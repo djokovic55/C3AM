@@ -7,7 +7,7 @@
     #include <algorithm>
     #include <vector>
     #include <time.h>
-    //#include <systemc>
+    #include <systemc>
 
     using namespace cv;
     using namespace std;
@@ -57,7 +57,6 @@
 
         vector<vector<int>> vec_image(rowsize, vector<int> (colsize, 0));
 
-        cout<< "radi3.1" << endl;
         for (int i = 0; i < rowsize; i++)
         {
             for (int j = 0; j < colsize; j++)
@@ -68,7 +67,6 @@
             }   
         }
         
-        cout<< "radi3.2" << endl;
         return vec_image;
     }
 
@@ -76,7 +74,6 @@
 
         int rowsize = vec_image.size();
         int colsize = vec_image[0].size();
-        //vec_image(rowsize, vector<int> (colsize, 0));
 
         Mat mat_image(rowsize, colsize, CV_32S, int(0));
 
@@ -86,18 +83,22 @@
             {
                 mat_image.at<int>(i, j) = vec_image[i][j];
             }   
+
         }
+
         return mat_image;
+        
+
 
     }
 
     
 
 
-    int row_num(Mat image) {int rowsize = image.rows; return rowsize;}
-    int col_num(Mat image) {int colsize = image.cols; return colsize;}
-
-    Mat create_empty_cem(int rowsize, int colsize, Mat energy_image){
+    int row_num(Mat &image) {int rowsize = image.rows; return rowsize;}
+    int col_num(Mat &image) {int colsize = image.cols; return colsize;}
+/*
+    Mat create_empty_cem(int rowsize, int colsize, Mat &energy_image){
 
         // initialize the map with zeros
         Mat empty_cem = Mat(rowsize, colsize, CV_32S, int(0));
@@ -107,8 +108,8 @@
 
         return empty_cem;
     }
-
-    vector<vector<int>> createCumulativeEnergyMap(vector<vector<int>> energy_image, vector<vector<int>> &empty_cem, int rowsize, int colsize) {
+*/
+    vector<vector<int>> createCumulativeEnergyMap(vector<vector<int>> &energy_image, int &rowsize, int &colsize) {
 
         int a, b, c;
     
@@ -116,14 +117,14 @@
 
             for (int row = 1; row < rowsize; row++) {
                 for (int col = 0; col < colsize; col++) {
-                    a = empty_cem.at(row - 1).at(max(col - 1, 0));
-                    b = empty_cem.at(row - 1).at(col);
-                    c = empty_cem.at(row - 1).at(min(col + 1, colsize - 1));
+                    a = energy_image.at(row - 1).at(max(col - 1, 0));
+                    b = energy_image.at(row - 1).at(col);
+                    c = energy_image.at(row - 1).at(min(col + 1, colsize - 1));
 
-                    empty_cem.at(row).at(col) = energy_image.at(row).at(col) + std::min(a, min(b, c));
+                    energy_image.at(row).at(col) = energy_image.at(row).at(col) + std::min(a, min(b, c));
                 }
             }
-        return empty_cem;
+        return energy_image;
     }
     
     vector<int> findOptimalSeam(Mat& cumulative_energy_map) {
@@ -213,35 +214,25 @@
     void driver(Mat& image, int iterations) {
     
         namedWindow("Original Image", WINDOW_AUTOSIZE); imshow("Original Image", image);
-        cout<< "radi1" << endl;
         // perform the specified number of reductions
         for (int i = 0; i < iterations; i++) {
-            Mat energy_image = createEnergyImage(image);
-            
-        cout<< "radi2" << endl;
-            //preparing parameters for hard part 
-            //conversion to vector type
-            vector<vector<int>> eneregy_image_vect = convert_to_vect(energy_image);
 
-        cout<< "radi3" << endl;
             int rowsize = row_num(image);
             int colsize = col_num(image);
 
-        
-            Mat empty_cem = create_empty_cem(rowsize, colsize, energy_image);
-            //conversion to vector type
+            Mat energy_image = createEnergyImage(image);
+            vector<vector<int>> eneregy_image_vect = convert_to_vect(energy_image);
 
-        cout<< "radi4" << endl;
-            vector<vector<int>> empty_cem_vect = convert_to_vect (empty_cem); 
             //HARD PART
-            vector<vector<int>> cumulative_energy_map = createCumulativeEnergyMap(eneregy_image_vect, empty_cem_vect, rowsize, colsize);
+            vector<vector<int>> cumulative_energy_map = createCumulativeEnergyMap(eneregy_image_vect, rowsize, colsize);
 
-        cout<< "radi5" << endl;
             //convert again to mat because the soft part will be working with it
             Mat cem_mat = convert_to_mat(cumulative_energy_map);
             
             vector<int> path = findOptimalSeam(cem_mat);
             reduce(image, path);
+
+            cout<<"Seam "<<i+1<<" done."<<endl;
         }
 
         namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
@@ -250,7 +241,7 @@
         
     }
 
-    int main() {
+    int sc_main(int argc, char* argv[]) {
 
         string filename, width_height, s_iterations;
         int iterations;
@@ -280,10 +271,14 @@
         driver(image, iterations);
         
         //int test[colsize] = image.row(0);
+/*
+        Mat energy_image = createEnergyImage(image);
+        vector<vector<int>> energy_image_2d = convert_to_vect(energy_image);
 
-        //Mat energy_image1 = createEnergyImage(image);
-        //cout<< energy_image1;
-    // cout << image;
-
+        vector<vector<int>> cem_2d = createCumulativeEnergyMap(energy_image_2d, rowsize, colsize);
+        Mat cem_mat = convert_to_mat(cem_2d);
+        cout<<"2d version"<<cem_mat<<endl;
+        // cout << image;
+*/
         return 0;
     }

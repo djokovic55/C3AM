@@ -7,7 +7,9 @@
     #include <algorithm>
     #include <vector>
     #include <time.h>
-    //#include <systemc>
+    #include <systemc>
+    #include <fstream>
+
 
     using namespace cv;
     using namespace std;
@@ -27,10 +29,6 @@
 
         // convert to grayscale
         cvtColor(image_blur, image_gray, COLOR_BGR2GRAY);
-
-        // use Sobel to calculate the gradient of the image in the x and y direction
-        //Sobel(image_gray, grad_x, ddepth, 1, 0, 3, scale, delta, BORDER_DEFAULT);
-        //Sobel(image_gray, grad_y, ddepth, 0, 1, 3, scale, delta, BORDER_DEFAULT);
 
         // use Scharr to calculate the gradient of the image in the x and y direction
         Scharr(image_gray, grad_x, ddepth, 1, 0, scale, delta, BORDER_DEFAULT);
@@ -61,8 +59,6 @@
         {
             for (int j = 0; j < colsize; j++)
             {
-
-        
                 vec_image[i][j] = mat_image.at<int>(i, j);
             }   
         }
@@ -74,7 +70,6 @@
 
         int rowsize = vec_image.size();
         int colsize = vec_image[0].size();
-        //vec_image(rowsize, vector<int> (colsize, 0));
 
         Mat mat_image(rowsize, colsize, CV_32S, int(0));
 
@@ -90,31 +85,24 @@
     }
 
 
-    vector<int> convert_to_1d(vector<vector<int>> vect_2d, int rowsize, int colsize){
+    vector<int> convert_to_1d(vector<vector<int>> &vect_2d, int &rowsize, int &colsize){
 
         int i, j, k;
         vector<int> vect_1d(rowsize*colsize, 0);
+            for(i = 0; i < rowsize; i++){ 
+                for(j = 0; j < colsize; j++){
 
-        for(i = 0; i < rowsize; i++){
-            for(j = 0; j < colsize; j++){
-
-                k = (i * colsize) + j;
-                vect_1d[k] = vect_2d[i][j];
-                k++;
+                    k = (i * colsize) + j;
+                    vect_1d[k] = vect_2d[i][j];
+                
             }
         }
         return vect_1d;
     }
 
-    vector<vector<int>> convert_to_2d(vector<int> vect_1d, int rowsize, int colsize){
+    vector<vector<int>> convert_to_2d(vector<int> &vect_1d, int &rowsize, int &colsize){
 
         vector<vector<int>> vect_2d(rowsize, vector<int>(colsize, 0));
-        vect_2d.resize(rowsize);
-
-        for(int i = 0; i < rowsize; i++){
-            vect_2d[i].resize(colsize);
-        }
-
         for(int i = 0; i < vect_1d.size(); i++){
 
             int row = i / rowsize;
@@ -125,10 +113,10 @@
         return vect_2d;     
     }
 
-    int row_num(Mat image) {int rowsize = image.rows; return rowsize;}
-    int col_num(Mat image) {int colsize = image.cols; return colsize;}
-
-    Mat create_empty_cem(int rowsize, int colsize, Mat energy_image){
+    int row_num(Mat &image) {int rowsize = image.rows; return rowsize;}
+    int col_num(Mat &image) {int colsize = image.cols; return colsize;}
+/*
+    Mat create_empty_cem(int &rowsize, int &colsize, Mat& energy_image){
 
         // initialize the map with zeros
         Mat empty_cem = Mat(rowsize, colsize, CV_32S, int(0));
@@ -138,8 +126,8 @@
 
         return empty_cem;
     }
-
-    vector<int> createCumulativeEnergyMap(vector<int> energy_image, vector<int> &empty_cem, int rowsize, int colsize) {
+*/
+    vector<int> createCumulativeEnergyMap(vector<int> &energy_image, int &rowsize, int &colsize) {
 
         int a, b, c;
         int index_1d;
@@ -149,14 +137,24 @@
                 for (int col = 0; col < colsize; col++) {
                     index_1d = (row * colsize) + col;
 
-                    a = empty_cem.at(max(index_1d - (colsize + 1), 0));
-                    b = empty_cem.at(index_1d - colsize);
-                    c = empty_cem.at(min(index_1d - (colsize - 1), colsize - 1));
+                    b = energy_image.at(index_1d - colsize);
 
-                    empty_cem.at(index_1d) = energy_image.at(index_1d) + std::min(a, min(b, c));
+                    if(col == 0){
+                        a = b;
+                        
+                    }else{
+                        a = energy_image.at(index_1d - (colsize + 1));
+
+                    }
+                    if(col == (colsize - 1)){
+                        c=b;
+                    }else {
+                        c = energy_image.at(index_1d - (colsize - 1));
+                    }
+                    energy_image.at(index_1d) = energy_image.at(index_1d) + std::min(a, min(b, c));
                 }
             }
-        return empty_cem;
+        return energy_image;
     }
     
     vector<int> findOptimalSeam(Mat& cumulative_energy_map) {
@@ -164,7 +162,6 @@
         int a, b, c;
         int offset = 0;
         vector<int> path;
-        // int path[64] vector<vector<double>>
         double min_val, max_val;
         Point min_pt, max_pt;
 
@@ -243,55 +240,61 @@
             image = image.colRange(0, colsize - 1);
     }
 
+    void print_1d (vector<int> &vector_1d){
+        
+        cout<<"1d vector: "<<endl;
+        for(int i = 0; i < vector_1d.size(); i++){
+            cout<<vector_1d[i]<<' ';
+        }
+        cout<<endl;
+    }
+
+    void print_2d(vector<vector<int>> &vector_2d){
+
+        cout<<"2d vector: "<<endl;
+        for (int i = 0; i < vector_2d.size(); i++) {
+            for (int j = 0; j < vector_2d[i].size(); j++) {
+                cout<<vector_2d[i][j]<<' ';
+            }
+        }
+        cout<<endl;
+    }
+
     void driver(Mat& image, int iterations) {
     
         namedWindow("Original Image", WINDOW_AUTOSIZE); imshow("Original Image", image);
         // perform the specified number of reductions
         for (int i = 0; i < iterations; i++) {
-            Mat energy_image = createEnergyImage(image);
-            
-        cout<< "1. Mat energy image" << endl;
-            //preparing parameters for hard part 
-            //conversion of energy image to vector type
-            vector<vector<int>> energy_image_vect = convert_to_vect(energy_image);
-
-        cout<< "    2. Conversion to 2d vect" << endl;
+            //SOFT PART
             int rowsize = row_num(image);
             int colsize = col_num(image);
+            //Energy image, type Mat
+            Mat energy_image_mat = createEnergyImage(image);
+            //Energy image, type 2d vector
+            vector<vector<int>> energy_image_vect_2d = convert_to_vect(energy_image_mat);
+            //Energy image, type 1d vector
+            vector<int> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
 
-            
-            Mat empty_cem = create_empty_cem(rowsize, colsize, energy_image);
-            //conversion of empty cem to vector type
-            vector<vector<int>> empty_cem_vect = convert_to_vect (empty_cem); 
-        
-        cout<< "        3. Mat cem and conversion to 2d" << endl; 
-            //CONVERSION TO 1D VECTOR, EMPTY_CEM AND ENERGY IMAGE
-            vector<int> energy_image_vect_1d = convert_to_1d(energy_image_vect, rowsize, colsize);
-            
-        cout<< "            4. 1d energy image" << endl; 
-            vector<int> empty_cem_vect_1d = convert_to_1d(empty_cem_vect, rowsize, colsize);         
             //HARD PART
-            vector<int> cumulative_energy_map_1d = createCumulativeEnergyMap(energy_image_vect_1d, empty_cem_vect_1d, rowsize, colsize);
+            //CEM, type 1d vector
+            vector<int> cumulative_energy_map_1d = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
 
-        cout<< "                5. 1d cem" << endl;
-            // convert the resulting 1D CUMULATIVE ENERGY MAP TO 2D
+            //SOFT PART 
+            //CEM, type 2d vector
             vector<vector<int>> cumulative_energy_map_2d = convert_to_2d(cumulative_energy_map_1d, rowsize, colsize);
-            //convert again to mat because the soft part will be working with it
-            Mat cem_mat = convert_to_mat(cumulative_energy_map_2d);
+            //CEM, type Mat
+            Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
             
-            vector<int> path = findOptimalSeam(cem_mat);
+            vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
             reduce(image, path);
+            cout<<"Seam "<<i+1<<" done."<<endl;
         
-        cout<< "                    6. Seam done" << endl;
         }
-
         namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
         imwrite("result.jpg", image);
-        
-        
     }
 
-    int main() {
+    int sc_main(int argc, char* argv[]) {
 
         string filename, width_height, s_iterations;
         int iterations;
@@ -318,13 +321,54 @@
             return 0;
         }
 
+
+/*       
+
+        Mat energy_image = createEnergyImage(image);
+        vector<vector<int>> energy_image_2d = convert_to_vect(energy_image);
+        //print_2d(energy_image_2d);
+        vector<int> energy_image_1d = convert_to_1d(energy_image_2d, rowsize, colsize);
+
+        vector<int> cem_1d = createCumulativeEnergyMap(energy_image_1d, rowsize, colsize);
+
+
+        vector<vector<int>> cem_2d = convert_to_2d(cem_1d, rowsize, colsize);
+
+
+        Mat cem_mat = convert_to_mat(cem_2d);
+       // cout<<"1d version"<<cem_mat<<endl;
+*/
+
+
         driver(image, iterations);
+
+
+/*
+// *************************   DEBUG *************************************
+        int array[] = {3, 2, 10, 8, 1, 0, 4, 12, 13, 0, 6, 3, 1, 2, 8, 7, 3, 9, 14, 12, 18, 3, 0, 2, 6};
+        Mat small_energy_image = Mat(5, 5, CV_32S, array);
+        cout<<"Small image, Mat: "<<endl<<small_energy_image<<endl;
+
+        int rowsize = small_energy_image.rows;
+        int colsize = small_energy_image.cols;
+        //cout<<rowsize<<endl;
+
+        vector<vector<int>> small_energy_image_2d = convert_to_vect(small_energy_image);
+        print_2d(small_energy_image_2d);
+
+        vector<int> small_energy_image_1d = convert_to_1d(small_energy_image_2d, rowsize, colsize);
+        print_1d(small_energy_image_1d);        
+
+        vector<int> cumulative_energy_map_1d = createCumulativeEnergyMap(small_energy_image_1d, rowsize, colsize);
+        print_1d(cumulative_energy_map_1d);
+
         
-        //int test[colsize] = image.row(0);
+        vector<vector<int>> cumulative_energy_map_2d = convert_to_2d(cumulative_energy_map_1d, rowsize, colsize);
+        print_2d(cumulative_energy_map_2d);
 
-        //Mat energy_image1 = createEnergyImage(image);
-        //cout<< energy_image1;
-    // cout << image;
-
+        Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
+        cout<<"Mat CEM, final: "<<endl<<cumulative_energy_map_mat<<endl;
+// *********************************************************************************
+*/
         return 0;
     }
