@@ -9,6 +9,7 @@
     #include <time.h>
     #include <systemc>
     #include <fstream>
+    #include <math.h>
 
 
     using namespace cv;
@@ -102,11 +103,12 @@
 
     vector<vector<int>> convert_to_2d(vector<int> &vect_1d, int &rowsize, int &colsize){
 
+        //assert(rowsize* colsize == vect_1d.size());
         vector<vector<int>> vect_2d(rowsize, vector<int>(colsize, 0));
         for(int i = 0; i < vect_1d.size(); i++){
 
-            int row = i / rowsize;
-            int col = i % colsize;
+            int row = i / colsize;
+            int col = i % colsize; 
 
             vect_2d[row][col] = vect_1d[i];
         }
@@ -296,19 +298,19 @@
 
     int sc_main(int argc, char* argv[]) {
 
-        string filename, width_height, s_iterations;
+        string filename = argv[1], s_iterations = argv[2];
         int iterations;
 
-        cout << "Please enter a filename: ";
-        cin >> filename;
+        //cout << "Please enter a filename: ";
+        //cin >> filename;
 
         Mat image = imread(filename);
         if (image.empty()) {
             cout << "Unable to load image, please try again." << endl;
             exit(EXIT_FAILURE);
         }
-        cout << "Reduce width how many times? ";
-        cin >> s_iterations;
+        //cout << "Reduce width how many times? ";
+        //cin >> s_iterations;
 
         iterations = stoi(s_iterations);
         int rowsize = image.rows;
@@ -322,25 +324,27 @@
         }
 
 
-/*       
+       
 
         Mat energy_image = createEnergyImage(image);
+        //cout<<image;
         vector<vector<int>> energy_image_2d = convert_to_vect(energy_image);
-        //print_2d(energy_image_2d);
+        print_2d(energy_image_2d);
         vector<int> energy_image_1d = convert_to_1d(energy_image_2d, rowsize, colsize);
 
         vector<int> cem_1d = createCumulativeEnergyMap(energy_image_1d, rowsize, colsize);
-
-
+        //print_1d(cem_1d);
+         cout << "\nMax Element = "<< *max_element(cem_1d.begin(), cem_1d.end());
+         cout<<endl;
         vector<vector<int>> cem_2d = convert_to_2d(cem_1d, rowsize, colsize);
-
+        //print_2d(cem_2d);
 
         Mat cem_mat = convert_to_mat(cem_2d);
-       // cout<<"1d version"<<cem_mat<<endl;
-*/
+        //cout<<"1d version"<<cem_mat<<endl;
 
 
-        driver(image, iterations);
+
+        //driver(image, iterations);
 
 
 /*
