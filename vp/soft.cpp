@@ -1,6 +1,49 @@
 #include "soft.hpp"
 
-    Mat createEnergyImage(Mat& image) {
+int input_num;
+char** input_parameter;
+
+SC_HAS_PROCESS(Soft);
+
+Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name)
+{
+    SC_THREAD(seam_carving);
+    SC_REPORT_INFO("Soft", "Constructed.");
+    input_num = argc;
+    input_parameter = argv;
+}
+
+Soft::~Soft()
+{
+    SC_REPORT_INFO("Soft", "Destructed.");
+}
+
+    void Soft::seam_carving(){
+
+        string filename = input_parameter[1], s_iterations = input_parameter[2];
+        int iterations;
+
+        Mat image = imread(filename);
+        if (image.empty()) {
+            cout << "Unable to load image, please try again." << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        iterations = stoi(s_iterations);
+        int rowsize = image.rows;
+        int colsize = image.cols;
+
+        // check that inputted number of iterations doesn't exceed the image size
+
+        if (iterations > colsize) {
+            cout << "Input is greater than image's width, please try again." << endl;
+        
+        }else{
+            driver(image, iterations);
+        }
+    }
+
+    Mat Soft::createEnergyImage(Mat& image) {
     
         Mat image_blur, image_gray;
         Mat grad_x, grad_y;
@@ -33,7 +76,7 @@
         return energy_image;
     }
 
-    vector<int> findOptimalSeam(Mat& cumulative_energy_map) {
+    vector<int> Soft::findOptimalSeam(Mat& cumulative_energy_map) {
 
         int a, b, c;
         int offset = 0;
@@ -80,7 +123,7 @@
         return path;
     }
 
-    void reduce(Mat& image, vector<int> path) {
+    void Soft::reduce(Mat& image, vector<int> path) {
 
         // get the number of rows and columns in the image
         int rowsize = image.rows;
@@ -117,7 +160,7 @@
     }
 
 
-    void driver(Mat& image, int iterations) {
+    void Soft::driver(Mat& image, int iterations) {
     
         namedWindow("Original Image", WINDOW_AUTOSIZE); imshow("Original Image", image);
         // perform the specified number of reductions

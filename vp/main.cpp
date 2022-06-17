@@ -1,35 +1,15 @@
 #include "hard.hpp"
 #include "soft.hpp"
 #include "utils.hpp"
-int sc_main(int argc, char* argv[]) {
 
-    string filename = argv[1], s_iterations = argv[2];
-    int iterations;
+int sc_main(int argc, char** argv) {
 
-    //cout << "Please enter a filename: ";
-    //cin >> filename;
+    Soft soft("Soft_part", argc, argv);
+    sc_start(1000, sc_core::SC_NS);
 
-    Mat image = imread(filename);
-    if (image.empty()) {
-        cout << "Unable to load image, please try again." << endl;
-        exit(EXIT_FAILURE);
-    }
-    //cout << "Reduce width how many times? ";
-    //cin >> s_iterations;
 
-    iterations = stoi(s_iterations);
-    int rowsize = image.rows;
-    int colsize = image.cols;
-
-    // check that inputted number of iterations doesn't exceed the image size
-
-    if (iterations > colsize) {
-        cout << "Input is greater than image's width, please try again." << endl;
-        return 0;
-    }
-
-    driver(image, iterations);
-
+    return 0;
+}
 /*       
 
     Mat energy_image = createEnergyImage(image);
@@ -80,5 +60,3 @@ int sc_main(int argc, char* argv[]) {
     cout<<"Mat CEM, final: "<<endl<<cumulative_energy_map_mat<<endl;
 // *********************************************************************************
 */
-    return 0;
-}

@@ -13,11 +13,16 @@
 #include <systemc>
 #include <fstream>
 #include <math.h>
+#include <tlm>
 
 
 using namespace cv;
 using namespace std;
 using namespace sc_dt;
+using namespace chrono;
+
+typedef tlm::tlm_base_protocol_types::tlm_payload_type pl_t;
+typedef tlm::tlm_base_protocol_types::tlm_phase_type ph_t;
 
 // CONVERSION FUNTIONS
 vector<vector<sc_uint<8>>> convert_to_vect(Mat& mat_image);
