@@ -5,7 +5,7 @@ char** input_parameter;
 
 SC_HAS_PROCESS(Soft);
 
-Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name)
+Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name), offset(sc_core::SC_ZERO_TIME)
 {
     SC_THREAD(seam_carving);
     SC_REPORT_INFO("Soft", "Constructed.");
@@ -41,6 +41,11 @@ Soft::~Soft()
         }else{
             driver(image, iterations);
         }
+
+        // write bram
+        write_ddr();
+
+
     }
 
     Mat Soft::createEnergyImage(Mat& image) {
@@ -192,4 +197,17 @@ Soft::~Soft()
         }
         namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
         imwrite("result.jpg", image);
+    }
+
+    void Soft::write_ddr(){
+
+        pl_t p1;
+
+        offset += sc_core::sc_time(5, sc_core::SC_NS);
+
+        p1.set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
+        soft_ddr_socket->b_transport(p1, offset);
+
+
+
     }

@@ -1,11 +1,13 @@
-#include "hard.hpp"
-#include "soft.hpp"
-#include "utils.hpp"
+#include "vp.hpp"
+
 
 int sc_main(int argc, char** argv) {
 
-    Soft soft("Soft_part", argc, argv);
+    Vp vp("Virtual Platform", argc, argv);
+    // Soft("soft", argc, argv);
+    // Ddr ddr("ddr"); 
     sc_start(1000, sc_core::SC_NS);
+
 
 
     return 0;

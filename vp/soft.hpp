@@ -12,8 +12,8 @@ class Soft : public sc_core::sc_module
     public:
        Soft(sc_core::sc_module_name name, int argc, char** argv);
        ~Soft();
-       tlm_utils::simple_initiator_socket<Soft> interconnect_socket;
-       tlm_utils::simple_initiator_socket<Soft> mem_socket;
+    //    tlm_utils::simple_initiator_socket<Soft> interconnect_socket;
+       tlm_utils::simple_initiator_socket<Soft> soft_ddr_socket;
 
 
 
@@ -26,6 +26,8 @@ class Soft : public sc_core::sc_module
         vector<int> findOptimalSeam(Mat& cumulative_energy_map);
         void reduce(Mat& image, vector<int> path);
         void driver(Mat& image, int iterations);
+
+        void write_ddr(); //incomplete impl
 
 
 };
