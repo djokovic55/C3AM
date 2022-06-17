@@ -1,7 +1,7 @@
 #include "hard.hpp"
 #include "soft.hpp"
 #include "utils.hpp"
-//test
+
 int sc_main(int argc, char** argv) {
 
     Soft soft("Soft_part", argc, argv);
