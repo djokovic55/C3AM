@@ -42,6 +42,10 @@ void print_2d(vector<vector<int>> &vector_2d);
 
 
 // *****************ADDRESS SPACE************************
+// register in hard
+#define BEGIN_ADDR 0x0
 
-
+// memory and hard
+#define HARD_L_VP 0x41000000
+#define HARD_H_VP 0x410000FF
 #endif 

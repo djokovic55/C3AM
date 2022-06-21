@@ -4,6 +4,8 @@
 #include "utils.hpp"
 #include "soft.hpp"
 #include "ddr.hpp"
+#include "intcon.hpp"
+#include "hard.hpp"
 
 
 
@@ -13,8 +15,12 @@ class Vp : public sc_core::sc_module{
         ~Vp();
 
     protected:
+        Hard hard;
         Soft soft;
         Ddr ddr;
+        Intcon intcon;
+        
+        
 };
 
 #endif

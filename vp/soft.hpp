@@ -3,6 +3,7 @@
 // test
 #include "utils.hpp"
 #include "hard.hpp"
+#include "intcon.hpp"
 #include <systemc>
 #include <tlm_utils/simple_initiator_socket.h>
 #include <tlm_utils/simple_target_socket.h>
@@ -12,10 +13,8 @@ class Soft : public sc_core::sc_module
     public:
        Soft(sc_core::sc_module_name name, int argc, char** argv);
        ~Soft();
-    //    tlm_utils::simple_initiator_socket<Soft> interconnect_socket;
+       tlm_utils::simple_initiator_socket<Soft> soft_intcon_socket;
        tlm_utils::simple_initiator_socket<Soft> soft_ddr_socket;
-
-
 
     protected:
         pl_t pl;
@@ -27,8 +26,11 @@ class Soft : public sc_core::sc_module
         void reduce(Mat& image, vector<int> path);
         void driver(Mat& image, int iterations);
 
-        void write_ddr(); //incomplete impl
+        //hard part, will be here until the whole structure of vp is constructed
+        vector<sc_uint<16>> createCumulativeEnergyMap(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize);
 
+        void write_ddr(); //incomplete impl
+        void write_hard(); //incomplete impl 
 
 };
 
