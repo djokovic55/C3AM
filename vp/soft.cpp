@@ -41,13 +41,89 @@ void Soft::seam_carving(){
     }else{
         driver(image, iterations);
     }
+    // sending package to dma
+    int dma_control = 5;
+    pl_t p1;
+    p1.set_command(TLM_WRITE_COMMAND);
+    p1.set_address(DMA_L + DMA_CONTROL);
+    p1.set_data_ptr((unsigned char*)&dma_control);
+    p1.set_data_length(1);
+    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-    // write bram
-    write_ddr();
-    // write hard
-    write_hard();
+    soft_intcon_socket->b_transport(p1, offset);
+    
 
 
+}
+
+void Soft::driver(Mat& image, int iterations) {
+
+    namedWindow("Original Image", WINDOW_AUTOSIZE); imshow("Original Image", image);
+    // perform the specified number of reductions
+    for (int i = 0; i < iterations; i++) {
+        //SOFT PART
+        int rowsize = row_num(image);
+        int colsize = col_num(image);
+        //Energy image, type Mat
+        Mat energy_image_mat = createEnergyImage(image);
+        //Energy image, type 2d 8b vector
+        vector<vector<sc_uint<8>>> energy_image_vect_2d = convert_to_vect(energy_image_mat);
+        //Energy image, type 1d 8b vector
+        vector<sc_uint<8>> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
+
+        // WRITING TO DMA
+
+
+
+
+
+        //HARD PART
+        //CEM, type 1d vector
+        vector<sc_uint<16>> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
+
+
+
+
+
+        // READING FROM DMA
+
+
+
+
+
+        //SOFT PART 
+        //CEM, type 2d vector
+        vector<vector<sc_uint<16>>> cumulative_energy_map_2d = convert_to_2d(cumulative_energy_map_16b, rowsize, colsize);
+        //CEM, type Mat
+        Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
+        
+        vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
+        reduce(image, path);
+        cout<<"Seam "<<i+1<<" done."<<endl;
+    
+    }
+    namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
+    imwrite("result.jpg", image);
+}
+
+void Soft::write_dma(vector<sc_uint<8>> &vect){
+
+    offset += sc_core::sc_time(5, sc_core::SC_NS);
+    pl_t p1;
+
+    p1.set_command(TLM_WRITE_COMMAND);
+    p1.set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
+    soft_dma_socket->b_transport(p1, offset);
+}
+
+void Soft::write_hard(){
+
+    pl_t p1;
+
+    offset += sc_core::sc_time(5, sc_core::SC_NS);
+
+    p1.set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
+    soft_intcon_socket->b_transport(p1, offset);
 }
 
 Mat Soft::createEnergyImage(Mat& image) {
@@ -165,63 +241,6 @@ void Soft::reduce(Mat& image, vector<int> path) {
         // clip the right-most side of the image
         image = image.colRange(0, colsize - 1);
 }
-
-
-void Soft::driver(Mat& image, int iterations) {
-
-    namedWindow("Original Image", WINDOW_AUTOSIZE); imshow("Original Image", image);
-    // perform the specified number of reductions
-    for (int i = 0; i < iterations; i++) {
-        //SOFT PART
-        int rowsize = row_num(image);
-        int colsize = col_num(image);
-        //Energy image, type Mat
-        Mat energy_image_mat = createEnergyImage(image);
-        //Energy image, type 2d 8b vector
-        vector<vector<sc_uint<8>>> energy_image_vect_2d = convert_to_vect(energy_image_mat);
-        //Energy image, type 1d 8b vector
-        vector<sc_uint<8>> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
-
-        //HARD PART
-        //CEM, type 1d vector
-        vector<sc_uint<16>> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
-
-        //SOFT PART 
-        //CEM, type 2d vector
-        vector<vector<sc_uint<16>>> cumulative_energy_map_2d = convert_to_2d(cumulative_energy_map_16b, rowsize, colsize);
-        //CEM, type Mat
-        Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
-        
-        vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
-        reduce(image, path);
-        cout<<"Seam "<<i+1<<" done."<<endl;
-    
-    }
-    namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
-    imwrite("result.jpg", image);
-}
-
-void Soft::write_ddr(){
-
-    pl_t p1;
-
-    offset += sc_core::sc_time(5, sc_core::SC_NS);
-
-    p1.set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
-    soft_ddr_socket->b_transport(p1, offset);
-}
-
-void Soft::write_hard(){
-
-    pl_t p1;
-
-    offset += sc_core::sc_time(5, sc_core::SC_NS);
-
-    p1.set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
-    soft_intcon_socket->b_transport(p1, offset);
-}
-
-
 
 vector<sc_uint<16>> Soft::createCumulativeEnergyMap(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize) {
 

@@ -1,6 +1,6 @@
 CC = "g++"
 PROJECT =  main	 
-SRC = main.cpp vp.cpp soft.cpp ddr.cpp hard.cpp utils.cpp intcon.cpp
+SRC = main.cpp vp.cpp soft.cpp dma.cpp hard.cpp utils.cpp intcon.cpp
 
 LIBS = `pkg-config opencv4 --cflags --libs`
 																		

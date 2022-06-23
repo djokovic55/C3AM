@@ -19,10 +19,11 @@ int sc_main(int argc, char** argv) {
 
     cout<<"Hello world"<<endl;
         
-    vector<sc_uint<8>> vect;
-    vect.reserve(10);
-    vect.push_back(50);
-    cout<<vect[0]<<endl<<vect.capacity()<<endl;  
+    vector<sc_uint<8>> vect(10, 0);
+    vect[0] = 10;
+    // vect.reserve(10);
+    // vect.push_back(50);
+    cout<<vect[0]<<endl;  
 
 
     // *((sc_uint<16>*)&vect[0]) = 500;

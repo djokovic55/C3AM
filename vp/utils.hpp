@@ -23,6 +23,7 @@ using namespace cv;
 using namespace std;
 using namespace sc_dt;
 using namespace chrono;
+using namespace tlm;
 // *******************TYPES**********************
 typedef tlm::tlm_base_protocol_types::tlm_payload_type pl_t;
 typedef tlm::tlm_base_protocol_types::tlm_phase_type ph_t;
@@ -40,12 +41,4 @@ int col_num(Mat &image);
 void print_1d (vector<int> &vector_1d);
 void print_2d(vector<vector<int>> &vector_2d);
 
-
-// *****************ADDRESS SPACE************************
-// register in hard
-#define BEGIN_ADDR 0x0
-
-// memory and hard
-#define HARD_L_VP 0x41000000
-#define HARD_H_VP 0x410000FF
 #endif 
