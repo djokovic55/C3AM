@@ -17,6 +17,7 @@ void Intcon::b_transport(pl_t &p1, sc_core::sc_time &offset)
 {
     sc_dt::uint64 addr = p1.get_address();
     sc_dt::uint64 taddr;
+    unsigned char *data = p1.get_data_ptr();
 
     if(addr >= int(DMA_L) && addr <= int(DMA_H))
     {
@@ -27,8 +28,9 @@ void Intcon::b_transport(pl_t &p1, sc_core::sc_time &offset)
     else if(addr >= int(HARD_L) && addr <= int(HARD_H))
     {
         taddr = addr & 0x000000FF;
-        p1.set_address(addr);
+        p1.set_address(taddr);
         intcon_hard_socket->b_transport(p1, offset);
+
     }else
     {
         SC_REPORT_ERROR("Interconnect", "Wrong address.");

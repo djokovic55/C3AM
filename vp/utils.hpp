@@ -38,7 +38,7 @@ int row_num(Mat &image);
 int col_num(Mat &image);
 
 // vector<sc_uint<16>> convert_from_8b_to_16b(vector<sc_uint<8>> &sc_image);
-void print_1d (vector<int> &vector_1d);
+void print_1d (vector<unsigned char> &vector_1d);
 void print_2d(vector<vector<int>> &vector_2d);
 
 #endif 

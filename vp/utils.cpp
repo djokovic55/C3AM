@@ -87,11 +87,11 @@
     return image;
     }
 
-    void print_1d (vector<int> &vector_1d){
+    void print_1d (vector<unsigned char> &vector_1d){
         
         cout<<"1d vector: "<<endl;
         for(int i = 0; i < vector_1d.size(); i++){
-            cout<<vector_1d[i]<<' ';
+            cout<<int(vector_1d[i])<<' ';
         }
         cout<<endl;
     }

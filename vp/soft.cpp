@@ -7,10 +7,15 @@ SC_HAS_PROCESS(Soft);
 
 Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name), offset(sc_core::SC_ZERO_TIME)
 {
-SC_THREAD(seam_carving);
-SC_REPORT_INFO("Soft", "Constructed.");
-input_num = argc;
-input_parameter = argv;
+
+
+    SC_THREAD(seam_carving);
+    SC_REPORT_INFO("Soft", "Constructed.");
+
+    soft_dma_socket.register_b_transport(this, &Soft::b_transport);
+    input_num = argc;
+    input_parameter = argv;
+    
 }
 
 Soft::~Soft()
@@ -41,20 +46,40 @@ void Soft::seam_carving(){
     }else{
         driver(image, iterations);
     }
-    // sending package to dma
-    int dma_control = 5;
-    pl_t p1;
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_address(DMA_L + DMA_CONTROL);
-    p1.set_data_ptr((unsigned char*)&dma_control);
-    p1.set_data_length(1);
-    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-    soft_intcon_socket->b_transport(p1, offset);
-    
-
 
 }
+
+// **************DDR inside SOFT*********************
+void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
+{
+  	tlm_command cmd    = p1.get_command();
+	sc_dt::uint64 addr = p1.get_address();
+	unsigned char *buf = p1.get_data_ptr();
+	unsigned int len   = p1.get_data_length();
+
+    
+    switch(cmd)
+    {
+
+        case TLM_WRITE_COMMAND:
+            for(int i = 0; i < len; i++)
+            {
+                ddr16[addr++] = buf[i];
+            }
+            p1.set_response_status(TLM_OK_RESPONSE);
+            break;
+        case TLM_READ_COMMAND:
+            for(int i = 0; i < len; i++)
+            {
+                buf[i] = ddr8[addr++];
+            }
+            p1.set_response_status(TLM_OK_RESPONSE);
+            break;
+        default:
+            p1.set_response_status(TLM_COMMAND_ERROR_RESPONSE);
+   } 
+}
+//***************************************************************** 
 
 void Soft::driver(Mat& image, int iterations) {
 
@@ -71,11 +96,75 @@ void Soft::driver(Mat& image, int iterations) {
         //Energy image, type 1d 8b vector
         vector<sc_uint<8>> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
 
+        // SOFT TO DDR
+    
+        ddr8.assign(energy_image_vect_1d.begin(), energy_image_vect_1d.end());
+
+        // START SIGNAL TO HARD
+        
+        pl_t p1;
+
+        int hard_control = 1;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(HARD_L + HARD_CONTROL);
+        p1.set_data_ptr((unsigned char*)&hard_control);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
         // WRITING TO DMA
+        
+        //source addr
+        int saddr = 0;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_SOURCE_ADD);
+        p1.set_data_ptr((unsigned char*)&saddr);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+        soft_intcon_socket->b_transport(p1, offset);
 
+        //destination addr
+        int daddr = HARD_L;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_DEST_ADD);
+        p1.set_data_ptr((unsigned char*)&daddr);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+        soft_intcon_socket->b_transport(p1, offset);
 
+        //cnt
+        int cnt = rowsize * colsize;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_COUNT);
+        p1.set_data_ptr((unsigned char*)&cnt);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        // dma control, ide na kraj jer se ovde poziva dm()
+        int dma_control = 1;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_CONTROL);
+        p1.set_data_ptr((unsigned char*)&dma_control);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset); 
+
+        do{
+            
+            p1.set_command(TLM_READ_COMMAND);
+            p1.set_address(DMA_L + DMA_CONTROL);
+            p1.set_data_ptr((unsigned char*)&dma_control);
+            p1.set_data_length(1);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            soft_intcon_socket->b_transport(p1, offset);
+        }while(dma_control != 0);      
 
         //HARD PART
         //CEM, type 1d vector
@@ -104,26 +193,6 @@ void Soft::driver(Mat& image, int iterations) {
     }
     namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
     imwrite("result.jpg", image);
-}
-
-void Soft::write_dma(vector<sc_uint<8>> &vect){
-
-    offset += sc_core::sc_time(5, sc_core::SC_NS);
-    pl_t p1;
-
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
-    soft_dma_socket->b_transport(p1, offset);
-}
-
-void Soft::write_hard(){
-
-    pl_t p1;
-
-    offset += sc_core::sc_time(5, sc_core::SC_NS);
-
-    p1.set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
-    soft_intcon_socket->b_transport(p1, offset);
 }
 
 Mat Soft::createEnergyImage(Mat& image) {

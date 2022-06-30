@@ -13,8 +13,55 @@ Hard::~Hard()
 
 void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
 {
-    p1.set_response_status(tlm::TLM_OK_RESPONSE);
+    
+    tlm_command cmd = p1.get_command();
+    sc_dt::uint64 addr = p1.get_address();
+    unsigned char *data = p1.get_data_ptr();
+    unsigned int length = p1.get_data_length();
+
+    switch(cmd)
+    {
+        case TLM_WRITE_COMMAND:
+            switch(addr)
+            {
+                case HARD_CONTROL:
+                    control = *((int*)data);
+                    p1.set_response_status(TLM_OK_RESPONSE);
+                    break;
+
+                default:
+                    p1.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
+                    break;
+            }
+        case TLM_READ_COMMAND:
+            switch(addr)
+            {
+                case HARD_CONTROL:
+                    memcpy(data, &control, sizeof(control));
+                    p1.set_response_status(TLM_OK_RESPONSE);
+                    break;
+
+                default:
+                    p1.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
+                    break;
+            }
+        default:
+            p1.set_response_status(tlm::TLM_COMMAND_ERROR_RESPONSE);
+            break;
+    }
 }
+
+
+void Hard::write(const Data& data)
+{
+
+}
+
+void Hard::read(Data& data, int i)
+{
+
+}
+
 
 // vector<sc_uint<16>> Hard::createCumulativeEnergyMap(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize) {
 

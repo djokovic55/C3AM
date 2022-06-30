@@ -14,13 +14,20 @@ class Soft : public sc_core::sc_module
     public:
        Soft(sc_core::sc_module_name name, int argc, char** argv);
        ~Soft();
-       tlm_utils::simple_initiator_socket<Soft> soft_intcon_socket;
-       tlm_utils::simple_initiator_socket<Soft> soft_dma_socket;
+       tlm_utils::simple_initiator_socket<Soft> soft_intcon_socket; // 90% impl
+       tlm_utils::simple_target_socket<Soft> soft_dma_socket; // 50%, receiving data left, sending done
 
     protected:
         pl_t pl;
         sc_core::sc_time offset;
 
+        // ********* DDR IN SOFT ****** 
+        void b_transport(pl_t &p1, sc_core::sc_time &offset);
+
+        vector<unsigned char> ddr8;
+        vector<short int> ddr16;
+        // **************************************
+        
         void seam_carving();
         Mat createEnergyImage(Mat& image);
         vector<int> findOptimalSeam(Mat& cumulative_energy_map);
@@ -29,9 +36,6 @@ class Soft : public sc_core::sc_module
 
         //hard part, will be here until the whole structure of vp is constructed
         vector<sc_uint<16>> createCumulativeEnergyMap(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize);
-
-        void write_dma(vector<sc_uint<8>> &vect); //incomplete impl
-        void write_hard(); //incomplete impl 
 
 };
 
