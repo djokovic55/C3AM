@@ -6,6 +6,7 @@
 #include "addr.hpp"
 
 #include "hard_if.hpp"
+using namespace sc_core;
 
 class Dma: public sc_core::sc_module
 {
@@ -18,17 +19,19 @@ class Dma: public sc_core::sc_module
         tlm_utils::simple_target_socket<Dma> dma_intcon_socket; // 90% impl
 
 
-        sc_core::sc_port<hard_write_if> wr_port;
-        sc_core::sc_port<hard_read_if> rd_port;       
+        sc_port<hard_write_if> wr_port;
+        sc_port<hard_read_if> rd_port;       
     protected:
         sc_core::sc_time offset;
         void b_transport(pl_t&, sc_core::sc_time&);
         void dm();
-        vector<sc_uint<8>> mem8;
+        
         int control;
         int saddr;
         int cnt;
         int daddr;
+
+
 
 
 };

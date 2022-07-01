@@ -13,14 +13,24 @@ Dma::~Dma(){
     SC_REPORT_INFO("DMA", "Destructed.");
 }
 
+
 void Dma::dm()
 {
 
+    Data input;
     vector<unsigned char> buff8(cnt);
+    cout<<"row_col: "<< cnt<<endl;
     vector<unsigned short int> buff16(cnt);
 
     vector<sc_uint<8>> sc_buff8;
     vector<sc_uint<16>> sc_buff16;
+    // vector<sc_uint<8>> v {7, 5, 1, 3, 8};
+    // vector<sc_uint<16>> n;
+
+    // vector<unsigned short> n_sh;
+    
+    unsigned char buff[2];
+
     pl_t p1;
 
     switch(daddr)
@@ -36,35 +46,67 @@ void Dma::dm()
 
             sc_buff8.assign(buff8.begin(), buff8.end());
 
+            // print_1d_sc8(sc_buff8);
+            //cout<<"ddr in dma: "<< sc_buff8[50]<<endl;
 
+            // posalji buff8 preko kanala i postavi control na 0
 
-            // posalji buff8 preko fifo i postavi control na 0
+            // for(int i = 0; i < sc_buff8.size(); i++)
+            // {
+            //     input.last = false;
+            //     if(i == (sc_buff8.size() - 1))
+            //     {
+            //         input.last = true;
+            //     }
+            //     input.byte = sc_buff8[i];
+            //     wr_port -> write(input);
+            // }
 
-            // print_1d(buff8);
+            
+
+            for(int i = 0; i < cnt; i++)
+            {
+                input.last = false;
+                if(i == (sc_buff8.size() - 1))
+                {
+                    input.last = true;
+                }
+                input.byte = sc_buff8[i];
+                wr_port -> write(input);
+            }
 
             control = 0;
-
-
-        break;
+            break;
 
         case DDR_L:
-            // procitaj iz fifo i upisi u buff16
+            // procitaj iz kanala i upisi u buff16
+            for(int i = 0; i < cnt; i++)
+            {
+                rd_port -> read(input, i);
+                sc_buff16.push_back(input.two_bytes);
+                //cout <<"Niz nakon citanja: "<<sc_buff16[i] << endl;
+            }
 
-            p1.set_address(saddr);
-            p1.set_command(TLM_WRITE_COMMAND);
-            p1.set_data_length(cnt);
-            p1.set_data_ptr((unsigned char*)buff16.data());
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+            buff16.assign(sc_buff16.begin(), sc_buff16.end());
+            cout<<"buff16 size: "<<cnt<<endl;
+            for(int i = 0; i < buff16.size(); i++)
+            {
+                toUchar(buff, buff16[i]);
 
-            dma_soft_socket->b_transport(p1, offset);
+                p1.set_address(saddr);
+                p1.set_command(TLM_WRITE_COMMAND);
+                p1.set_data_length(cnt);
+                p1.set_data_ptr((unsigned char*)buff);
+                p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-            //postavi control na 0
+                dma_soft_socket->b_transport(p1, offset);
 
-
-        break;
+            }
+            control = 0;  
+            break;
 
         default:
-        break;
+            break;
     }
 }
 
@@ -74,20 +116,6 @@ void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
     sc_dt::uint64 addr = p1.get_address();
     unsigned char *data = p1.get_data_ptr();
     unsigned int length = p1.get_data_length();
-
-
-    // int x;
-    // int y;
-
-    // int *a;
-    
-
-    // a = &x;
-
-    // *a = y;
-
-    // int *(&x)
-
 
     switch(cmd)
     {
@@ -113,6 +141,7 @@ void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
 
                 case DMA_COUNT:
                     cnt = *((int*)data);
+                    cout<<"Cnt number: "<< cnt<<endl<<endl;
                     p1.set_response_status(TLM_OK_RESPONSE);
                 break;
 

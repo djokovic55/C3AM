@@ -17,6 +17,8 @@
 #define HARD_H 0x410000FF
 // registers in hard
 #define HARD_CONTROL 0x00
+#define HARD_ROWSIZE 0x01
+#define HARD_COLSIZE 0x02
 
 // dma
 #define DMA_L 0x42000000

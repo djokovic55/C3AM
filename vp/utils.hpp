@@ -38,7 +38,15 @@ int row_num(Mat &image);
 int col_num(Mat &image);
 
 // vector<sc_uint<16>> convert_from_8b_to_16b(vector<sc_uint<8>> &sc_image);
-void print_1d (vector<unsigned char> &vector_1d);
+void print_1d_uc (vector<unsigned char> &vector_1d);
+void print_1d_sc8(vector<sc_uint<8>> &vector_1d_sc);
+
+void print_1d_sh (vector<unsigned short> &vector_1d);
+void print_1d_sc16(vector<sc_uint<16>> &vector_1d_sc);
+
 void print_2d(vector<vector<int>> &vector_2d);
+
+unsigned short toShort(unsigned char *buf);
+void toUchar(unsigned char *buf,unsigned short val);
 
 #endif 

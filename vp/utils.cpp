@@ -56,7 +56,11 @@
     vector<vector<sc_uint<16>>> convert_to_2d(vector<sc_uint<16>> &vect_1d, int &rowsize, int &colsize){
 
         //assert(rowsize* colsize == vect_1d.size());
+        cout<<"Entered func"<<endl;
         vector<vector<sc_uint<16>>> vect_2d(rowsize, vector<sc_uint<16>>(colsize, 0));
+
+        cout<<"Before for loop"<<endl;
+        cout<<"vect1d size: "<< vect_1d.size()<<endl;
         for(int i = 0; i < vect_1d.size(); i++){
 
             int row = i / colsize;
@@ -87,7 +91,7 @@
     return image;
     }
 
-    void print_1d (vector<unsigned char> &vector_1d){
+    void print_1d_uc (vector<unsigned char> &vector_1d){
         
         cout<<"1d vector: "<<endl;
         for(int i = 0; i < vector_1d.size(); i++){
@@ -96,6 +100,32 @@
         cout<<endl;
     }
 
+    void print_1d_sc8(vector<sc_uint<8>> &vector_1d_sc){
+        
+        cout<<"1d vector: "<<endl;
+        for(int i = 0; i < vector_1d_sc.size(); i++){
+            cout<<vector_1d_sc[i]<<' ';
+        }
+        cout<<endl;
+    }
+
+    void print_1d_sh (vector<unsigned short> &vector_1d){
+        
+        cout<<"1d vector: "<<endl;
+        for(int i = 0; i < vector_1d.size(); i++){
+            cout<<int(vector_1d[i])<<' ';
+        }
+        cout<<endl;
+    }
+
+    void print_1d_sc16(vector<sc_uint<16>> &vector_1d_sc){
+        
+        cout<<"1d vector: "<<endl;
+        for(int i = 0; i < vector_1d_sc.size(); i++){
+            cout<<vector_1d_sc[i]<<' ';
+        }
+        cout<<endl;
+    }
     void print_2d(vector<vector<int>> &vector_2d){
 
         cout<<"2d vector: "<<endl;
@@ -106,3 +136,18 @@
         }
         cout<<endl;
     }
+
+
+unsigned short toShort(unsigned char *buf)
+{
+    unsigned short val = 0;
+    val += ((unsigned short)buf[0]) << 8;
+    val += ((unsigned short)buf[1]);
+    return val;
+}
+
+void toUchar(unsigned char *buf,unsigned short val)
+{
+    buf[0] = (unsigned char) (val >> 8);
+    buf[1] = (unsigned char) (val);
+}

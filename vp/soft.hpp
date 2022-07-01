@@ -25,9 +25,16 @@ class Soft : public sc_core::sc_module
         void b_transport(pl_t &p1, sc_core::sc_time &offset);
 
         vector<unsigned char> ddr8;
-        vector<short int> ddr16;
+        vector<unsigned short int> ddr16;
+
+        vector<sc_uint<16>> sc_ddr16;
+
+        int ite = 0;
+
+        unsigned short out;
         // **************************************
-        
+        int rowsize;
+        int colsize;
         void seam_carving();
         Mat createEnergyImage(Mat& image);
         vector<int> findOptimalSeam(Mat& cumulative_energy_map);

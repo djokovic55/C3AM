@@ -5,10 +5,13 @@
 #include <vector>
 
 using namespace sc_dt;
+using namespace std;
+using namespace sc_core;
 
 typedef struct
 {
 	sc_uint<8> byte;
+	sc_uint<16> two_bytes;
 	bool last;
 }Data;
 

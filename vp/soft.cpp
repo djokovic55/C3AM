@@ -57,15 +57,21 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
 	unsigned char *buf = p1.get_data_ptr();
 	unsigned int len   = p1.get_data_length();
 
-    
+    //  
     switch(cmd)
     {
 
         case TLM_WRITE_COMMAND:
-            for(int i = 0; i < len; i++)
-            {
-                ddr16[addr++] = buf[i];
-            }
+
+            out = toShort(buf);
+            ddr16.push_back(out);
+            // cout<< "Soft niz: "<< ddr16[ite++]<<endl;
+
+
+            // for(int i = 0; i < len; i++)
+            // {
+            //     ddr16[addr++] = buf[i];
+            // }
             p1.set_response_status(TLM_OK_RESPONSE);
             break;
         case TLM_READ_COMMAND:
@@ -83,12 +89,17 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
 
 void Soft::driver(Mat& image, int iterations) {
 
+   
     namedWindow("Original Image", WINDOW_AUTOSIZE); imshow("Original Image", image);
     // perform the specified number of reductions
     for (int i = 0; i < iterations; i++) {
+
+         cout<<"radi1 "<< "seam: "<<i+1 <<endl;
         //SOFT PART
-        int rowsize = row_num(image);
-        int colsize = col_num(image);
+        rowsize = row_num(image);
+        
+        colsize = col_num(image);
+        // cout<<endl<<"colsize: "<<colsize<<endl;
         //Energy image, type Mat
         Mat energy_image_mat = createEnergyImage(image);
         //Energy image, type 2d 8b vector
@@ -98,12 +109,32 @@ void Soft::driver(Mat& image, int iterations) {
 
         // SOFT TO DDR
     
+         cout<<"radi2 "<< "seam: "<<i+1 <<endl;
         ddr8.assign(energy_image_vect_1d.begin(), energy_image_vect_1d.end());
+        // print_1d_uc(ddr8);
 
-        // START SIGNAL TO HARD
+         cout<<"radi3 "<< "seam: "<<i+1 <<endl;
         
         pl_t p1;
+        // sending rowsize to hard
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(HARD_L + HARD_ROWSIZE);
+        p1.set_data_ptr((unsigned char*)&rowsize);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+        soft_intcon_socket->b_transport(p1, offset);
+
+        // sending colsize to hard
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(HARD_L + HARD_COLSIZE);
+        p1.set_data_ptr((unsigned char*)&colsize);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        // START SIGNAL TO HARD
         int hard_control = 1;
         p1.set_command(TLM_WRITE_COMMAND);
         p1.set_address(HARD_L + HARD_CONTROL);
@@ -164,31 +195,100 @@ void Soft::driver(Mat& image, int iterations) {
             p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
             soft_intcon_socket->b_transport(p1, offset);
-        }while(dma_control != 0);      
+        }while(dma_control != 0);    
 
+        do
+        {
+            
+            p1.set_command(TLM_READ_COMMAND);
+            p1.set_address(HARD_L + HARD_CONTROL);
+            p1.set_data_ptr((unsigned char*)&hard_control);
+            p1.set_data_length(1);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            soft_intcon_socket->b_transport(p1, offset);
+
+        }while(hard_control);
+
+        cout<<"radi4 "<< "seam: "<<i+1 <<endl;
         //HARD PART
         //CEM, type 1d vector
-        vector<sc_uint<16>> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
-
-
-
-
-
+        // vector<sc_uint<16>> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
+        //
         // READING FROM DMA
 
+ // ***************** AFTER HARD IS DONE *********************
+        //source addr
+        saddr = 0;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_SOURCE_ADD);
+        p1.set_data_ptr((unsigned char*)&saddr);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+    //destination addr
+        daddr = DDR_L;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_DEST_ADD);
+        p1.set_data_ptr((unsigned char*)&daddr);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        //cnt
+        cnt = rowsize * colsize;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_COUNT);
+        p1.set_data_ptr((unsigned char*)&cnt);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        // dma control, ide na kraj jer se ovde poziva dm()
+        dma_control = 1;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_CONTROL);
+        p1.set_data_ptr((unsigned char*)&dma_control);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset); 
+
+        do{
+            
+            p1.set_command(TLM_READ_COMMAND);
+            p1.set_address(DMA_L + DMA_CONTROL);
+            p1.set_data_ptr((unsigned char*)&dma_control);
+            p1.set_data_length(1);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            soft_intcon_socket->b_transport(p1, offset);
+        }while(dma_control != 0);       
+
+        // final data after transfer from dma
+        // ready to be used for the rest of the sort part
+
+        sc_ddr16.assign(ddr16.begin(), ddr16.end());
+        //  print_1d_sc16(sc_ddr16);
 
 
-
+        cout<<"radi5 "<< "seam: "<<i+1 <<endl;
+        cout<<"sc_ddr16 size: "<<sc_ddr16.size()<<endl;
 
         //SOFT PART 
         //CEM, type 2d vector
-        vector<vector<sc_uint<16>>> cumulative_energy_map_2d = convert_to_2d(cumulative_energy_map_16b, rowsize, colsize);
+        vector<vector<sc_uint<16>>> cumulative_energy_map_2d = convert_to_2d(sc_ddr16, rowsize, colsize);
+        cout<<"radi6 "<< "seam: "<<i+1 <<endl;
         //CEM, type Mat
         Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
         
         vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
         reduce(image, path);
-        cout<<"Seam "<<i+1<<" done."<<endl;
+       // cout<<"Seam "<<i+1<<" done."<<endl;
     
     }
     namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
