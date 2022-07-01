@@ -15,6 +15,7 @@ Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name
     soft_dma_socket.register_b_transport(this, &Soft::b_transport);
     input_num = argc;
     input_parameter = argv;
+
     
 }
 
@@ -65,6 +66,12 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
 
             out = toShort(buf);
             ddr16.push_back(out);
+            
+            if(ddr16.size() == len)
+            {
+                sc_ddr16.assign(ddr16.begin(), ddr16.end());
+                ddr16.clear();
+            }
             // cout<< "Soft niz: "<< ddr16[ite++]<<endl;
 
 
@@ -94,7 +101,7 @@ void Soft::driver(Mat& image, int iterations) {
     // perform the specified number of reductions
     for (int i = 0; i < iterations; i++) {
 
-         cout<<"radi1 "<< "seam: "<<i+1 <<endl;
+        
         //SOFT PART
         rowsize = row_num(image);
         
@@ -109,11 +116,9 @@ void Soft::driver(Mat& image, int iterations) {
 
         // SOFT TO DDR
     
-         cout<<"radi2 "<< "seam: "<<i+1 <<endl;
         ddr8.assign(energy_image_vect_1d.begin(), energy_image_vect_1d.end());
         // print_1d_uc(ddr8);
 
-         cout<<"radi3 "<< "seam: "<<i+1 <<endl;
         
         pl_t p1;
         // sending rowsize to hard
@@ -210,7 +215,6 @@ void Soft::driver(Mat& image, int iterations) {
 
         }while(hard_control);
 
-        cout<<"radi4 "<< "seam: "<<i+1 <<endl;
         //HARD PART
         //CEM, type 1d vector
         // vector<sc_uint<16>> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
@@ -272,23 +276,20 @@ void Soft::driver(Mat& image, int iterations) {
         // final data after transfer from dma
         // ready to be used for the rest of the sort part
 
-        sc_ddr16.assign(ddr16.begin(), ddr16.end());
+        
         //  print_1d_sc16(sc_ddr16);
 
 
-        cout<<"radi5 "<< "seam: "<<i+1 <<endl;
-        cout<<"sc_ddr16 size: "<<sc_ddr16.size()<<endl;
 
         //SOFT PART 
         //CEM, type 2d vector
         vector<vector<sc_uint<16>>> cumulative_energy_map_2d = convert_to_2d(sc_ddr16, rowsize, colsize);
-        cout<<"radi6 "<< "seam: "<<i+1 <<endl;
         //CEM, type Mat
         Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
         
         vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
         reduce(image, path);
-       // cout<<"Seam "<<i+1<<" done."<<endl;
+        cout<<"Seam "<<i+1<<" done."<<endl;
     
     }
     namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);

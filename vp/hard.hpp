@@ -29,12 +29,12 @@ class Hard :
         sc_core::sc_time offset;
         int control = 0;
         void b_transport(pl_t&, sc_core::sc_time&);
-
+        int rowsize;
+        int colsize;
         std::vector<sc_uint<8>> sc_buff8;
         std::vector<sc_uint<16>> sc_buff16;
 
-        int rowsize;
-        int colsize;
+       
 
         // void calculate();
 };

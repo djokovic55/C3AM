@@ -19,7 +19,6 @@ void Dma::dm()
 
     Data input;
     vector<unsigned char> buff8(cnt);
-    cout<<"row_col: "<< cnt<<endl;
     vector<unsigned short int> buff16(cnt);
 
     vector<sc_uint<8>> sc_buff8;
@@ -63,16 +62,17 @@ void Dma::dm()
             // }
 
             
-
+            cout<<"---------------------------> Number of pixels: "<<cnt<<endl;
             for(int i = 0; i < cnt; i++)
             {
                 input.last = false;
-                if(i == (sc_buff8.size() - 1))
+                if(i == (cnt - 1))
                 {
                     input.last = true;
                 }
                 input.byte = sc_buff8[i];
                 wr_port -> write(input);
+                input.last = false;
             }
 
             control = 0;
@@ -88,8 +88,7 @@ void Dma::dm()
             }
 
             buff16.assign(sc_buff16.begin(), sc_buff16.end());
-            cout<<"buff16 size: "<<cnt<<endl;
-            for(int i = 0; i < buff16.size(); i++)
+            for(int i = 0; i < cnt; i++)
             {
                 toUchar(buff, buff16[i]);
 
@@ -141,7 +140,6 @@ void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
 
                 case DMA_COUNT:
                     cnt = *((int*)data);
-                    cout<<"Cnt number: "<< cnt<<endl<<endl;
                     p1.set_response_status(TLM_OK_RESPONSE);
                 break;
 

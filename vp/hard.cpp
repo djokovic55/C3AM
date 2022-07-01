@@ -69,12 +69,13 @@ void Hard::write(const Data& data)
     if(control)
     {
         sc_buff8.push_back(data.byte);
+        
         if(data.last)
         {
             //cout<<"ddr in hard: "<< sc_buff8[5]<<endl;
             //print_1d_sc8(sc_buff8);
-
             sc_buff16 = hard_cem(sc_buff8, rowsize, colsize);
+            sc_buff8.clear();
             // print_1d_sc16(sc_buff16);
             control = 0;
         }
