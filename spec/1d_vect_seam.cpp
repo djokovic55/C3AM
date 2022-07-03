@@ -343,27 +343,36 @@
             return 0;
         }
 
-        driver(image, iterations);
+        // driver(image, iterations);
 
-/*       
+       
+// Dynamic bit analysis
 
         Mat energy_image = createEnergyImage(image);
         //cout<<image;
-        vector<vector<int>> energy_image_2d = convert_to_vect(energy_image);
-        print_2d(energy_image_2d);
-        vector<int> energy_image_1d = convert_to_1d(energy_image_2d, rowsize, colsize);
+        vector<vector<sc_uint<8>>> energy_image_2d = convert_to_vect(energy_image);
+        //print_2d(energy_image_2d);
+        vector<sc_uint<8>> energy_image_1d = convert_to_1d(energy_image_2d, rowsize, colsize);
 
-        vector<int> cem_1d = createCumulativeEnergyMap(energy_image_1d, rowsize, colsize);
+        vector<sc_uint<16>> cem_1d = createCumulativeEnergyMap(energy_image_1d, rowsize, colsize);
         //print_1d(cem_1d);
-         cout << "\nMax Element = "<< *max_element(cem_1d.begin(), cem_1d.end());
-         cout<<endl;
-        vector<vector<int>> cem_2d = convert_to_2d(cem_1d, rowsize, colsize);
+        sc_uint<16> max = *(max_element(cem_1d.begin(), cem_1d.end()));
+        int bit_num = log2(int(max)) + 1;
+
+
+
+        cout<<endl<<"Image: "<< argv[1]<<endl;
+        cout<<"Rowsize: "<< rowsize<<endl;
+        cout << "Max Element = "<< max<<endl;
+        cout << "Bits required: "<< bit_num<<endl;
+
+        vector<vector<sc_uint<16>>> cem_2d = convert_to_2d(cem_1d, rowsize, colsize);
         //print_2d(cem_2d);
 
         Mat cem_mat = convert_to_mat(cem_2d);
         //cout<<"1d version"<<cem_mat<<endl;
 
-*/
+
 
         
 

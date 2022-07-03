@@ -1,0 +1,41 @@
+Dynamic bit analysis.
+
+Image: ../data/forest.jpg
+Rowsize: 988
+Max Element = 23814
+Bits required: 15
+
+Image: ../data/light.jpeg
+Rowsize: 175
+Max Element = 1635
+Bits required: 11
+
+Image: ../data/sea.jpg
+Rowsize: 500
+Max Element = 24224
+Bits required: 15
+
+Image: ../data/starry_image.jpg
+Rowsize: 811
+Max Element = 55693
+Bits required: 16
+
+Image: ../data/castle.jpg
+Rowsize: 968
+Max Element = 28423
+Bits required: 15
+
+Image: ../data/persistence_of_memory.jpg
+Rowsize: 500
+Max Element = 19240
+Bits required: 15
+
+Image: ../data/night.jpg
+Rowsize: 1482
+Max Element = 51174
+Bits required: 16
+
+Image: ../data/edgy.jpg
+Rowsize: 1000
+Max Element = 64727
+Bits required: 16

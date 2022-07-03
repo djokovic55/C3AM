@@ -7,9 +7,14 @@
     #include <algorithm>
     #include <vector>
     #include <time.h>
+    #include <systemc>
+    #include <fstream>
+    #include <math.h>
+
 
     using namespace cv;
     using namespace std;
+    using namespace sc_dt;
 
     Mat createEnergyImage(Mat& image) {
     
@@ -178,21 +183,21 @@
         
     }
 
-    int main() {
+ int sc_main(int argc, char* argv[]) {
 
-        string filename, width_height, s_iterations;
+        string filename = argv[1], s_iterations = argv[2];
         int iterations;
 
-        cout << "Please enter a filename: ";
-        cin >> filename;
+        //cout << "Please enter a filename: ";
+        //cin >> filename;
 
         Mat image = imread(filename);
         if (image.empty()) {
             cout << "Unable to load image, please try again." << endl;
             exit(EXIT_FAILURE);
         }
-        cout << "Reduce width how many times? ";
-        cin >> s_iterations;
+        //cout << "Reduce width how many times? ";
+        //cin >> s_iterations;
 
         iterations = stoi(s_iterations);
         int rowsize = image.rows;
@@ -206,14 +211,6 @@
         }
 
         driver(image, iterations);
-        
-        //int test[colsize] = image.row(0);
-
-        cout<< image.row(0) << "Row_number:"<< colsize;
-        
-        Mat energy_image1 = createEnergyImage(image);
-        //cout<< energy_image1;
-    // cout << image;
 
         return 0;
     }
