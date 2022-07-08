@@ -1,13 +1,13 @@
 #include "utils.hpp"
 
 
-    vector<vector<sc_uint<8>>> convert_to_vect(Mat& mat_image){
+    vector<vector<unsigned char>> convert_to_vect(Mat& mat_image){
 
 
         int rowsize = mat_image.rows;
         int colsize = mat_image.cols;
 
-        vector<vector<sc_uint<8>>> vec_image(rowsize, vector<sc_uint<8>> (colsize, 0));
+        vector<vector<unsigned char>> vec_image(rowsize, vector<unsigned char> (colsize, 0));
 
         for (int i = 0; i < rowsize; i++)
         {
@@ -20,7 +20,7 @@
         return vec_image;
     }
 
-    Mat convert_to_mat(vector<vector<sc_uint<16>>> &vec_image){
+    Mat convert_to_mat(vector<vector<unsigned short>> &vec_image){
 
         int rowsize = vec_image.size();
         int colsize = vec_image[0].size();
@@ -38,10 +38,10 @@
 
     }
 
-    vector<sc_uint<8>> convert_to_1d(vector<vector<sc_uint<8>>> &vect_2d, int &rowsize, int &colsize){
+    vector<unsigned char> convert_to_1d(vector<vector<unsigned char>> &vect_2d, int &rowsize, int &colsize){
 
         int i, j, k;
-        vector<sc_uint<8>> vect_1d(rowsize*colsize, 0);
+        vector<unsigned char> vect_1d(rowsize*colsize, 0);
             for(i = 0; i < rowsize; i++){ 
                 for(j = 0; j < colsize; j++){
 
@@ -53,9 +53,9 @@
         return vect_1d;
     }
 
-    vector<vector<sc_uint<16>>> convert_to_2d(vector<sc_uint<16>> &vect_1d, int &rowsize, int &colsize){
+    vector<vector<unsigned short>> convert_to_2d(vector<unsigned short> &vect_1d, int &rowsize, int &colsize){
 
-        vector<vector<sc_uint<16>>> vect_2d(rowsize, vector<sc_uint<16>>(colsize, 0));
+        vector<vector<unsigned short>> vect_2d(rowsize, vector<unsigned short>(colsize, 0));
 
         for(int i = 0; i < vect_1d.size(); i++){
 
@@ -70,12 +70,12 @@
     int row_num(Mat &image) {int rowsize = image.rows; return rowsize;}
     int col_num(Mat &image) {int colsize = image.cols; return colsize;}
 
-    vector<sc_uint<16>> convert_from_8b_to_16b(vector<sc_uint<8>> &sc_image){
+    vector<unsigned short> convert_from_8b_to_16b(vector<unsigned char> &sc_image){
 
         int length = sc_image.size();
           
 
-        vector<sc_uint<16>> image(length, 0);
+        vector<unsigned short> image(length, 0);
 
         for (int i = 0; i < length; i++)
         {
@@ -96,14 +96,6 @@
         cout<<endl;
     }
 
-    void print_1d_sc8(vector<sc_uint<8>> &vector_1d_sc){
-        
-        cout<<"1d vector: "<<endl;
-        for(int i = 0; i < vector_1d_sc.size(); i++){
-            cout<<vector_1d_sc[i]<<' ';
-        }
-        cout<<endl;
-    }
 
     void print_1d_sh (vector<unsigned short> &vector_1d){
         
@@ -114,14 +106,6 @@
         cout<<endl;
     }
 
-    void print_1d_sc16(vector<sc_uint<16>> &vector_1d_sc){
-        
-        cout<<"1d vector: "<<endl;
-        for(int i = 0; i < vector_1d_sc.size(); i++){
-            cout<<vector_1d_sc[i]<<' ';
-        }
-        cout<<endl;
-    }
     void print_2d(vector<vector<int>> &vector_2d){
 
         cout<<"2d vector: "<<endl;

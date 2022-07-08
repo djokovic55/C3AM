@@ -68,14 +68,15 @@ void Hard::write(const Data& data)
 {
     if(control)
     {
-        sc_buff8.push_back(data.byte);
+        buff8.push_back(data.byte);
         
         if(data.last)
         {
             //cout<<"ddr in hard: "<< sc_buff8[5]<<endl;
-            //print_1d_sc8(sc_buff8);
-            sc_buff16 = hard_cem(sc_buff8, rowsize, colsize);
-            sc_buff8.clear();
+            // print_1d_uc(buff8);
+            buff16 = hard_cem(buff8, rowsize, colsize);
+            // print_1d_sh(buff16);
+            buff8.clear();
             // print_1d_sc16(sc_buff16);
             control = 0;
         }
@@ -85,7 +86,7 @@ void Hard::write(const Data& data)
 
 void Hard::read(Data& data, int i)
 {
-    data.two_bytes = sc_buff16[i];
+    data.two_bytes = buff16[i];
 
 }
 
@@ -99,13 +100,13 @@ void Hard::read(Data& data, int i)
 // }
 
 
-vector<sc_uint<16>> Hard::hard_cem(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize) {
+vector<unsigned short> Hard::hard_cem(vector<unsigned char> &energy_image, int &rowsize, int &colsize) {
 
-    sc_uint<16> a, b, c;
+    unsigned short a, b, c;
     int index_1d;
     // take the minimum of the three neighbors and add to total, this creates a running sum which is used to determine the lowest energy path
     
-    vector<sc_uint<16>> energy_image_16b (energy_image.begin(), energy_image.end());
+    vector<unsigned short> energy_image_16b (energy_image.begin(), energy_image.end());
 
         for (int row = 1; row < rowsize; row++) {
             for (int col = 0; col < colsize; col++) {

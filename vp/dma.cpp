@@ -19,10 +19,8 @@ void Dma::dm()
 
     Data input;
     vector<unsigned char> buff8(cnt);
-    vector<unsigned short int> buff16(cnt);
+    vector<unsigned short int> buff16;
 
-    vector<sc_uint<8>> sc_buff8;
-    vector<sc_uint<16>> sc_buff16;
     // vector<sc_uint<8>> v {7, 5, 1, 3, 8};
     // vector<sc_uint<16>> n;
 
@@ -42,26 +40,7 @@ void Dma::dm()
             p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
             dma_soft_socket->b_transport(p1, offset);
-
-            sc_buff8.assign(buff8.begin(), buff8.end());
-
-            // print_1d_sc8(sc_buff8);
-            //cout<<"ddr in dma: "<< sc_buff8[50]<<endl;
-
-            // posalji buff8 preko kanala i postavi control na 0
-
-            // for(int i = 0; i < sc_buff8.size(); i++)
-            // {
-            //     input.last = false;
-            //     if(i == (sc_buff8.size() - 1))
-            //     {
-            //         input.last = true;
-            //     }
-            //     input.byte = sc_buff8[i];
-            //     wr_port -> write(input);
-            // }
-
-            
+            // print_1d_uc(buff8);
             cout<<"---------------------------> Number of pixels: "<<cnt<<endl;
             for(int i = 0; i < cnt; i++)
             {
@@ -70,7 +49,7 @@ void Dma::dm()
                 {
                     input.last = true;
                 }
-                input.byte = sc_buff8[i];
+                input.byte = buff8[i];
                 wr_port -> write(input);
                 input.last = false;
             }
@@ -83,11 +62,12 @@ void Dma::dm()
             for(int i = 0; i < cnt; i++)
             {
                 rd_port -> read(input, i);
-                sc_buff16.push_back(input.two_bytes);
-                //cout <<"Niz nakon citanja: "<<sc_buff16[i] << endl;
+                // cout<< "input.two_bytes: "<< input.two_bytes<<endl;
+                buff16.push_back(input.two_bytes);
+                // cout <<endl<<"Niz nakon citanja: "<< i <<" "<<buff16[i] << endl;
             }
-
-            buff16.assign(sc_buff16.begin(), sc_buff16.end());
+            // cout<<"dma: pre slanja podataka u memoriju"<<endl;
+            // print_1d_sh(buff16);
             for(int i = 0; i < cnt; i++)
             {
                 toUchar(buff, buff16[i]);

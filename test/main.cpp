@@ -33,15 +33,20 @@ int sc_main(int argc, char** argv) {
 
     cout<<"Hello world"<<endl;
 
-    // for(int i = 0; i < 5; i++){
+    vector<unsigned char> vect1;
+    vect1.reserve(10);
+    cout<<"vec size = "<<vect1.size()<<endl;
+    for(int i = 0; i < 10; i++){
+        cout<< "usao u petlju"<< endl;
+    vect1[i] = 2;
+    cout<<"vect1: " << int(vect1[i])<<endl;
+    }
+    // vect1[0] = 5;
+    // cout<< "size "<< vect1.size()<<endl;
 
-    vector<sc_uint<8>> vect1(10);
-    vect1[0] = 5;
-    cout<< "size "<< vect1.size()<<endl;
-
-    vect1.clear();
+    // vect1.clear();
     
-    cout<< "size after clear"<< vect1.size()<<endl;
+    // cout<< "size after clear"<< vect1.size()<<endl;
     
     //     cout<<"vect before"<<vect1[0]<<endl;
     //     vect1[0] = 1;

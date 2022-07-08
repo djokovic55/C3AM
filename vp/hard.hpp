@@ -23,7 +23,7 @@ class Hard :
         void read(Data& data, int i);
         //implementation of hierarchical channel 0%
         
-        vector<sc_uint<16>> hard_cem(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize);
+        vector<unsigned short> hard_cem(vector<unsigned char> &energy_image, int &rowsize, int &colsize);
     protected:
         pl_t p1;
         sc_core::sc_time offset;
@@ -31,8 +31,8 @@ class Hard :
         void b_transport(pl_t&, sc_core::sc_time&);
         int rowsize;
         int colsize;
-        std::vector<sc_uint<8>> sc_buff8;
-        std::vector<sc_uint<16>> sc_buff16;
+        std::vector<unsigned char> buff8;
+        std::vector<unsigned short> buff16;
 
        
 

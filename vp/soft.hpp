@@ -25,10 +25,9 @@ class Soft : public sc_core::sc_module
         void b_transport(pl_t &p1, sc_core::sc_time &offset);
 
         vector<unsigned char> ddr8;
-        vector<unsigned short int> ddr16;
+        vector<unsigned short> ddr16;
 
-        vector<sc_uint<16>> sc_ddr16;
-
+        vector<unsigned short> ddr16_copy;
         int ite = 0;
 
         unsigned short out;
@@ -41,8 +40,6 @@ class Soft : public sc_core::sc_module
         void reduce(Mat& image, vector<int> path);
         void driver(Mat& image, int iterations);
 
-        //hard part, will be here until the whole structure of vp is constructed
-        vector<sc_uint<16>> createCumulativeEnergyMap(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize);
 
 };
 

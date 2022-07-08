@@ -66,18 +66,15 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
 
             out = toShort(buf);
             ddr16.push_back(out);
-            
             if(ddr16.size() == len)
             {
-                sc_ddr16.assign(ddr16.begin(), ddr16.end());
+                ddr16_copy.assign(ddr16.begin(), ddr16.end());
+                // print_1d_sh(ddr16);
                 ddr16.clear();
             }
-            // cout<< "Soft niz: "<< ddr16[ite++]<<endl;
-
-
             // for(int i = 0; i < len; i++)
             // {
-            //     ddr16[addr++] = buf[i];
+            //     ddr16[addr++] = out;
             // }
             p1.set_response_status(TLM_OK_RESPONSE);
             break;
@@ -110,9 +107,9 @@ void Soft::driver(Mat& image, int iterations) {
         //Energy image, type Mat
         Mat energy_image_mat = createEnergyImage(image);
         //Energy image, type 2d 8b vector
-        vector<vector<sc_uint<8>>> energy_image_vect_2d = convert_to_vect(energy_image_mat);
+        vector<vector<unsigned char>> energy_image_vect_2d = convert_to_vect(energy_image_mat);
         //Energy image, type 1d 8b vector
-        vector<sc_uint<8>> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
+        vector<unsigned char> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
 
         // SOFT TO DDR
     
@@ -217,7 +214,7 @@ void Soft::driver(Mat& image, int iterations) {
 
         //HARD PART
         //CEM, type 1d vector
-        // vector<sc_uint<16>> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
+        // vector<unsigned short> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
         //
         // READING FROM DMA
 
@@ -283,7 +280,9 @@ void Soft::driver(Mat& image, int iterations) {
 
         //SOFT PART 
         //CEM, type 2d vector
-        vector<vector<sc_uint<16>>> cumulative_energy_map_2d = convert_to_2d(sc_ddr16, rowsize, colsize);
+        vector<vector<unsigned short>> cumulative_energy_map_2d = convert_to_2d(ddr16_copy, rowsize, colsize);
+        //brisemo sadrzaj memorije jer funcionise na push_back, pa je potrebno da je resetujemo kako se njen sadrzaj ne bi beskonacno uvecavao
+        // ddr16.clear();
         //CEM, type Mat
         Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
         
@@ -412,36 +411,3 @@ void Soft::reduce(Mat& image, vector<int> path) {
         image = image.colRange(0, colsize - 1);
 }
 
-vector<sc_uint<16>> Soft::createCumulativeEnergyMap(vector<sc_uint<8>> &energy_image, int &rowsize, int &colsize) {
-
-    sc_uint<16> a, b, c;
-    int index_1d;
-    // take the minimum of the three neighbors and add to total, this creates a running sum which is used to determine the lowest energy path
-
-    // vector<sc_uint<16>> energy_image_16b = convert_from_8b_to_16b(energy_image);
-
-    vector<sc_uint<16>> energy_image_16b (energy_image.begin(), energy_image.end());
-
-    for (int row = 1; row < rowsize; row++) {
-        for (int col = 0; col < colsize; col++) {
-            index_1d = (row * colsize) + col;
-
-            b = energy_image_16b.at(index_1d - colsize);
-
-            if(col == 0){
-                a = b;
-                
-            }else{
-                a = energy_image_16b.at(index_1d - (colsize + 1));
-
-            }
-            if(col == (colsize - 1)){
-                c=b;
-            }else {
-                c = energy_image_16b.at(index_1d - (colsize - 1));
-            }
-            energy_image_16b.at(index_1d) = energy_image_16b.at(index_1d) + std::min(a, min(b, c));
-        }
-    }
-    return energy_image_16b;
-}

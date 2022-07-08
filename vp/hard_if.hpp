@@ -10,8 +10,8 @@ using namespace sc_core;
 
 typedef struct
 {
-	sc_uint<8> byte;
-	sc_uint<16> two_bytes;
+	unsigned char byte;
+	unsigned short two_bytes;
 	bool last;
 }Data;
 

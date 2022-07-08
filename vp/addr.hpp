@@ -11,6 +11,9 @@
 //ddr in soft
 #define DDR_L 0x40000000
 #define DDR_H 0x400000FF
+#define MAX_ROW 2048
+#define MAX_COL 2048
+#define MAX_CAP MAX_ROW * MAX_COL
 
 //hard
 #define HARD_L 0x41000000
