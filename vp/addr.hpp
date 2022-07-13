@@ -26,12 +26,16 @@
 
 // dma
 #define DMA_L 0x42000000
+
 #define DMA_H 0x420000FF
 
 // registers in dma
+
 #define DMA_CONTROL 0x00
 #define DMA_SOURCE_ADD 0x01
 #define DMA_DEST_ADD 0x02
 #define DMA_COUNT 0x03
+#define DMA_ROWSIZE 0x04
+#define DMA_COLSIZE 0x05
 
 #endif

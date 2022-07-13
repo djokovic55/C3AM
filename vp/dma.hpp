@@ -30,6 +30,8 @@ class Dma: public sc_core::sc_module
         int saddr;
         int cnt;
         int daddr;
+        int rowsize;
+        int colsize;
 
 
 

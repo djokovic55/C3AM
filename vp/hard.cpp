@@ -90,14 +90,6 @@ void Hard::read(Data& data, int i)
 
 }
 
-// void Hard::calculate()
-// {
-//     for(int i = 0; i < sc_buff8.size(); i++)
-//     {
-//        sc_buff16.push_back(sc_buff8[i] + 255);
-//        cout<<"after calculate: "<< sc_buff16[i]<<endl;
-//     }
-// }
 
 
 vector<unsigned short> Hard::hard_cem(vector<unsigned char> &energy_image, int &rowsize, int &colsize) {
@@ -108,7 +100,7 @@ vector<unsigned short> Hard::hard_cem(vector<unsigned char> &energy_image, int &
     
     vector<unsigned short> energy_image_16b (energy_image.begin(), energy_image.end());
 
-        for (int row = 1; row < rowsize; row++) {
+        for (int row = 1; row < 2; row++) {
             for (int col = 0; col < colsize; col++) {
                 index_1d = (row * colsize) + col;
 
