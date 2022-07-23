@@ -70,52 +70,51 @@
     int row_num(Mat &image) {int rowsize = image.rows; return rowsize;}
     int col_num(Mat &image) {int colsize = image.cols; return colsize;}
 
-    vector<unsigned short> convert_from_8b_to_16b(vector<unsigned char> &sc_image){
+    vector<unsigned short> convert_from_8b_to_16b(vector<unsigned char> &image_8b){
 
-        int length = sc_image.size();
-          
-
-        vector<unsigned short> image(length, 0);
+        int length = image_8b.size();
+        vector<unsigned short> image_16b(length, 0);
 
         for (int i = 0; i < length; i++)
         {
 
-                image[i] = sc_image[i];
+                image_16b[i] = image_8b[i];
                
         }
-
-    return image;
+    return image_16b;
     }
 
-    void print_1d_uc (vector<unsigned char> &vector_1d){
+    // void print_1d_uc (vector<unsigned char> &vector_1d){
         
-        cout<<"1d vector: "<<endl;
-        for(int i = 0; i < vector_1d.size(); i++){
-            cout<<int(vector_1d[i])<<' ';
-        }
-        cout<<endl;
-    }
+    //     cout<<"1d vector: "<<endl;
+    //     for(int i = 0; i < vector_1d.size(); i++){
+    //         cout<<int(vector_1d[i])<<' ';
+    //     }
+    //     cout<<endl;
+    // }
 
 
-    void print_1d_sh (vector<unsigned short> &vector_1d){
+    void print_1d_sh(vector<unsigned short> &vector_1d){
         
-        cout<<"1d vector: "<<endl;
-        for(int i = 0; i < vector_1d.size(); i++){
-            cout<<int(vector_1d[i])<<' ';
+        for(int i = 0; i < vector_1d.size(); i++)
+        {
+            cout<<vector_1d[i]<<' ';
+    
         }
+        cout<<endl;
         cout<<endl;
     }
 
-    void print_2d(vector<vector<int>> &vector_2d){
+    // void print_2d(vector<vector<int>> &vector_2d){
 
-        cout<<"2d vector: "<<endl;
-        for (int i = 0; i < vector_2d.size(); i++) {
-            for (int j = 0; j < vector_2d[i].size(); j++) {
-                cout<<vector_2d[i][j]<<' ';
-            }
-        }
-        cout<<endl;
-    }
+    //     cout<<"2d vector: "<<endl;
+    //     for (int i = 0; i < vector_2d.size(); i++) {
+    //         for (int j = 0; j < vector_2d[i].size(); j++) {
+    //             cout<<vector_2d[i][j]<<' ';
+    //         }
+    //     }
+    //     cout<<endl;
+    // }
 
 
 unsigned short toShort(unsigned char *buf)
@@ -130,4 +129,9 @@ void toUchar(unsigned char *buf,unsigned short val)
 {
     buf[0] = (unsigned char) (val >> 8);
     buf[1] = (unsigned char) (val);
+}
+
+void mess(const char* part, const char* message)
+{
+    cout<<"Module: "<<part<<", "<<message<<endl;
 }

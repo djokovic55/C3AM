@@ -10,7 +10,7 @@ Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name
 
 
     SC_THREAD(seam_carving);
-    SC_REPORT_INFO("Soft", "Constructed.");
+    // SC_REPORT_INFO("Soft", "Constructed.");
 
     soft_dma_socket.register_b_transport(this, &Soft::b_transport);
     input_num = argc;
@@ -63,15 +63,20 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
     {
 
         case TLM_WRITE_COMMAND:
-
+            
+            // cout<<"buff za upis, ddr "<<endl<<"bajt 1: "<<int(buf[0])<<endl<<"bajt 2: "<<int(buf[1])<<endl;
             out = toShort(buf);
-            ddr16.push_back(out);
-            if(ddr16.size() == len)
-            {
-                ddr16_copy.assign(ddr16.begin(), ddr16.end());
-                // print_1d_sh(ddr16);
-                ddr16.clear();
-            }
+            // cout<<"-----------------vrednost za upis, ddr"<<int(out)<<endl;
+            ddr16[addr] = out;
+            
+            // cout<<"-----------------vrednost za upis, ddr"<<ddr16[addr]<<endl;
+            // cout<<"write address: "<<addr<<endl;
+            // if(ddr16.size() == len)
+            // {
+            //     ddr16_copy.assign(ddr16.begin(), ddr16.end());
+            //     // print_1d_sh(ddr16);
+            //     // ddr16.clear();
+            // }
             // for(int i = 0; i < len; i++)
             // {
             //     ddr16[addr++] = out;
@@ -79,10 +84,20 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
             p1.set_response_status(TLM_OK_RESPONSE);
             break;
         case TLM_READ_COMMAND:
+            // cout<<"ddr, soft:  "<<ddr16[addr]<<endl;
+            
+            toUchar(in, ddr16[addr]);
             for(int i = 0; i < len; i++)
             {
-                buf[i] = ddr8[addr++];
+                buf[i] = in[i];
             }
+            // cout<<"first byte: "<<int(buf[0])<<endl;
+
+            // cout<<"second byte: "<<int(buf[1])<<endl;
+            // unsigned short temp;
+            // temp = toShort(buf);
+
+            // cout<<"Collected element: "<<temp<<"  "<< "address: "<<addr<<endl;
             p1.set_response_status(TLM_OK_RESPONSE);
             break;
         default:
@@ -93,7 +108,9 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
 
 void Soft::driver(Mat& image, int iterations) {
 
-   
+    int array[] = {3, 2, 10, 8, 1, 0, 4, 12, 13, 0, 6, 3, 1, 2, 8, 7, 3, 9, 14, 12, 18, 3, 0, 2, 6};
+    Mat small_energy_image = Mat(5, 5, CV_32S, array);
+
     namedWindow("Original Image", WINDOW_AUTOSIZE); imshow("Original Image", image);
     // perform the specified number of reductions
     for (int i = 0; i < iterations; i++) {
@@ -106,17 +123,23 @@ void Soft::driver(Mat& image, int iterations) {
         // cout<<endl<<"colsize: "<<colsize<<endl;
         //Energy image, type Mat
         Mat energy_image_mat = createEnergyImage(image);
+        // cout<<energy_image_mat<<endl<<endl;
         //Energy image, type 2d 8b vector
+
+        //PREVEZANO
+
         vector<vector<unsigned char>> energy_image_vect_2d = convert_to_vect(energy_image_mat);
         //Energy image, type 1d 8b vector
         vector<unsigned char> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
 
         // SOFT TO DDR
     
-        ddr8.assign(energy_image_vect_1d.begin(), energy_image_vect_1d.end());
-        // print_1d_uc(ddr8);
+        ddr16.assign(energy_image_vect_1d.begin(), energy_image_vect_1d.end());
+        // mess("Soft", "starting values");
+        // print_1d_sh(ddr16);
 
-        
+        // HARD CONFIG
+
         pl_t p1;
         //sending rowsize to hard 
         p1.set_command(TLM_WRITE_COMMAND);
@@ -136,7 +159,7 @@ void Soft::driver(Mat& image, int iterations) {
 
         soft_intcon_socket->b_transport(p1, offset);
 
-        // START SIGNAL TO HARD
+        // sending start to hard
         int hard_control = 1;
         p1.set_command(TLM_WRITE_COMMAND);
         p1.set_address(HARD_L + HARD_CONTROL);
@@ -146,38 +169,8 @@ void Soft::driver(Mat& image, int iterations) {
 
         soft_intcon_socket->b_transport(p1, offset);
 
-        // WRITING TO DMA
+        // DMA CONFIG
         
-        // //source addr
-        // int saddr = 0;
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(DMA_L + DMA_SOURCE_ADD);
-        // p1.set_data_ptr((unsigned char*)&saddr);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        // soft_intcon_socket->b_transport(p1, offset);
-
-        // //destination addr
-        // int daddr = HARD_L;
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(DMA_L + DMA_DEST_ADD);
-        // p1.set_data_ptr((unsigned char*)&daddr);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        // soft_intcon_socket->b_transport(p1, offset);
-
-        // //cnt
-        // int cnt = rowsize * colsize;
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(DMA_L + DMA_COUNT);
-        // p1.set_data_ptr((unsigned char*)&cnt);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        // soft_intcon_socket->b_transport(p1, offset);
-
         //sending rowsize to dma 
         p1.set_command(TLM_WRITE_COMMAND);
         p1.set_address(DMA_L + DMA_ROWSIZE);
@@ -215,73 +208,22 @@ void Soft::driver(Mat& image, int iterations) {
             soft_intcon_socket->b_transport(p1, offset);
         }while(dma_control != 0);    
 
-        do
-        {
-            
-            p1.set_command(TLM_READ_COMMAND);
-            p1.set_address(HARD_L + HARD_CONTROL);
-            p1.set_data_ptr((unsigned char*)&hard_control);
-            p1.set_data_length(1);
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+        // mess("Soft", "Cumulative energy map");
+        // print_1d_sh(ddr16);
 
-            soft_intcon_socket->b_transport(p1, offset);
-
-        }while(hard_control);
-
-        // READING FROM DMA
-
- // ***************** AFTER HARD IS DONE *********************
-        // //source addr
-        // saddr = 0;
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(DMA_L + DMA_SOURCE_ADD);
-        // p1.set_data_ptr((unsigned char*)&saddr);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        // soft_intcon_socket->b_transport(p1, offset);
-
-    //destination addr
-        // daddr = DDR_L;
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(DMA_L + DMA_DEST_ADD);
-        // p1.set_data_ptr((unsigned char*)&daddr);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        // soft_intcon_socket->b_transport(p1, offset);
-
-        // //cnt
-        // cnt = rowsize * colsize;
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(DMA_L + DMA_COUNT);
-        // p1.set_data_ptr((unsigned char*)&cnt);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        // soft_intcon_socket->b_transport(p1, offset);
-
-        // // dma control, ide na kraj jer se ovde poziva dm()
-        // dma_control = 1;
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(DMA_L + DMA_CONTROL);
-        // p1.set_data_ptr((unsigned char*)&dma_control);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        // soft_intcon_socket->b_transport(p1, offset); 
-
-        // do{
+        // exit(1);
+        // do
+        // {
             
         //     p1.set_command(TLM_READ_COMMAND);
-        //     p1.set_address(DMA_L + DMA_CONTROL);
-        //     p1.set_data_ptr((unsigned char*)&dma_control);
+        //     p1.set_address(HARD_L + HARD_CONTROL);
+        //     p1.set_data_ptr((unsigned char*)&hard_control);
         //     p1.set_data_length(1);
         //     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
         //     soft_intcon_socket->b_transport(p1, offset);
-        // }while(dma_control != 0);       
 
+        // }while(hard_control);
         // final data after transfer from dma
         // ready to be used for the rest of the sort part
 
@@ -292,13 +234,21 @@ void Soft::driver(Mat& image, int iterations) {
 
         //SOFT PART 
         //CEM, type 2d vector
-        vector<vector<unsigned short>> cumulative_energy_map_2d = convert_to_2d(ddr16_copy, rowsize, colsize);
+        vector<vector<unsigned short>> cumulative_energy_map_2d = convert_to_2d(ddr16, rowsize, colsize);
         //brisemo sadrzaj memorije jer funcionise na push_back, pa je potrebno da je resetujemo kako se njen sadrzaj ne bi beskonacno uvecavao
         // ddr16.clear();
         //CEM, type Mat
         Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
         
         vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
+        // cout<<"SEAM*************************"<<endl;
+        // for(int i = 0; i < path.size(); i++)
+        // {
+        //     cout<<path[i]<<' ';
+    
+        // }
+        // cout<<endl;
+        // cout<<endl;
         reduce(image, path);
         cout<<"Seam "<<i+1<<" done."<<endl;
     

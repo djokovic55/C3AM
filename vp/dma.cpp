@@ -4,7 +4,7 @@ Dma::Dma(sc_core::sc_module_name name) : sc_module(name){
 
     dma_intcon_socket.register_b_transport(this, &Dma::b_transport);
 
-    SC_REPORT_INFO("DMA", "Constructed.");
+    // SC_REPORT_INFO("DMA", "Constructed.");
 
 }
 
@@ -18,28 +18,55 @@ void Dma::dm()
 {
 
     Data input;
-    vector<unsigned char> buff8(2*colsize);
-    vector<unsigned short int> buff16;
+    vector<unsigned short> buff16(2*colsize);
 
-    // vector<sc_uint<8>> v {7, 5, 1, 3, 8};
-    // vector<sc_uint<16>> n;
-
-    // vector<unsigned short> n_sh;
     int saddr = 0; 
-    unsigned char buff[2];
+    unsigned char buff_write[2];
+    unsigned char buff_read[2];
+
+    unsigned short out_dma;
 
     pl_t p1;
     cout<<"---------------------------> Number of pixels: "<<rowsize*colsize<<endl;
     for(int j = 0; j < rowsize - 1; j++)
     {
-        p1.set_address(saddr);
-        p1.set_command(TLM_READ_COMMAND);
-        p1.set_data_length(2*colsize);
-        p1.set_data_ptr((unsigned char*)buff8.data());
-        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+        for(int i = 0; i < 2*colsize; i++){
 
-        dma_soft_socket->b_transport(p1, offset);
-        // print_1d_uc(buff8);
+            p1.set_address(saddr + i);
+            p1.set_command(TLM_READ_COMMAND);
+            p1.set_data_length(2);
+            p1.set_data_ptr((unsigned char*)buff_read);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            dma_soft_socket->b_transport(p1, offset);
+            
+            // cout<<"prosao b_transport"<<endl;
+            // cout<<"first byte: "<<int(buff_read[0])<<endl;
+
+            // cout<<"second byte: "<<int(buff_read[1])<<endl;
+
+            out_dma = toShort(buff_read);
+            
+            // cout<<"Collected element: "<<out_dma<<"  "<< "address: "<<i<<endl;
+            
+            buff16[i] = out_dma;
+            // cout<<"buff16 "<<buff16[i]<<endl;
+        }
+        // cout<<"prosao drugi for"<<endl;
+        
+        // mess("Dma", "before sending to hard");
+        // cout<<buff16.size()<<endl;
+        // print_1d_sh(buff16);
+
+
+
+        // exit(0);
+        // if(j == 0)
+        // {
+        //     cout<<"dma: "<<endl;
+        //     print_1d_sh(buff16);
+        // }
+        // exit(0);
         for(int i = 0; i < 2*colsize; i++)
         {
             input.last = false;
@@ -47,7 +74,7 @@ void Dma::dm()
             {
                 input.last = true;
             }
-            input.byte = buff8[i];
+            input.two_bytes = buff16[i];
             wr_port -> write(input);
             input.last = false;
         }
@@ -57,29 +84,40 @@ void Dma::dm()
         for(int i = 0; i < 2*colsize; i++)
         {
             rd_port -> read(input, i);
-            // cout<< "input.two_bytes: "<< input.two_bytes<<endl;
-            buff16.push_back(input.two_bytes);
+            // cout<<i+1<< " input.two_bytes: "<< input.two_bytes<<endl;
+            buff16[i] = input.two_bytes;
             // cout <<endl<<"Niz nakon citanja: "<< i <<" "<<buff16[i] << endl;
         }
-        // cout<<"dma: pre slanja podataka u memoriju"<<endl;
+
+        // if(j == 0)
+        // {
+        //     cout<<"dma after hard: "<<endl;
+        //     print_1d_sh(buff16);
+        // }
+        // mess("Dma", "After receiving from hard");
         // print_1d_sh(buff16);
+
+        // exit(EXIT_FAILURE);
+        // cout<<"----------"<<endl;
         for(int i = 0; i < 2*colsize; i++)
         {
-            toUchar(buff, buff16[i]);
-
-            p1.set_address(saddr);
+            toUchar(buff_write, buff16[i]);
+            // cout<<"buff za upis, dma "<<endl<<"bajt 1: "<<int(buff_write[0])<<endl<<"bajt 2: "<<int(buff_write[1])<<endl;
+            p1.set_address(saddr + i);
             p1.set_command(TLM_WRITE_COMMAND);
             // ovo ovde se ne odnosi na broj podataka koji se upisuje
             // vec posto upis ide preko push_back() nece biti potreban
             // pojam od koje adrese se nastavlja upis jer se svakako sve nadodaje
             // zbog if-a u write delu saljemo zapravo dimenzije slike kako bismo znali kada da se izvrsi clear()
-            p1.set_data_length(rowsize*colsize);
-            p1.set_data_ptr((unsigned char*)buff);
+            p1.set_data_length(1);
+            p1.set_data_ptr((unsigned char*)buff_write);
             p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
             dma_soft_socket->b_transport(p1, offset);
 
         }
+
+        // exit(EXIT_FAILURE);
         saddr += colsize;
     }
     control = 0;

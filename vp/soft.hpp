@@ -24,13 +24,11 @@ class Soft : public sc_core::sc_module
         // ********* DDR IN SOFT ****** 
         void b_transport(pl_t &p1, sc_core::sc_time &offset);
 
-        vector<unsigned char> ddr8;
         vector<unsigned short> ddr16;
-
         vector<unsigned short> ddr16_copy;
-        int ite = 0;
-
+        
         unsigned short out;
+        unsigned char in[2];
         // **************************************
         int rowsize;
         int colsize;

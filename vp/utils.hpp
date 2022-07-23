@@ -37,13 +37,12 @@ vector<unsigned char> convert_to_1d(vector<vector<unsigned char>> &vect_2d, int 
 int row_num(Mat &image);
 int col_num(Mat &image);
 
-// vector<sc_uint<16>> convert_from_8b_to_16b(vector<sc_uint<8>> &sc_image);
-void print_1d_uc (vector<unsigned char> &vector_1d);
-
+vector<unsigned short> convert_from_8b_to_16b(vector<unsigned char> &image_8b);
+// void print_1d_uc (vector<unsigned char> &vector_1d);
 void print_1d_sh (vector<unsigned short> &vector_1d);
+// void print_2d(vector<vector<int>> &vector_2d);
 
-void print_2d(vector<vector<int>> &vector_2d);
-
+void mess(const char*, const char*);
 unsigned short toShort(unsigned char *buf);
 void toUchar(unsigned char *buf,unsigned short val);
 

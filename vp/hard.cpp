@@ -6,7 +6,7 @@ using namespace std;
 Hard::Hard(sc_core::sc_module_name name): sc_channel(name)
 {
     hard_intcon_socket.register_b_transport(this, &Hard::b_transport);
-    SC_REPORT_INFO("Hard", "Constructed.");
+    // SC_REPORT_INFO("Hard", "Constructed.");
 }
 
 Hard::~Hard()
@@ -68,17 +68,19 @@ void Hard::write(const Data& data)
 {
     if(control)
     {
-        buff8.push_back(data.byte);
+        buff16.push_back(data.two_bytes);
         
         if(data.last)
         {
-            //cout<<"ddr in hard: "<< sc_buff8[5]<<endl;
-            // print_1d_uc(buff8);
-            buff16 = hard_cem(buff8, rowsize, colsize);
+            // mess("Hard", "received data");
             // print_1d_sh(buff16);
-            buff8.clear();
+            // exit(EXIT_FAILURE);
+            buff16_copy = hard_cem(buff16, rowsize, colsize);
+            // print_1d_sh(buff16);
+            buff16.clear();
             // print_1d_sc16(sc_buff16);
-            control = 0;
+            // BUG !!!!!!
+                    // control = 0;
         }
     }
 
@@ -86,19 +88,20 @@ void Hard::write(const Data& data)
 
 void Hard::read(Data& data, int i)
 {
-    data.two_bytes = buff16[i];
+    data.two_bytes = buff16_copy[i];
+    // cout<<"two_butes, hard: "<<data.two_bytes<<endl;
 
 }
 
 
 
-vector<unsigned short> Hard::hard_cem(vector<unsigned char> &energy_image, int &rowsize, int &colsize) {
+vector<unsigned short> Hard::hard_cem(vector<unsigned short> &energy_image_16b, int &rowsize, int &colsize) {
 
     unsigned short a, b, c;
     int index_1d;
     // take the minimum of the three neighbors and add to total, this creates a running sum which is used to determine the lowest energy path
     
-    vector<unsigned short> energy_image_16b (energy_image.begin(), energy_image.end());
+    // vector<unsigned short> energy_image_16b (energy_image.begin(), energy_image.end());
 
         for (int row = 1; row < 2; row++) {
             for (int col = 0; col < colsize; col++) {
