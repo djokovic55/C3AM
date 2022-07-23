@@ -159,6 +159,24 @@ void Soft::driver(Mat& image, int iterations) {
 
         soft_intcon_socket->b_transport(p1, offset);
 
+        // sending first row to hard_cash
+        unsigned char hard_first_row[2];
+        
+        for(int i = 0; i < colsize; i++)
+        {
+            toUchar(hard_first_row, ddr16[i]);
+
+            p1.set_command(TLM_WRITE_COMMAND);
+            p1.set_address(HARD_L + HARD_CASH);
+            p1.set_data_ptr((unsigned char*)&hard_first_row);
+            p1.set_data_length(1);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            soft_intcon_socket->b_transport(p1, offset);
+        }
+
+        // exit(0);
+
         // sending start to hard
         int hard_control = 1;
         p1.set_command(TLM_WRITE_COMMAND);

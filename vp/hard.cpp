@@ -41,6 +41,15 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
 
+                case HARD_CASH:
+
+                    first_row_element = toShort(data);
+                    buff16.push_back(first_row_element);
+                    
+                    // cout<<"Element: "<<first_row_element<<endl;
+
+                    p1.set_response_status(TLM_OK_RESPONSE);
+                    break;
                 default:
                     p1.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
                     break;
@@ -64,20 +73,34 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
 }
 
 
-void Hard::write(const Data& data)
+void Hard::write(const Data& data, int i)
 {
     if(control)
     {
-        buff16.push_back(data.two_bytes);
+
+        if(data.first_row)
+        {
+            buff16.push_back(data.two_bytes);
+            if(data.last)
+            {
+                buff16_copy.assign(buff16.begin(), buff16.end());
+                buff16.clear();
+            }
+        }
+        else{
+
+            buff16_copy[colsize + i] = data.two_bytes;
+        }
+
         
         if(data.last)
         {
             // mess("Hard", "received data");
             // print_1d_sh(buff16);
             // exit(EXIT_FAILURE);
-            buff16_copy = hard_cem(buff16, rowsize, colsize);
+            buff16_copy = hard_cem(buff16_copy, rowsize, colsize);
             // print_1d_sh(buff16);
-            buff16.clear();
+            // buff16.clear();
             // print_1d_sc16(sc_buff16);
             // BUG !!!!!!
                     // control = 0;
@@ -88,9 +111,15 @@ void Hard::write(const Data& data)
 
 void Hard::read(Data& data, int i)
 {
-    data.two_bytes = buff16_copy[i];
+    data.two_bytes = buff16_copy[colsize + i];
     // cout<<"two_butes, hard: "<<data.two_bytes<<endl;
-
+    if(data.last)
+    {
+        for(int j = 0; j < colsize; j++)
+        {
+            buff16_copy[j] = buff16_copy[colsize + j];
+        }
+    }
 }
 
 

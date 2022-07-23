@@ -10,7 +10,7 @@ using namespace sc_core;
 
 typedef struct
 {
-	unsigned char byte;
+	bool first_row;	
 	unsigned short two_bytes;
 	bool last;
 }Data;
@@ -18,7 +18,7 @@ typedef struct
 class hard_write_if : virtual public sc_core::sc_interface
 {
 	public:
-		virtual void write(const Data& data) = 0;
+		virtual void write(const Data& data, int i) = 0;
 };
 
 class hard_read_if: virtual public sc_core::sc_interface

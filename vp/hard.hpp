@@ -19,7 +19,7 @@ class Hard :
         ~Hard();
 
         tlm_utils::simple_target_socket<Hard> hard_intcon_socket; // 90% complete
-        void write(const Data& data);
+        void write(const Data& data, int i);
         void read(Data& data, int i);
         //implementation of hierarchical channel 0%
         
@@ -33,6 +33,7 @@ class Hard :
         int colsize;
         std::vector<unsigned char> buff8;
         std::vector<unsigned short> buff16;
+        unsigned short first_row_element;
 
         std::vector<unsigned short> buff16_copy;
 

@@ -22,6 +22,7 @@
 #define HARD_ROWSIZE 0x00
 #define HARD_COLSIZE 0x01
 #define HARD_CONTROL 0x02
+#define HARD_CASH 0x03
 
 
 // dma
