@@ -34,8 +34,9 @@ class Hard :
         std::vector<unsigned char> buff8;
         std::vector<unsigned short> buff16;
         unsigned short first_row_element;
+        void cash_substitution(Data& data);
 
-        std::vector<unsigned short> buff16_copy;
+        std::vector<unsigned short>  buff16_copy;
 
        
 

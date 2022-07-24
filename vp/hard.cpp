@@ -113,16 +113,8 @@ void Hard::read(Data& data, int i)
 {
     data.two_bytes = buff16_copy[colsize + i];
     // cout<<"two_butes, hard: "<<data.two_bytes<<endl;
-    if(data.last)
-    {
-        for(int j = 0; j < colsize; j++)
-        {
-            buff16_copy[j] = buff16_copy[colsize + j];
-        }
-    }
+    cash_substitution(data);
 }
-
-
 
 vector<unsigned short> Hard::hard_cem(vector<unsigned short> &energy_image_16b, int &rowsize, int &colsize) {
 
@@ -154,4 +146,16 @@ vector<unsigned short> Hard::hard_cem(vector<unsigned short> &energy_image_16b, 
             }
         }
     return energy_image_16b;
+}
+
+// replace first and second row in cash
+void Hard::cash_substitution(Data& data)
+{
+    if(data.last)
+    {
+        for(int j = 0; j < colsize; j++)
+        {
+            buff16_copy[j] = buff16_copy[colsize + j];
+        }
+    }
 }

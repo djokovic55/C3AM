@@ -37,7 +37,7 @@ void Dma::dm()
         {
             input.first_row = true;
         }
-
+        // citav ovaj blok je write zapravo
         for(int i = 0; i < colsize; i++){
 
             p1.set_address(saddr + i);
