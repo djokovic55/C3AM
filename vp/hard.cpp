@@ -46,8 +46,6 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                     first_row_element = toShort(data);
                     buff16.push_back(first_row_element);
                     
-                    // cout<<"Element: "<<first_row_element<<endl;
-
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 default:
@@ -77,7 +75,6 @@ void Hard::write(const Data& data, int i)
 {
     if(control)
     {
-
         if(data.first_row)
         {
             buff16.push_back(data.two_bytes);
@@ -87,36 +84,25 @@ void Hard::write(const Data& data, int i)
                 buff16.clear();
             }
         }
-        else{
-
+        else
+        {
             buff16_copy[colsize + i] = data.two_bytes;
         }
 
-        
         if(data.last)
         {
-            // mess("Hard", "received data");
-            // print_1d_sh(buff16);
-            // exit(EXIT_FAILURE);
-            buff16_copy = hard_cem(buff16_copy, rowsize, colsize);
-            // print_1d_sh(buff16);
-            // buff16.clear();
-            // print_1d_sc16(sc_buff16);
-            // BUG !!!!!!
-                    // control = 0;
+            hard_cem();
         }
     }
-
 }
 
 void Hard::read(Data& data, int i)
 {
     data.two_bytes = buff16_copy[colsize + i];
-    // cout<<"two_butes, hard: "<<data.two_bytes<<endl;
-    cash_substitution(data);
+    cache_substitution(data);
 }
 
-vector<unsigned short> Hard::hard_cem(vector<unsigned short> &energy_image_16b, int &rowsize, int &colsize) {
+void Hard::hard_cem() {
 
     unsigned short a, b, c;
     int index_1d;
@@ -128,28 +114,27 @@ vector<unsigned short> Hard::hard_cem(vector<unsigned short> &energy_image_16b, 
             for (int col = 0; col < colsize; col++) {
                 index_1d = (row * colsize) + col;
 
-                b = energy_image_16b.at(index_1d - colsize);
+                b = buff16_copy.at(index_1d - colsize);
 
                 if(col == 0){
                     a = b;
                     
                 }else{
-                    a = energy_image_16b.at(index_1d - (colsize + 1));
+                    a = buff16_copy.at(index_1d - (colsize + 1));
 
                 }
                 if(col == (colsize - 1)){
                     c=b;
                 }else {
-                    c = energy_image_16b.at(index_1d - (colsize - 1));
+                    c = buff16_copy.at(index_1d - (colsize - 1));
                 }
-                energy_image_16b.at(index_1d) = energy_image_16b.at(index_1d) + std::min(a, min(b, c));
+                buff16_copy.at(index_1d) = buff16_copy.at(index_1d) + std::min(a, min(b, c));
             }
         }
-    return energy_image_16b;
 }
 
-// replace first and second row in cash
-void Hard::cash_substitution(Data& data)
+// replace first and second row in cache
+void Hard::cache_substitution(Data& data)
 {
     if(data.last)
     {

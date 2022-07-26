@@ -18,30 +18,27 @@ class Soft : public sc_core::sc_module
        tlm_utils::simple_target_socket<Soft> soft_dma_socket; // 50%, receiving data left, sending done
 
     protected:
-        pl_t pl;
+        pl_t p1;
         sc_core::sc_time offset;
 
         // ********* DDR IN SOFT ****** 
         void b_transport(pl_t &p1, sc_core::sc_time &offset);
 
         vector<unsigned short> ddr16;
-        vector<unsigned short> ddr16_copy;
-        
         unsigned short out;
         unsigned char in[2];
         // **************************************
         int rowsize;
         int colsize;
+        int dma_control;
         void seam_carving();
         Mat createEnergyImage(Mat& image);
         vector<int> findOptimalSeam(Mat& cumulative_energy_map);
         void reduce(Mat& image, vector<int> path);
         void driver(Mat& image, int iterations);
 
-
+        void dma_config();
+        void hard_config();
 };
-
-
-
 
 #endif

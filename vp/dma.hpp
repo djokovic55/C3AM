@@ -23,19 +23,21 @@ class Dma: public sc_core::sc_module
         sc_port<hard_read_if> rd_port;       
     protected:
         sc_core::sc_time offset;
+        pl_t p1;
+        
         void b_transport(pl_t&, sc_core::sc_time&);
         void dm();
+        void sh_transfer(vector<unsigned short>& buff16, int& saddr);
+        void hs_transfer(vector<unsigned short>& buff16, int& saddr);
         
         int control;
-        int saddr;
-        int cnt;
-        int daddr;
         int rowsize;
         int colsize;
 
-
-
-
+        unsigned char buff_write[2];
+        unsigned char buff_read[2];
+        unsigned short out_dma;
+        Data input;
 };
 
 #endif

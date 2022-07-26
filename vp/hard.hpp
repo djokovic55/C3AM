@@ -18,29 +18,28 @@ class Hard :
         Hard(sc_core::sc_module_name name);
         ~Hard();
 
-        tlm_utils::simple_target_socket<Hard> hard_intcon_socket; // 90% complete
+        tlm_utils::simple_target_socket<Hard> hard_intcon_socket;
         void write(const Data& data, int i);
         void read(Data& data, int i);
-        //implementation of hierarchical channel 0%
         
-        vector<unsigned short> hard_cem(vector<unsigned short> &energy_image_16b, int &rowsize, int &colsize);
+        void hard_cem();
     protected:
         pl_t p1;
         sc_core::sc_time offset;
-        int control = 0;
         void b_transport(pl_t&, sc_core::sc_time&);
+
+        int control = 0;
         int rowsize;
         int colsize;
-        std::vector<unsigned char> buff8;
+        
+
+        
         std::vector<unsigned short> buff16;
-        unsigned short first_row_element;
-        void cash_substitution(Data& data);
-
         std::vector<unsigned short>  buff16_copy;
+        unsigned short first_row_element;
 
-       
+        void cache_substitution(Data& data);
 
-        // void calculate();
 };
 
 #endif
