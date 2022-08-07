@@ -25,8 +25,8 @@ class Soft : public sc_core::sc_module
         void b_transport(pl_t &p1, sc_core::sc_time &offset);
 
         vector<unsigned short> ddr16;
-        unsigned short out;
-        unsigned char in[2];
+        unsigned short write_pixel;
+        unsigned char read_pixel[2];
         // **************************************
         int rowsize;
         int colsize;

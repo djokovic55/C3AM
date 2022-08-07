@@ -38,14 +38,10 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                     break;
                 case HARD_COLSIZE:
                     colsize = *((int*)data);
-                    p1.set_response_status(TLM_OK_RESPONSE);
-                    break;
+                    // cache init
+                    for(int i = 0; i < 2*colsize; i++)
+                        cache.push_back(0);
 
-                case HARD_CASH:
-
-                    first_row_element = toShort(data);
-                    buff16.push_back(first_row_element);
-                    
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 default:
@@ -71,66 +67,126 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
 }
 
 
-void Hard::write(const Data& data, int i)
+void Hard::write(Data& data, int i)
 {
     if(control)
     {
-        if(data.first_row)
-        {
-            buff16.push_back(data.two_bytes);
-            if(data.last)
-            {
-                buff16_copy.assign(buff16.begin(), buff16.end());
-                buff16.clear();
-            }
-        }
-        else
-        {
-            buff16_copy[colsize + i] = data.two_bytes;
-        }
 
-        if(data.last)
-        {
+        // flag togluje upis gornji-donji red
+        hard_toggle_row = data.toggle_row;
+        
+        if(hard_toggle_row)
+            write_read_start_addr = colsize;
+        else 
+            write_read_start_addr = 0;
+
+        cache[write_read_start_addr + i] = data.pixel;
+
+        if(!data.first_row && data.last)
             hard_cem();
-        }
+
     }
 }
 
 void Hard::read(Data& data, int i)
 {
-    data.two_bytes = buff16_copy[colsize + i];
-    cache_substitution(data);
+    data.pixel = cache[write_read_start_addr + i];
 }
 
 void Hard::hard_cem() {
 
-    unsigned short a, b, c;
-    int index_1d;
+  unsigned short a, b, c, min;
+   
     // take the minimum of the three neighbors and add to total, this creates a running sum which is used to determine the lowest energy path
+	int col = 0;
+    int target_pixel_addr;
+    int abc_addr;
+
+    // generisanje pocetnih adresa
+    if(hard_toggle_row)
+    {
+        abc_addr = col;
+        target_pixel_addr = colsize + col;
+    } 
+    else
+    {
+        abc_addr = colsize + col;
+        target_pixel_addr = col;
+    }
+  
+	// Levi granicni slucaj
+    b = cache.at(abc_addr);
+    min = b;
     
-    // vector<unsigned short> energy_image_16b (energy_image.begin(), energy_image.end());
+    c = cache.at(abc_addr + 1);
+        
+    if(c < b)
+    {
+        min = c;
+    }
 
-        for (int row = 1; row < 2; row++) {
-            for (int col = 0; col < colsize; col++) {
-                index_1d = (row * colsize) + col;
+    cache.at(target_pixel_addr) = cache.at(target_pixel_addr) + min;
+		
 
-                b = buff16_copy.at(index_1d - colsize);
-
-                if(col == 0){
-                    a = b;
-                    
-                }else{
-                    a = buff16_copy.at(index_1d - (colsize + 1));
-
-                }
-                if(col == (colsize - 1)){
-                    c=b;
-                }else {
-                    c = buff16_copy.at(index_1d - (colsize - 1));
-                }
-                buff16_copy.at(index_1d) = buff16_copy.at(index_1d) + std::min(a, min(b, c));
-            }
+	// Srednji slucaj
+    for(col = 1; col < colsize - 1; col++)
+    {
+        // generisanje pocetnih adresa
+        if(hard_toggle_row)
+        {
+            abc_addr = col;
+            target_pixel_addr = colsize + col;
+        } 
+        else
+        {
+            abc_addr = colsize + col;
+            target_pixel_addr = col;
         }
+
+		a = b;
+		b = c;
+		min = b;
+   
+		c = cache.at(abc_addr + 1);
+		
+		if(a < c)
+		{
+			if(a < b)
+				min = a;
+		}
+		else
+		{
+			if(c < b)
+				min = c;
+		}	
+
+        cache.at(target_pixel_addr) = cache.at(target_pixel_addr) + min;
+    }    
+		
+	// Desni granicni slucaj
+	
+    // generisanje pocetnih adresa
+    if(hard_toggle_row)
+    {
+        abc_addr = col;
+        target_pixel_addr = colsize + col;
+    } 
+    else
+    {
+        abc_addr = colsize + col;
+        target_pixel_addr = col;
+    }
+
+    a = b;
+    b = c;
+    min = b;
+        
+    if(a < b)
+    {
+        min = a;
+    }
+
+    cache.at(target_pixel_addr) = cache.at(target_pixel_addr) + min;
 }
 
 // replace first and second row in cache
@@ -140,7 +196,7 @@ void Hard::cache_substitution(Data& data)
     {
         for(int j = 0; j < colsize; j++)
         {
-            buff16_copy[j] = buff16_copy[colsize + j];
+            cache[j] = cache[colsize + j];
         }
     }
 }

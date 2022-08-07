@@ -40,7 +40,6 @@ void Soft::seam_carving(){
     int colsize = image.cols;
 
     // check that inputted number of iterations doesn't exceed the image size
-
     if (iterations > colsize) {
         cout << "Input is greater than image's width, please try again." << endl;
     
@@ -63,17 +62,17 @@ void Soft::b_transport(pl_t& p1, sc_core::sc_time& offset)
 
         case TLM_WRITE_COMMAND:
             
-            out = toShort(buf);
-            ddr16[addr] = out;
+            write_pixel = toShort(buf);
+            ddr16[addr] = write_pixel;
             
             p1.set_response_status(TLM_OK_RESPONSE);
             break;
         case TLM_READ_COMMAND:
             
-            toUchar(in, ddr16[addr]);
+            toUchar(read_pixel, ddr16[addr]);
             for(int i = 0; i < len; i++)
             {
-                buf[i] = in[i];
+                buf[i] = read_pixel[i];
             }
 
             p1.set_response_status(TLM_OK_RESPONSE);
@@ -301,22 +300,6 @@ void Soft::hard_config()
     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
     soft_intcon_socket->b_transport(p1, offset);
-
-    // sending first row to hard_cash
-    unsigned char hard_first_row[2];
-    
-    for(int i = 0; i < colsize; i++)
-    {
-        toUchar(hard_first_row, ddr16[i]);
-
-        p1.set_command(TLM_WRITE_COMMAND);
-        p1.set_address(HARD_L + HARD_CASH);
-        p1.set_data_ptr((unsigned char*)&hard_first_row);
-        p1.set_data_length(1);
-        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        soft_intcon_socket->b_transport(p1, offset);
-    }
 
     // sending start to hard
     int hard_control = 1;

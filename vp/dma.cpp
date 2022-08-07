@@ -16,15 +16,18 @@ Dma::~Dma(){
 
 void Dma::dm()
 {
-    vector<unsigned short> buff16(colsize);
-    int saddr = colsize; 
+    int saddr = 0; 
+    data.toggle_row = true;
 
     cout<<"---------------------------> Number of pixels: "<<rowsize*colsize<<endl;
-    for(int j = 0; j < rowsize - 1; j++)
-    {
 
-        sh_transfer(buff16, saddr);
-        hs_transfer(buff16, saddr);
+    for(int j = 0; j < rowsize; j++)
+    {
+        data.toggle_row = !data.toggle_row;
+
+        sh_transfer(saddr);
+        if(j != 0)
+            hs_transfer(saddr);
 
         saddr += colsize;
     }
@@ -33,15 +36,13 @@ void Dma::dm()
 }
 
 
-void Dma::sh_transfer(vector<unsigned short>& buff16, int& saddr) 
+void Dma::sh_transfer(const int saddr) 
 {
-
-    input.first_row = false;
-    if(saddr == colsize)
+    data.first_row = false;
+    if(saddr == 0)
     {
-        input.first_row = true;
+        data.first_row = true;
     }
-    
     for(int i = 0; i < colsize; i++){
 
         p1.set_address(saddr + i);
@@ -52,36 +53,33 @@ void Dma::sh_transfer(vector<unsigned short>& buff16, int& saddr)
 
         dma_soft_socket->b_transport(p1, offset);
         
-        out_dma = toShort(buff_read);
-        buff16[i] = out_dma;
+        pixel_dma = toShort(buff_read);
 
-        input.last = false;
+        data.last = false;
         if(i == (colsize - 1))
         {
-            input.last = true;
+            data.last = true;
         }
-        input.two_bytes = buff16[i];
-        wr_port -> write(input, i);
-        input.last = false;
+        data.pixel = pixel_dma;
+        wr_port -> write(data, i);
+        data.last = false;
     }
 
 }
 
-void Dma::hs_transfer(vector<unsigned short>& buff16, int& saddr)
+void Dma::hs_transfer(const int saddr)
 {
-
     for(int i = 0; i < colsize; i++)
     {
 
-        input.last = false;
+        data.last = false;
         if(i == (colsize - 1))
         {
-            input.last = true;
+            data.last = true;
         }
-        rd_port -> read(input, i);
-        buff16[i] = input.two_bytes;
-        input.last = false;
-        toUchar(buff_write, buff16[i]);
+        rd_port -> read(data, i);
+        data.last = false;
+        toUchar(buff_write, data.pixel);
         
         p1.set_address(saddr + i);
         p1.set_command(TLM_WRITE_COMMAND);

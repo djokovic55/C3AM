@@ -3,9 +3,9 @@
 
 Vp::Vp (sc_core::sc_module_name name, int argc, char** argv):
     sc_module (name),
-    hard("Hard"),
     soft ("Soft", argc, argv),
     dma("Dma"),
+    hard("Hard"),
     intcon("Intcon")
 {
     soft.soft_dma_socket.bind(dma.dma_soft_socket);

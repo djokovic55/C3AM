@@ -33,14 +33,59 @@ int sc_main(int argc, char** argv) {
 
     cout<<"Hello world"<<endl;
 
-    vector<unsigned char> vect1;
-    vect1.reserve(10);
-    cout<<"vec size = "<<vect1.size()<<endl;
-    for(int i = 0; i < 10; i++){
-        cout<< "usao u petlju"<< endl;
-    vect1[i] = 2;
-    cout<<"vect1: " << int(vect1[i])<<endl;
+    // char c = 1;
+    // if (c > 0)
+    // {
+    //     cout<<"This is unsigned number"<<endl;
+    // }
+    // else
+    // {
+    //     cout<<"This is signed number"<<endl;
+    // }
+
+    vector<int> vec;
+    vec.reserve(10);
+
+    vec[5] = 1;
+    for(int i = 0; i < 9; i++)
+    {
+        cout<<i<<" vec:"<<vec[i]<<endl;
     }
+
+    // unsigned short a = 255;
+
+    // // unsigned char *p1;
+    // unsigned char buff[2];
+
+    // unsigned short b;
+
+    // toUchar(buff, a);
+
+    // // p1 = buff;
+    // // cout<<"second element: "<< int(p1[1])<<endl;
+
+    // cout<<"buff"<<endl<<"bajt 1: "<<int(buff[0])<<endl<<"bajt 2: "<<int(buff[1])<<endl;
+    // b = toShort(p1);
+
+    // cout<<"Konacna vrednost: "<<b<<endl;
+
+
+
+
+
+
+
+
+
+    // exit()
+    // vector<unsigned char> vect1;
+    // vect1.reserve(10);
+    // cout<<"vec size = "<<vect1.size()<<endl;
+    // for(int i = 0; i < 10; i++){
+    //     cout<< "usao u petlju"<< endl;
+    // vect1[i] = 2;
+    // cout<<"vect1: " << int(vect1[i])<<endl;
+    // }
     // vect1[0] = 5;
     // cout<< "size "<< vect1.size()<<endl;
 

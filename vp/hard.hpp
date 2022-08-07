@@ -19,7 +19,7 @@ class Hard :
         ~Hard();
 
         tlm_utils::simple_target_socket<Hard> hard_intcon_socket;
-        void write(const Data& data, int i);
+        void write(Data& data, int i);
         void read(Data& data, int i);
         
         void hard_cem();
@@ -31,11 +31,11 @@ class Hard :
         int control = 0;
         int rowsize;
         int colsize;
+        bool hard_toggle_row; 
+        int write_read_start_addr;
         
-
-        
-        std::vector<unsigned short> buff16;
-        std::vector<unsigned short>  buff16_copy;
+        std::vector<unsigned short> cache;
+        // std::vector<unsigned short>  buff16_copy;
         unsigned short first_row_element;
 
         void cache_substitution(Data& data);

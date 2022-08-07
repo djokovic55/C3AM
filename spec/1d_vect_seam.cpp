@@ -262,15 +262,33 @@
             image = image.colRange(0, colsize - 1);
     }
 
-    void print_1d (vector<int> &vector_1d){
+    void print_1d_16b (vector<sc_uint<16>> &vector_1d){
         
-        cout<<"1d vector: "<<endl;
+        cout<<"CEM: "<<endl;
         for(int i = 0; i < vector_1d.size(); i++){
             cout<<vector_1d[i]<<' ';
         }
         cout<<endl;
     }
 
+
+    void print_1d_8b(vector<sc_uint<8>> &vector_1d){
+        
+        cout<<"Energy_image: "<<endl;
+        for(int i = 0; i < vector_1d.size(); i++){
+            cout<<vector_1d[i]<<' ';
+        }
+        cout<<endl;
+    }
+
+    void print_1d (vector<int> &vector_1d){
+        
+        cout<<"SEAM PATH****************** "<<endl;
+        for(int i = 0; i < vector_1d.size(); i++){
+            cout<<vector_1d[i]<<' ';
+        }
+        cout<<endl;
+    }
     void print_2d(vector<vector<int>> &vector_2d){
 
         cout<<"2d vector: "<<endl;
@@ -292,15 +310,19 @@
             int colsize = col_num(image);
             //Energy image, type Mat
             Mat energy_image_mat = createEnergyImage(image);
+            // cout<<energy_image_mat<<endl;
             //Energy image, type 2d 8b vector
             vector<vector<sc_uint<8>>> energy_image_vect_2d = convert_to_vect(energy_image_mat);
             //Energy image, type 1d 8b vector
             vector<sc_uint<8>> energy_image_vect_1d = convert_to_1d(energy_image_vect_2d, rowsize, colsize);
 
+            // print_1d_8b(energy_image_vect_1d);
+
             //HARD PART
             //CEM, type 1d vector
             vector<sc_uint<16>> cumulative_energy_map_16b = createCumulativeEnergyMap(energy_image_vect_1d, rowsize, colsize);
 
+            // print_1d_16b(cumulative_energy_map_16b);
             //SOFT PART 
             //CEM, type 2d vector
             vector<vector<sc_uint<16>>> cumulative_energy_map_2d = convert_to_2d(cumulative_energy_map_16b, rowsize, colsize);
@@ -308,6 +330,8 @@
             Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
             
             vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
+
+            // print_1d(path);
             reduce(image, path);
             cout<<"Seam "<<i+1<<" done."<<endl;
         
@@ -343,33 +367,33 @@
             return 0;
         }
 
-        // driver(image, iterations);
+        driver(image, iterations);
 
        
 // Dynamic bit analysis
 
-        Mat energy_image = createEnergyImage(image);
-        //cout<<image;
-        vector<vector<sc_uint<8>>> energy_image_2d = convert_to_vect(energy_image);
-        //print_2d(energy_image_2d);
-        vector<sc_uint<8>> energy_image_1d = convert_to_1d(energy_image_2d, rowsize, colsize);
+        // Mat energy_image = createEnergyImage(image);
+        // //cout<<image;
+        // vector<vector<sc_uint<8>>> energy_image_2d = convert_to_vect(energy_image);
+        // //print_2d(energy_image_2d);
+        // vector<sc_uint<8>> energy_image_1d = convert_to_1d(energy_image_2d, rowsize, colsize);
 
-        vector<sc_uint<16>> cem_1d = createCumulativeEnergyMap(energy_image_1d, rowsize, colsize);
-        //print_1d(cem_1d);
-        sc_uint<16> max = *(max_element(cem_1d.begin(), cem_1d.end()));
-        int bit_num = log2(int(max)) + 1;
+        // vector<sc_uint<16>> cem_1d = createCumulativeEnergyMap(energy_image_1d, rowsize, colsize);
+        // //print_1d(cem_1d);
+        // sc_uint<16> max = *(max_element(cem_1d.begin(), cem_1d.end()));
+        // int bit_num = log2(int(max)) + 1;
 
 
 
-        cout<<endl<<"Image: "<< argv[1]<<endl;
-        cout<<"Rowsize: "<< rowsize<<endl;
-        cout << "Max Element = "<< max<<endl;
-        cout << "Bits required: "<< bit_num<<endl;
+        // cout<<endl<<"Image: "<< argv[1]<<endl;
+        // cout<<"Rowsize: "<< rowsize<<endl;
+        // cout << "Max Element = "<< max<<endl;
+        // cout << "Bits required: "<< bit_num<<endl;
 
-        vector<vector<sc_uint<16>>> cem_2d = convert_to_2d(cem_1d, rowsize, colsize);
+        // vector<vector<sc_uint<16>>> cem_2d = convert_to_2d(cem_1d, rowsize, colsize);
         //print_2d(cem_2d);
 
-        Mat cem_mat = convert_to_mat(cem_2d);
+        // Mat cem_mat = convert_to_mat(cem_2d);
         //cout<<"1d version"<<cem_mat<<endl;
 
 

@@ -11,14 +11,17 @@ using namespace sc_core;
 typedef struct
 {
 	bool first_row;	
-	unsigned short two_bytes;
+	unsigned short pixel;
 	bool last;
+
+	// Polje koje odredjuje u koji red kesa se upisuju podaci, true za red 1, false za red 0
+	bool toggle_row;
 }Data;
 
 class hard_write_if : virtual public sc_core::sc_interface
 {
 	public:
-		virtual void write(const Data& data, int i) = 0;
+		virtual void write(Data& data, int i) = 0;
 };
 
 class hard_read_if: virtual public sc_core::sc_interface
