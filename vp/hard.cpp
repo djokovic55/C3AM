@@ -39,9 +39,10 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                 case HARD_COLSIZE:
                     colsize = *((int*)data);
                     // cache init
+                    cache.clear();
                     for(int i = 0; i < 2*colsize; i++)
                         cache.push_back(0);
-
+                    cout<<"---------------------------> Cache size: "<<cache.size()<<endl;
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 default:
