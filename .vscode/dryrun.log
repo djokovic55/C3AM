@@ -1,5 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/djokovic/C3AM'
-"g++" -g 1d_vect_seam.cpp  -lsystemc -fno-omit-frame-pointer -o 1d_vect_seam  `pkg-config opencv4 --cflags --libs`
-make: Leaving directory '/home/djokovic/C3AM'
- 
