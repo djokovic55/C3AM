@@ -17,13 +17,11 @@ Dma::~Dma(){
 void Dma::dm()
 {
     int saddr = 0; 
-    data.toggle_row = true;
 
     cout<<"---------------------------> Number of pixels: "<<rowsize*colsize<<endl;
 
     for(int j = 0; j < rowsize; j++)
     {
-        data.toggle_row = !data.toggle_row;
 
         sh_transfer(saddr);
         if(j != 0)

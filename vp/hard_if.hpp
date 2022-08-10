@@ -13,9 +13,6 @@ typedef struct
 	bool first_row;	
 	unsigned short pixel;
 	bool last;
-
-	// Polje koje odredjuje u koji red kesa se upisuju podaci, true za red 1, false za red 0
-	bool toggle_row;
 }Data;
 
 class hard_write_if : virtual public sc_core::sc_interface
