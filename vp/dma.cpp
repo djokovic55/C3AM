@@ -3,6 +3,9 @@
 Dma::Dma(sc_core::sc_module_name name) : sc_module(name){
 
     dma_intcon_socket.register_b_transport(this, &Dma::b_transport);
+    SC_METHOD(dm);
+    dont_initialize();
+    sensitive<<dma_start;
 
     // SC_REPORT_INFO("DMA", "Constructed.");
 
@@ -29,8 +32,9 @@ void Dma::dm()
 
         saddr += colsize;
     }
-    control = 0;
-
+    control++;
+    cout<<"Control value: "<<control<<endl;
+    to_soft->write(control);
 }
 
 
@@ -104,7 +108,7 @@ void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
             {
                 case DMA_CONTROL:
                    control = *((int*)data);
-                   dm();
+                   dma_start.notify();
                    p1.set_response_status(TLM_OK_RESPONSE);
                 break;
 

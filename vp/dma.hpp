@@ -11,6 +11,7 @@ using namespace sc_core;
 class Dma: public sc_core::sc_module
 {
     public:
+        SC_HAS_PROCESS(Dma);
         Dma (sc_core::sc_module_name name);
         ~Dma ();
 
@@ -20,9 +21,12 @@ class Dma: public sc_core::sc_module
         sc_port<hard_write_if> wr_port;
         sc_port<hard_read_if> rd_port;       
 
+        sc_out<int> to_soft;
     protected:
         sc_core::sc_time offset;
         pl_t p1;
+
+        sc_event dma_start;
         
         void b_transport(pl_t&, sc_core::sc_time&);
         void dm();

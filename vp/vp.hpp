@@ -20,6 +20,7 @@ class Vp : public sc_core::sc_module{
         Soft soft;
         Dma dma;
         Intcon intcon;
+        sc_signal<int> soft_dma;
         
         
 };

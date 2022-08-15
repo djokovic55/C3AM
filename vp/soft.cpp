@@ -3,13 +3,17 @@
 int input_num;
 char** input_parameter;
 
-SC_HAS_PROCESS(Soft);
 
 Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name), offset(sc_core::SC_ZERO_TIME)
 {
 
 
     SC_THREAD(seam_carving);
+    SC_METHOD(dma_interrupt);
+    dont_initialize();
+    sensitive<<from_dma;
+    dma_control = 1;
+
     // SC_REPORT_INFO("Soft", "Constructed.");
 
     soft_dma_socket.register_b_transport(this, &Soft::b_transport);
@@ -22,6 +26,11 @@ Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name
 Soft::~Soft()
 {
 SC_REPORT_INFO("Soft", "Destructed.");
+}
+
+void Soft::dma_interrupt()
+{
+    dma_done.notify();
 }
 
 void Soft::seam_carving(){
@@ -109,15 +118,16 @@ void Soft::driver(Mat& image, int iterations) {
         dma_config();
         
         // UNTIL TRANSFER IS DONE 
-        do{
-            p1.set_command(TLM_READ_COMMAND);
-            p1.set_address(DMA_L + DMA_CONTROL);
-            p1.set_data_ptr((unsigned char*)&dma_control);
-            p1.set_data_length(1);
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+        wait(dma_done);
+        // do{
+        //     p1.set_command(TLM_READ_COMMAND);
+        //     p1.set_address(DMA_L + DMA_CONTROL);
+        //     p1.set_data_ptr((unsigned char*)&dma_control);
+        //     p1.set_data_length(1);
+        //     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-            soft_intcon_socket->b_transport(p1, offset);
-        }while(dma_control != 0);    
+        //     soft_intcon_socket->b_transport(p1, offset);
+        // }while(dma_control != 0);    
 
         //SOFT PART 
         //CEM, type 2d vector
@@ -270,7 +280,7 @@ void Soft::dma_config()
 
     soft_intcon_socket->b_transport(p1, offset);
     // dma control, ide na kraj jer se ovde poziva dm()
-    dma_control = 1;
+    dma_control++;
     p1.set_command(TLM_WRITE_COMMAND);
     p1.set_address(DMA_L + DMA_CONTROL);
     p1.set_data_ptr((unsigned char*)&dma_control);

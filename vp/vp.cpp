@@ -15,7 +15,8 @@ Vp::Vp (sc_core::sc_module_name name, int argc, char** argv):
 
     dma.wr_port(hard);
     dma.rd_port(hard);
-
+    soft.from_dma(soft_dma);
+    dma.to_soft(soft_dma);
     SC_REPORT_INFO("Virtual Platform", "Constructed.");
 }
 
