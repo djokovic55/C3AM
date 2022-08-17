@@ -36,6 +36,8 @@ class Dma: public sc_core::sc_module
         int control;
         int rowsize;
         int colsize;
+        int saddr;
+        int daddr;
         
         unsigned char buff_write[2];
         unsigned char buff_read[2];

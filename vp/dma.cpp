@@ -19,22 +19,23 @@ Dma::~Dma(){
 
 void Dma::dm()
 {
-    int saddr = 0; 
 
-    cout<<"---------------------------> Number of pixels: "<<rowsize*colsize<<endl;
 
-    for(int j = 0; j < rowsize; j++)
+    if(daddr == TO_HARD)
     {
-
         sh_transfer(saddr);
-        if(j != 0)
-            hs_transfer(saddr);
-
-        saddr += colsize;
+        control++;
+        // cout<<"Control value: "<<control<<endl;
+        to_soft->write(control);
     }
-    control++;
-    cout<<"Control value: "<<control<<endl;
-    to_soft->write(control);
+    else if(daddr == TO_DDR)
+    {
+        hs_transfer(saddr);
+        control--;
+        // cout<<"Control value: "<<control<<endl;
+        to_soft->write(control);
+    }
+
 }
 
 
@@ -122,6 +123,15 @@ void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
                     p1.set_response_status(TLM_OK_RESPONSE);
                 break;
 
+                case DMA_SADDR:
+                    saddr = *((int*)data);
+                    p1.set_response_status(TLM_OK_RESPONSE);
+                break;
+
+                case DMA_DADDR:
+                    daddr = *((int*)data);
+                    p1.set_response_status(TLM_OK_RESPONSE);
+                break;
                 default:
                     p1.set_response_status(TLM_ADDRESS_ERROR_RESPONSE);
                 break;

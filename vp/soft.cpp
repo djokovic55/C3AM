@@ -115,10 +115,10 @@ void Soft::driver(Mat& image, int iterations) {
         hard_config();
 
         // DMA CONFIG
+        cout<<"---------------------------> Number of pixels: "<<rowsize*colsize<<endl;
         dma_config();
         
         // UNTIL TRANSFER IS DONE 
-        wait(dma_done);
         // do{
         //     p1.set_command(TLM_READ_COMMAND);
         //     p1.set_address(DMA_L + DMA_CONTROL);
@@ -143,6 +143,133 @@ void Soft::driver(Mat& image, int iterations) {
     imwrite("result.jpg", image);
 }
 
+void Soft::dma_config()
+{
+    int saddr;
+    int daddr;
+    for (int j = 0; j < rowsize; j++)
+    {
+        
+        saddr = j * colsize;
+
+        //sending rowsize to dma 
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_ROWSIZE);
+        p1.set_data_ptr((unsigned char*)&rowsize);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        // sending colsize to dma
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_COLSIZE);
+        p1.set_data_ptr((unsigned char*)&colsize);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        //sending destination to dma 
+        daddr = TO_HARD;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_DADDR);
+        p1.set_data_ptr((unsigned char*)&daddr);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        //sending source to dma 
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_SADDR);
+        p1.set_data_ptr((unsigned char*)&saddr);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset);
+
+        // dma control, ide na kraj jer se ovde poziva dm()
+        dma_control++;
+        p1.set_command(TLM_WRITE_COMMAND);
+        p1.set_address(DMA_L + DMA_CONTROL);
+        p1.set_data_ptr((unsigned char*)&dma_control);
+        p1.set_data_length(1);
+        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+        soft_intcon_socket->b_transport(p1, offset); 
+
+        wait(dma_done);
+
+        //sending destination to dma 
+        if(j != 0)
+        {
+
+            daddr = TO_DDR;
+            p1.set_command(TLM_WRITE_COMMAND);
+            p1.set_address(DMA_L + DMA_DADDR);
+            p1.set_data_ptr((unsigned char*)&daddr);
+            p1.set_data_length(1);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            soft_intcon_socket->b_transport(p1, offset);
+
+            //sending source to dma 
+            p1.set_command(TLM_WRITE_COMMAND);
+            p1.set_address(DMA_L + DMA_SADDR);
+            p1.set_data_ptr((unsigned char*)&saddr);
+            p1.set_data_length(1);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            soft_intcon_socket->b_transport(p1, offset);
+
+            // dma control, ide na kraj jer se ovde poziva dm()
+            dma_control++;
+            p1.set_command(TLM_WRITE_COMMAND);
+            p1.set_address(DMA_L + DMA_CONTROL);
+            p1.set_data_ptr((unsigned char*)&dma_control);
+            p1.set_data_length(1);
+            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+            soft_intcon_socket->b_transport(p1, offset); 
+
+            wait(dma_done);
+        }
+    }
+    
+}
+
+void Soft::hard_config()
+{
+
+    //sending rowsize to hard 
+    p1.set_command(TLM_WRITE_COMMAND);
+    p1.set_address(HARD_L + HARD_ROWSIZE);
+    p1.set_data_ptr((unsigned char*)&rowsize);
+    p1.set_data_length(1);
+    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+    soft_intcon_socket->b_transport(p1, offset);
+
+    // sending colsize to hard
+    p1.set_command(TLM_WRITE_COMMAND);
+    p1.set_address(HARD_L + HARD_COLSIZE);
+    p1.set_data_ptr((unsigned char*)&colsize);
+    p1.set_data_length(1);
+    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+    soft_intcon_socket->b_transport(p1, offset);
+
+    // sending start to hard
+    int hard_control = 1;
+    p1.set_command(TLM_WRITE_COMMAND);
+    p1.set_address(HARD_L + HARD_CONTROL);
+    p1.set_data_ptr((unsigned char*)&hard_control);
+    p1.set_data_length(1);
+    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+
+    soft_intcon_socket->b_transport(p1, offset);
+}
 Mat Soft::createEnergyImage(Mat& image) {
 
     Mat image_blur, image_gray;
@@ -257,67 +384,4 @@ void Soft::reduce(Mat& image, vector<int> path) {
         }
         // clip the right-most side of the image
         image = image.colRange(0, colsize - 1);
-}
-
-void Soft::dma_config()
-{
-
-    //sending rowsize to dma 
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_address(DMA_L + DMA_ROWSIZE);
-    p1.set_data_ptr((unsigned char*)&rowsize);
-    p1.set_data_length(1);
-    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-    soft_intcon_socket->b_transport(p1, offset);
-
-    // sending colsize to dma
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_address(DMA_L + DMA_COLSIZE);
-    p1.set_data_ptr((unsigned char*)&colsize);
-    p1.set_data_length(1);
-    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-    soft_intcon_socket->b_transport(p1, offset);
-    // dma control, ide na kraj jer se ovde poziva dm()
-    dma_control++;
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_address(DMA_L + DMA_CONTROL);
-    p1.set_data_ptr((unsigned char*)&dma_control);
-    p1.set_data_length(1);
-    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-    soft_intcon_socket->b_transport(p1, offset); 
-}
-
-void Soft::hard_config()
-{
-
-    //sending rowsize to hard 
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_address(HARD_L + HARD_ROWSIZE);
-    p1.set_data_ptr((unsigned char*)&rowsize);
-    p1.set_data_length(1);
-    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-    soft_intcon_socket->b_transport(p1, offset);
-
-    // sending colsize to hard
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_address(HARD_L + HARD_COLSIZE);
-    p1.set_data_ptr((unsigned char*)&colsize);
-    p1.set_data_length(1);
-    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-    soft_intcon_socket->b_transport(p1, offset);
-
-    // sending start to hard
-    int hard_control = 1;
-    p1.set_command(TLM_WRITE_COMMAND);
-    p1.set_address(HARD_L + HARD_CONTROL);
-    p1.set_data_ptr((unsigned char*)&hard_control);
-    p1.set_data_length(1);
-    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-    soft_intcon_socket->b_transport(p1, offset);
 }
