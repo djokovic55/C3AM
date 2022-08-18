@@ -5,7 +5,7 @@ Intcon::Intcon(sc_core::sc_module_name name)
     : sc_module(name), offset(sc_core::SC_ZERO_TIME)
 {
     intcon_soft_socket.register_b_transport(this, &Intcon::b_transport);
-    // SC_REPORT_INFO("Interconnect", "Consructed");
+    SC_REPORT_INFO("Interconnect", "Constructed");
 }
 Intcon::~Intcon()
 {

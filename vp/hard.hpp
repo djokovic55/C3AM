@@ -15,28 +15,34 @@ class Hard :
     public hard_read_if
 {
     public:
+        SC_HAS_PROCESS(Hard);
         Hard(sc_core::sc_module_name name);
         ~Hard();
 
         tlm_utils::simple_target_socket<Hard> hard_intcon_socket;
         void write(Data& data, int i);
         void read(Data& data, int i);
+
+        sc_out<int> to_soft_h;
         
-        void hard_cem();
     protected:
         pl_t p1;
         sc_core::sc_time offset;
         void b_transport(pl_t&, sc_core::sc_time&);
+        void hard_cem();
 
-        int control = 0;
+        sc_event hard_start; 
+
+
+        int control;
         int rowsize;
         int colsize;
-        bool hard_toggle_row; 
-        int write_read_start_addr;
+        int hard_toggle_row; 
+        int cache_saddr;
         
         std::vector<unsigned short> cache;
         // std::vector<unsigned short>  buff16_copy;
-        unsigned short first_row_element;
+        // unsigned short first_row_element;
 
         void cache_substitution(Data& data);
 

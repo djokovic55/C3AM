@@ -6,7 +6,10 @@ using namespace std;
 Hard::Hard(sc_core::sc_module_name name): sc_channel(name)
 {
     hard_intcon_socket.register_b_transport(this, &Hard::b_transport);
-    // SC_REPORT_INFO("Hard", "Constructed.");
+    SC_METHOD(hard_cem);
+    dont_initialize();
+    sensitive<<hard_start;
+    SC_REPORT_INFO("Hard", "Constructed.");
 }
 
 Hard::~Hard()
@@ -29,7 +32,7 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
             {
                 case HARD_CONTROL:
                     control = *((int*)data);
-                    hard_toggle_row = false;
+                    hard_start.notify();
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 
@@ -44,6 +47,11 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                     for(int i = 0; i < 2*colsize; i++)
                         cache.push_back(0);
                     cout<<"---------------------------> Cache size: "<<cache.size()<<endl;
+                    p1.set_response_status(TLM_OK_RESPONSE);
+                    break;
+                case HARD_CACHE_SADDR:
+                    cache_saddr = *((int*)data);
+                    hard_toggle_row = cache_saddr;
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 default:
@@ -71,29 +79,12 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
 
 void Hard::write(Data& data, int i)
 {
-    if(control)
-    {
-        // flag togluje upis gornji-donji red
-
-        if(hard_toggle_row)
-            write_read_start_addr = colsize;
-        else 
-            write_read_start_addr = 0;
-
-        cache[write_read_start_addr + i] = data.pixel;
-
-        if(!data.first_row && data.last)
-        {
-            hard_cem();
-        }
-    }
+    cache[cache_saddr++] = data.pixel;
 }
 
 void Hard::read(Data& data, int i)
 {
-    data.pixel = cache[write_read_start_addr + i];
-    if(data.last)
-       hard_toggle_row = !hard_toggle_row; 
+    data.pixel = cache[cache_saddr++];
 }
 
 void Hard::hard_cem() {
@@ -174,6 +165,9 @@ void Hard::hard_cem() {
     }
 
     cache.at(target_pixel_addr) = cache.at(target_pixel_addr) + min;
+
+    control++; 
+    to_soft_h->write(control);
 }
 
 // replace first and second row in cache

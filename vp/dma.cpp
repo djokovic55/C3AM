@@ -7,7 +7,7 @@ Dma::Dma(sc_core::sc_module_name name) : sc_module(name){
     dont_initialize();
     sensitive<<dma_start;
 
-    // SC_REPORT_INFO("DMA", "Constructed.");
+    SC_REPORT_INFO("DMA", "Constructed.");
 
 }
 
@@ -31,7 +31,7 @@ void Dma::dm()
     else if(daddr == TO_DDR)
     {
         hs_transfer(saddr);
-        control--;
+        control++;
         // cout<<"Control value: "<<control<<endl;
         to_soft->write(control);
     }
@@ -41,11 +41,11 @@ void Dma::dm()
 
 void Dma::sh_transfer(const int saddr) 
 {
-    data.first_row = false;
-    if(saddr == 0)
-    {
-        data.first_row = true;
-    }
+    // data.first_row = false;
+    // if(saddr == 0)
+    // {
+    //     data.first_row = true;
+    // }
     for(int i = 0; i < colsize; i++){
 
         p1.set_address(saddr + i);
@@ -58,14 +58,14 @@ void Dma::sh_transfer(const int saddr)
         
         pixel_dma = toShort(buff_read);
 
-        data.last = false;
-        if(i == (colsize - 1))
-        {
-            data.last = true;
-        }
+        // data.last = false;
+        // if(i == (colsize - 1))
+        // {
+        //     data.last = true;
+        // }
         data.pixel = pixel_dma;
         wr_port -> write(data, i);
-        data.last = false;
+        // data.last = false;
     }
 
 }
@@ -75,13 +75,13 @@ void Dma::hs_transfer(const int saddr)
     for(int i = 0; i < colsize; i++)
     {
 
-        data.last = false;
-        if(i == (colsize - 1))
-        {
-            data.last = true;
-        }
+        // data.last = false;
+        // if(i == (colsize - 1))
+        // {
+        //     data.last = true;
+        // }
         rd_port -> read(data, i);
-        data.last = false;
+        // data.last = false;
         toUchar(buff_write, data.pixel);
         
         p1.set_address(saddr + i);

@@ -19,6 +19,7 @@ class Soft : public sc_core::sc_module
         tlm_utils::simple_target_socket<Soft> soft_dma_socket; // 50%, receiving data left, sending done
         
         sc_in<int> from_dma;
+        sc_in<int> from_hard;
     protected:
         pl_t p1;
         sc_core::sc_time offset;
@@ -28,6 +29,13 @@ class Soft : public sc_core::sc_module
         
         void dma_interrupt();
         sc_core::sc_event dma_done;
+        int dma_control;
+
+        void hard_interrupt();
+        sc_core::sc_event hard_done;
+        int hard_control;
+
+        void configuration();
 
         vector<unsigned short> ddr16;
         unsigned short write_pixel;
@@ -35,15 +43,12 @@ class Soft : public sc_core::sc_module
         // **************************************
         int rowsize;
         int colsize;
-        int dma_control;
         void seam_carving();
         Mat createEnergyImage(Mat& image);
         vector<int> findOptimalSeam(Mat& cumulative_energy_map);
         void reduce(Mat& image, vector<int> path);
         void driver(Mat& image, int iterations);
 
-        void dma_config();
-        void hard_config();
 };
 
 #endif
