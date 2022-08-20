@@ -10,18 +10,26 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1305654fs"></ZoomStartTime>
-      <ZoomEndTime time="1813118fs"></ZoomEndTime>
-      <Cursor1Time time="1487432fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="882400fs"></ZoomEndTime>
+      <Cursor1Time time="405000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="199"></NameColumnWidth>
-      <ValueColumnWidth column_width="75"></ValueColumnWidth>
+      <NameColumnWidth column_width="197"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="36" />
+   <WVObjectSize size="34" />
    <wvobject fp_name="/cumulative_energy_map_tb/clk_s" type="logic">
       <obj_property name="ElementShortName">clk_s</obj_property>
       <obj_property name="ObjectShortName">clk_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/memorija/clka" type="logic">
+      <obj_property name="ElementShortName">clka</obj_property>
+      <obj_property name="ObjectShortName">clka</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/memorija/clkb" type="logic">
+      <obj_property name="ElementShortName">clkb</obj_property>
+      <obj_property name="ObjectShortName">clkb</obj_property>
    </wvobject>
    <wvobject fp_name="/cumulative_energy_map_tb/reset_s" type="logic">
       <obj_property name="ElementShortName">reset_s</obj_property>
@@ -43,6 +51,15 @@
       <obj_property name="CustomSignalColor">#FF0000</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/memorija/dib" type="array">
+      <obj_property name="ElementShortName">dib[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dib[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/memorija/web" type="logic">
+      <obj_property name="ElementShortName">web</obj_property>
+      <obj_property name="ObjectShortName">web</obj_property>
+   </wvobject>
    <wvobject fp_name="/cumulative_energy_map_tb/memorija/dob" type="array">
       <obj_property name="ElementShortName">dob[15:0]</obj_property>
       <obj_property name="ObjectShortName">dob[15:0]</obj_property>
@@ -50,20 +67,13 @@
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/hard/rd_addr_o" type="array">
-      <obj_property name="ElementShortName">rd_addr_o[11:0]</obj_property>
-      <obj_property name="ObjectShortName">rd_addr_o[11:0]</obj_property>
-      <obj_property name="CustomSignalColor">#FF0000</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject fp_name="/cumulative_energy_map_tb/hard/addra_ip" type="array">
+      <obj_property name="ElementShortName">addra_ip[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addra_ip[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/rd_data_i_s" type="array">
-      <obj_property name="ElementShortName">rd_data_i_s[15:0]</obj_property>
-      <obj_property name="ObjectShortName">rd_data_i_s[15:0]</obj_property>
-      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject fp_name="/cumulative_energy_map_tb/hard/dia_ip" type="array">
+      <obj_property name="ElementShortName">dia_ip[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dia_ip[15:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/cumulative_energy_map_tb/hard/komparator1/minimum" type="array">
       <obj_property name="ElementShortName">minimum[15:0]</obj_property>
@@ -74,44 +84,6 @@
    <wvobject fp_name="/cumulative_energy_map_tb/hard/min_abc" type="array">
       <obj_property name="ElementShortName">min_abc[15:0]</obj_property>
       <obj_property name="ObjectShortName">min_abc[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/hard/wr_data_o" type="array">
-      <obj_property name="ElementShortName">wr_data_o[15:0]</obj_property>
-      <obj_property name="ObjectShortName">wr_data_o[15:0]</obj_property>
-      <obj_property name="CustomSignalColor">#00FF7F</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/hard/wr_addr_o" type="array">
-      <obj_property name="ElementShortName">wr_addr_o[11:0]</obj_property>
-      <obj_property name="ObjectShortName">wr_addr_o[11:0]</obj_property>
-      <obj_property name="CustomSignalColor">#00FF7F</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/memorija/addra" type="array">
-      <obj_property name="ElementShortName">addra[11:0]</obj_property>
-      <obj_property name="ObjectShortName">addra[11:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="CustomSignalColor">#808080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/memorija/dia" type="array">
-      <obj_property name="ElementShortName">dia[15:0]</obj_property>
-      <obj_property name="ObjectShortName">dia[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="CustomSignalColor">#800080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/wr_addr_o_tb_s" type="array">
-      <obj_property name="ElementShortName">wr_addr_o_tb_s[11:0]</obj_property>
-      <obj_property name="ObjectShortName">wr_addr_o_tb_s[11:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/wr_data_o_tb_s" type="array">
-      <obj_property name="ElementShortName">wr_data_o_tb_s[15:0]</obj_property>
-      <obj_property name="ObjectShortName">wr_data_o_tb_s[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/cumulative_energy_map_tb/hard/b_reg" type="array">
       <obj_property name="ElementShortName">b_reg[15:0]</obj_property>
@@ -153,20 +125,6 @@
       <obj_property name="ElementShortName">min_next[15:0]</obj_property>
       <obj_property name="ObjectShortName">min_next[15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/wr_o_s" type="logic">
-      <obj_property name="ElementShortName">wr_o_s</obj_property>
-      <obj_property name="ObjectShortName">wr_o_s</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/memorija/wea" type="logic">
-      <obj_property name="ElementShortName">wea</obj_property>
-      <obj_property name="ObjectShortName">wea</obj_property>
-      <obj_property name="CustomSignalColor">#0000A0</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/wr_o_tb_s" type="logic">
-      <obj_property name="ElementShortName">wr_o_tb_s</obj_property>
-      <obj_property name="ObjectShortName">wr_o_tb_s</obj_property>
-   </wvobject>
    <wvobject fp_name="/cumulative_energy_map_tb/hard/state_reg" type="other">
       <obj_property name="ElementShortName">state_reg</obj_property>
       <obj_property name="ObjectShortName">state_reg</obj_property>
@@ -205,5 +163,17 @@
       <obj_property name="ElementShortName">MEM_CONTENT[0:24][15:0]</obj_property>
       <obj_property name="ObjectShortName">MEM_CONTENT[0:24][15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/enb_tb_s" type="logic">
+      <obj_property name="ElementShortName">enb_tb_s</obj_property>
+      <obj_property name="ObjectShortName">enb_tb_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/ena_tb_s" type="logic">
+      <obj_property name="ElementShortName">ena_tb_s</obj_property>
+      <obj_property name="ObjectShortName">ena_tb_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/memorija/enb" type="logic">
+      <obj_property name="ElementShortName">enb</obj_property>
+      <obj_property name="ObjectShortName">enb</obj_property>
    </wvobject>
 </wave_config>

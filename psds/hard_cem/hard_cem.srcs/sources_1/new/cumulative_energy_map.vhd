@@ -41,14 +41,18 @@ generic(
      clk:             in std_logic;
      reset:           in std_logic;
      
-----------Interfejs memorije za citanje----------
-     rd_addr_o:       out std_logic_vector(ADDR_WIDTH-1 downto 0);
-     rd_data_i:       in std_logic_vector(DATA_WIDTH-1 downto 0);
-     
-----------Interfejs memorije za upisivanje--------
-     wr_addr_o:       out std_logic_vector(ADDR_WIDTH-1 downto 0);
-     wr_data_o:       out std_logic_vector(DATA_WIDTH-1 downto 0);
-     wr_o:            out std_logic; 
+----------Memory port 1----------
+     addra_ip:       out std_logic_vector(ADDR_WIDTH-1 downto 0);
+     dia_ip:       in std_logic_vector(DATA_WIDTH-1 downto 0);
+     doa_ip:       out std_logic_vector(DATA_WIDTH-1 downto 0);
+     wea_ip:            out std_logic; 
+     ena_ip:            out std_logic; 
+----------Memory port 2----------
+     addrb_ip:       out std_logic_vector(ADDR_WIDTH-1 downto 0);
+     dib_ip:       in std_logic_vector(DATA_WIDTH-1 downto 0);
+     dob_ip:       out std_logic_vector(DATA_WIDTH-1 downto 0);
+     web_ip:            out std_logic; 
+     enb_ip:            out std_logic; 
      
 ----------Interfejs za prosljedjivanje broja kolona----------
      colsize:         in unsigned(ADDR_WIDTH-1 downto 0);
@@ -119,7 +123,7 @@ begin
  end process;
  
  process(a_reg, a_next, b_reg, b_next, c_reg, c_next, min_reg, min_next, 
-         col_next, col_reg, target_pixel_addr_reg, target_pixel_addr_next, abc_addr_next, abc_addr_reg, start, state_reg, rd_data_i)
+         col_next, col_reg, target_pixel_addr_reg, target_pixel_addr_next, abc_addr_next, abc_addr_reg, start, state_reg, dia_ip)
  begin
      
   -- Difoltne vrijednosti
@@ -134,12 +138,18 @@ begin
      target_pixel_addr_next <= target_pixel_addr_reg;
      abc_addr_next <= abc_addr_reg;
 
-     rd_addr_o <= (others => '0');
-     wr_data_o <= (others => '0');
-     wr_addr_o <= (others => '0');
+     -- default memory port 1
+     doa_ip <= (others => '0');
+     addra_ip <= (others => '0');
+     wea_ip <= '0';
+     ena_ip <= '1';
+     -- default memory port 1
+     dob_ip <= (others => '0');
+     addrb_ip <= (others => '0');
+     web_ip <= '0';
+     enb_ip <= '1';
 
      ready <= '0';
-     wr_o <= '0';
   
   case state_reg is
    when idle => 
@@ -148,7 +158,7 @@ begin
 
      if start = '1' then
           col_next <= (others => '0');
-          rd_addr_o <= abc_addr_next;
+          addra_ip <= abc_addr_next;
 
           if hard_toggle_row = '1' then
                abc_addr_next <= col_next;
@@ -166,29 +176,29 @@ begin
     
    when L1 => 
    
-     b_next <= rd_data_i;
+     b_next <= dia_ip;
 
      abc_addr_next <= std_logic_vector(unsigned(abc_addr_reg) + 1);
-     rd_addr_o <= std_logic_vector(unsigned(abc_addr_next));
+     addra_ip <= std_logic_vector(unsigned(abc_addr_next));
 
      state_next <= L2;
     
    when L2 =>
 
-     c_next <= rd_data_i;
-     a_next <= rd_data_i;
+     c_next <= dia_ip;
+     a_next <= dia_ip;
 
-     rd_addr_o <= target_pixel_addr_reg;
+     addra_ip <= target_pixel_addr_reg;
 
      state_next <= L3;
    when L3 =>
      -- bilo u prethodnom stanju
      min_next <= min_abc;
 
-     wr_addr_o <= target_pixel_addr_reg;
-     wr_o <= '1';
+     addrb_ip <= target_pixel_addr_reg;
+     web_ip <= '1';
      -- promena min_reg u min_next
-     wr_data_o <= std_logic_vector(unsigned(rd_data_i) + unsigned(min_next));
+     dob_ip <= std_logic_vector(unsigned(dia_ip) + unsigned(min_next));
      col_next <= std_logic_vector(unsigned(col_reg) + 1);
 
      target_pixel_addr_next <= std_logic_vector(unsigned(target_pixel_addr_reg) + 1); 
@@ -198,15 +208,15 @@ begin
      b_next <= c_reg;
      -- promena na next vrednost 
      abc_addr_next <= std_logic_vector(unsigned(abc_addr_reg) + 1);
-     rd_addr_o <= std_logic_vector(unsigned(abc_addr_next));
+     addra_ip <= std_logic_vector(unsigned(abc_addr_next));
 
      state_next <= L4;
    when L4 => 
 
-     c_next <= rd_data_i;
+     c_next <= dia_ip;
 
-     rd_addr_o <= target_pixel_addr_reg;
-     wr_o <= '0';
+     addra_ip <= target_pixel_addr_reg;
+     web_ip <= '0';
      
      
      state_next <= L5;
@@ -218,21 +228,21 @@ begin
      c_next <= b_reg;
      b_next <= c_reg;
 
-     wr_addr_o <= target_pixel_addr_reg;
-     wr_o <= '1';
+     addrb_ip <= target_pixel_addr_reg;
+     web_ip <= '1';
      -- min_reg prelazi u min_next
-     wr_data_o <= std_logic_vector(unsigned(rd_data_i) + unsigned(min_next));
+     dob_ip <= std_logic_vector(unsigned(dia_ip) + unsigned(min_next));
      -- new pixel iteration
      col_next <= std_logic_vector(unsigned(col_reg) + 1);
      target_pixel_addr_next <= std_logic_vector(unsigned(target_pixel_addr_reg) + 1);
      abc_addr_next <= std_logic_vector(unsigned(abc_addr_reg) + 1);
 
     if (unsigned(col_next) < colsize) then
-     rd_addr_o <= std_logic_vector(unsigned(abc_addr_next));
+     addra_ip <= std_logic_vector(unsigned(abc_addr_next));
 
      state_next <= L4;
     else
-     rd_addr_o <= target_pixel_addr_next;
+     addra_ip <= target_pixel_addr_next;
 
      state_next <= idle;
     end if;

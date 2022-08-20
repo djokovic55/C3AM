@@ -9,6 +9,60 @@ end entity;
 
 architecture beh of cumulative_energy_map_tb is
     type mem_t is array (0 to 24) of std_logic_vector(15 downto 0);
+
+    component  rams_tdp_rf_rf is
+	generic(
+		DATA_WIDTH: integer := 16;
+		ADDR_WIDTH: integer := 12
+	);
+	 port(
+		 clka : in std_logic;
+		 clkb : in std_logic;
+		 ena : in std_logic;
+		 enb : in std_logic;
+		 wea : in std_logic;
+		 web : in std_logic;
+		 addra : in std_logic_vector(ADDR_WIDTH-1 downto 0);
+		 addrb : in std_logic_vector(ADDR_WIDTH-1 downto 0);
+		 dia : in std_logic_vector(DATA_WIDTH-1 downto 0);
+		 dib : in std_logic_vector(DATA_WIDTH-1 downto 0);
+		 doa : out std_logic_vector(DATA_WIDTH-1 downto 0);
+		 dob : out std_logic_vector(DATA_WIDTH-1 downto 0)
+	 );
+    end component;
+
+    component cumulative_energy_map is
+        generic( 
+                DATA_WIDTH: integer := 16;
+                ADDR_WIDTH: integer := 12);
+        port(
+        ----------Interfejs za klok i reset signale----------
+            clk:             in std_logic;
+            reset:           in std_logic;
+            
+        ----------Memory port 1----------
+            addra_ip:       out std_logic_vector(ADDR_WIDTH-1 downto 0);
+            dia_ip:       in std_logic_vector(DATA_WIDTH-1 downto 0);
+            doa_ip:       out std_logic_vector(DATA_WIDTH-1 downto 0);
+            wea_ip:            out std_logic; 
+            ena_ip:            out std_logic; 
+        ----------Memory port 2----------
+            addrb_ip:       out std_logic_vector(ADDR_WIDTH-1 downto 0);
+            dib_ip:       in std_logic_vector(DATA_WIDTH-1 downto 0);
+            dob_ip:       out std_logic_vector(DATA_WIDTH-1 downto 0);
+            web_ip:            out std_logic; 
+            enb_ip:            out std_logic; 
+            
+        ----------Interfejs za prosljedjivanje broja kolona----------
+            colsize:         in unsigned(ADDR_WIDTH-1 downto 0);
+            
+        ----------Komandni interfejs----------
+            start:           in std_logic;
+            hard_toggle_row: in std_logic;
+            
+        ----------Statusni interfejs----------
+            ready:           out std_logic);
+    end component;
     
     constant MEM_CONTENT: mem_t :=
                                (std_logic_vector(to_unsigned(1, 16)),
@@ -41,27 +95,33 @@ architecture beh of cumulative_energy_map_tb is
     signal reset_s:             std_logic;
     
     signal colsize_s:           unsigned(11 downto 0);
-    --interfejsi memorije za citanje
-    signal rd_addr_o_s:         std_logic_vector(11 downto 0);
-    signal rd_data_i_s:         std_logic_vector(15 downto 0);
-    --Interfejsi memorije za upis
-    signal wr_addr_o_s:         std_logic_vector(11 downto 0);
-    signal wr_data_o_s:         std_logic_vector(15 downto 0);
+    -- port 1 
+    signal addra_ip_s:         std_logic_vector(11 downto 0);
+    signal dia_ip_s:         std_logic_vector(15 downto 0);
+    signal doa_ip_s:         std_logic_vector(15 downto 0);
+    signal wea_ip_s:               std_logic;
+    signal ena_ip_s:               std_logic;
 
-    signal wr_addr_o_tb_s:         std_logic_vector(11 downto 0);
-    signal wr_data_o_tb_s:         std_logic_vector(15 downto 0);
+    signal ena_tb_s:               std_logic;
+    -- port 2
+    signal addrb_ip_s:         std_logic_vector(11 downto 0);
+    signal dib_ip_s:         std_logic_vector(15 downto 0);
+    signal dob_ip_s:         std_logic_vector(15 downto 0);
+    signal web_ip_s:               std_logic;
+    signal enb_ip_s:               std_logic;
 
+    signal enb_tb_s:               std_logic;
+    -- signali preko kojih tb puni memoriju
+    signal addrb_tb:         std_logic_vector(11 downto 0);
+    signal db_tb:         std_logic_vector(15 downto 0);
+    signal web_tb:               std_logic;
 
-    signal dia_s:         std_logic_vector(15 downto 0);
-    signal addra_s:         std_logic_vector(11 downto 0);
-    
-    signal wr_o_s:              std_logic;
-    signal wr_o_tb_s:           std_logic;
+    signal addrb_or:         std_logic_vector(11 downto 0);
+    signal dib_or:         std_logic_vector(15 downto 0);
+    signal web_or:               std_logic;
+    signal ena_or:               std_logic;
+    signal enb_or:               std_logic;
 
-    signal wea_s:               std_logic;
-
-    -- signal ena_s:               std_logic;
-    -- signal enb_s:               std_logic;
     
     signal start_s:             std_logic := '0';
     signal hard_toggle_row_s:   std_logic := '0';
@@ -69,9 +129,11 @@ architecture beh of cumulative_energy_map_tb is
 
 begin
     -- before memory's interface
-    wea_s <= wr_o_s or wr_o_tb_s;
-    dia_s <= wr_data_o_s or wr_data_o_tb_s;
-    addra_s <= wr_addr_o_s or wr_addr_o_tb_s;
+    web_or <= web_tb or web_ip_s;
+    dib_or <= db_tb or dob_ip_s;
+    addrb_or <= addrb_tb or addrb_ip_s;
+    ena_or <= ena_tb_s or ena_ip_s;
+    enb_or <= enb_tb_s or enb_ip_s;
 
     clk_gen: process
     begin
@@ -84,26 +146,34 @@ begin
         reset_s <= '1';
         colsize_s <= (to_unsigned(5, 12));
         hard_toggle_row_s <= '1';
+
+        ena_tb_s <= '0'; 
+        enb_tb_s <= '0'; 
         wait for 500 ns;
         reset_s <= '0';
+
+        ena_tb_s <= '1'; 
+        enb_tb_s <= '1'; 
         wait until falling_edge(clk_s);
-        
-        wr_o_tb_s <= '0';
+         
+        web_tb <= '0';
         wait until falling_edge(clk_s);
 
         --punjenje memorije
-        wr_o_tb_s <= '1';
+        web_tb <= '1';
         wait until falling_edge(clk_s);
         for i in 0 to 4 loop
             for j in 0 to 4 loop
-                wr_addr_o_tb_s <= std_logic_vector(to_unsigned(i*5 + j, 12));
-                wr_data_o_tb_s <= MEM_CONTENT(i*5 + j);
+                addrb_tb <= std_logic_vector(to_unsigned(i*5 + j, 12));
+                db_tb <= MEM_CONTENT(i*5 + j);
                 wait until falling_edge(clk_s);
             end loop;
         end loop;
-        wr_o_tb_s <= '0';
-        wr_addr_o_tb_s <= (others => '0');
-        wr_data_o_tb_s <= (others => '0');
+        web_tb <= '0';
+        addrb_tb <= (others => '0');
+        db_tb <= (others => '0');
+        ena_tb_s <= '0';
+        enb_tb_s <= '0';
         wait until falling_edge(clk_s);
         --pocetak rada algoritma
         
@@ -119,30 +189,43 @@ begin
         wait; 
     end process;
     
-    memorija: entity work.memory
+    memorija: rams_tdp_rf_rf
+        generic map(DATA_WIDTH => 16, ADDR_WIDTH => 12)
         port map(
-                clk   => clk_s,
-                --reset => reset_s,
-                addra => addra_s,
-                addrb => rd_addr_o_s,
-                dia   => dia_s,
-                dob   => rd_data_i_s, 
-                wea   => wea_s
-                -- ena   => ena_s,
-                -- enb   => enb_s
+                clka   => clk_s,
+                clkb   => clk_s,
+                ena   => ena_or,
+                enb   => enb_or,
+                wea   => wea_ip_s,
+                web   => web_or,
+                addra => addra_ip_s,
+                addrb => addrb_or,
+                dia   => doa_ip_s,
+                dib   => dib_or,
+                doa   => dia_ip_s, 
+                dob   => dib_ip_s 
                 );
         
-    hard: entity work.cumulative_energy_map
+    hard: cumulative_energy_map
+        generic map(DATA_WIDTH => 16, ADDR_WIDTH => 12)
         port map(
-                clk             => clk_s,
-                reset           => reset_s,
-                rd_addr_o       => rd_addr_o_s,
-                rd_data_i       => rd_data_i_s,
-                wr_addr_o       => wr_addr_o_s,    
-                wr_data_o       => wr_data_o_s,   
-                wr_o            => wr_o_s,
-                colsize         => colsize_s, 
+                clk          => clk_s,
+                reset        => reset_s,
+                addra_ip     => addra_ip_s,
+                dia_ip       => dia_ip_s,
+                doa_ip       => doa_ip_s,    
+                ena_ip       => ena_ip_s,    
+                
+                wea_ip       => wea_ip_s,   
+                addrb_ip     => addrb_ip_s,
+                dib_ip       => dib_ip_s, 
+                dob_ip       => dob_ip_s,
+                enb_ip       => enb_ip_s,    
+
+                web_ip          => web_ip_s,
+                colsize         => colsize_s,
                 start           => start_s,
                 hard_toggle_row => hard_toggle_row_s,
-                ready           => ready_s);
+                ready           => ready_s
+                );
 end beh;

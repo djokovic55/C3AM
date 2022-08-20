@@ -13,7 +13,7 @@ Compiling package ieee.std_logic_1164
 Compiling package ieee.std_logic_arith
 Compiling package ieee.std_logic_unsigned
 Compiling package ieee.numeric_std
-Compiling architecture syn of entity xil_defaultlib.memory [memory_default]
+Compiling architecture syn of entity xil_defaultlib.rams_tdp_rf_rf [rams_tdp_rf_rf_default]
 Compiling architecture behavioral of entity xil_defaultlib.comparator [comparator_default]
 Compiling architecture behavioral of entity xil_defaultlib.cumulative_energy_map [cumulative_energy_map_default]
 Compiling architecture beh of entity xil_defaultlib.cumulative_energy_map_tb
