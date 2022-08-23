@@ -27,7 +27,7 @@ end rams_tdp_rf_rf;
 
 architecture syn of rams_tdp_rf_rf is
 
-	type ram_type is array (2023 downto 0) of std_logic_vector(DATA_WIDTH-1 downto 0);
+	type ram_type is array (24 downto 0) of std_logic_vector(DATA_WIDTH-1 downto 0);
 	signal RAM : ram_type;
 
 	attribute ram_style:string;

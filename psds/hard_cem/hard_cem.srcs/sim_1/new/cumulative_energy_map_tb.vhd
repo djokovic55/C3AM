@@ -67,10 +67,10 @@ architecture beh of cumulative_energy_map_tb is
     constant MEM_CONTENT: mem_t :=
                                (std_logic_vector(to_unsigned(1, 16)),
                                 std_logic_vector(to_unsigned(2, 16)),
-                                std_logic_vector(to_unsigned(3, 16)),
+                                std_logic_vector(to_unsigned(0, 16)),
                                 std_logic_vector(to_unsigned(4, 16)),
-                                std_logic_vector(to_unsigned(5, 16)),
-                                std_logic_vector(to_unsigned(6, 16)),
+                                std_logic_vector(to_unsigned(3, 16)),
+                                std_logic_vector(to_unsigned(1, 16)),
                                 std_logic_vector(to_unsigned(7, 16)),
                                 std_logic_vector(to_unsigned(8, 16)),
                                 std_logic_vector(to_unsigned(9, 16)),
@@ -102,7 +102,7 @@ architecture beh of cumulative_energy_map_tb is
     signal wea_ip_s:               std_logic;
     signal ena_ip_s:               std_logic;
 
-    signal ena_tb_s:               std_logic;
+    -- signal ena_tb_s:               std_logic;
     -- port 2
     signal addrb_ip_s:         std_logic_vector(11 downto 0);
     signal dib_ip_s:         std_logic_vector(15 downto 0);
@@ -119,7 +119,7 @@ architecture beh of cumulative_energy_map_tb is
     signal addrb_or:         std_logic_vector(11 downto 0);
     signal dib_or:         std_logic_vector(15 downto 0);
     signal web_or:               std_logic;
-    signal ena_or:               std_logic;
+    -- signal ena_or:               std_logic;
     signal enb_or:               std_logic;
 
     
@@ -132,7 +132,7 @@ begin
     web_or <= web_tb or web_ip_s;
     dib_or <= db_tb or dob_ip_s;
     addrb_or <= addrb_tb or addrb_ip_s;
-    ena_or <= ena_tb_s or ena_ip_s;
+    -- ena_or <= ena_tb_s or ena_ip_s;
     enb_or <= enb_tb_s or enb_ip_s;
 
     clk_gen: process
@@ -145,14 +145,12 @@ begin
     begin
         reset_s <= '1';
         colsize_s <= (to_unsigned(5, 12));
-        hard_toggle_row_s <= '1';
+        hard_toggle_row_s <= '0';
 
-        ena_tb_s <= '0'; 
         enb_tb_s <= '0'; 
         wait for 500 ns;
         reset_s <= '0';
 
-        ena_tb_s <= '1'; 
         enb_tb_s <= '1'; 
         wait until falling_edge(clk_s);
          
@@ -172,7 +170,6 @@ begin
         web_tb <= '0';
         addrb_tb <= (others => '0');
         db_tb <= (others => '0');
-        ena_tb_s <= '0';
         enb_tb_s <= '0';
         wait until falling_edge(clk_s);
         --pocetak rada algoritma
@@ -180,7 +177,7 @@ begin
         start_s <= '1';
         wait until falling_edge(clk_s);
         wait until falling_edge(clk_s);
-        wait until falling_edge(clk_s);
+       wait until falling_edge(clk_s);
         start_s <= '0';
         
         wait until ready_s = '1';
@@ -194,7 +191,7 @@ begin
         port map(
                 clka   => clk_s,
                 clkb   => clk_s,
-                ena   => ena_or,
+                ena   => ena_ip_s,
                 enb   => enb_or,
                 wea   => wea_ip_s,
                 web   => web_or,
@@ -211,18 +208,19 @@ begin
         port map(
                 clk          => clk_s,
                 reset        => reset_s,
+
                 addra_ip     => addra_ip_s,
                 dia_ip       => dia_ip_s,
                 doa_ip       => doa_ip_s,    
                 ena_ip       => ena_ip_s,    
-                
                 wea_ip       => wea_ip_s,   
+
                 addrb_ip     => addrb_ip_s,
                 dib_ip       => dib_ip_s, 
                 dob_ip       => dob_ip_s,
                 enb_ip       => enb_ip_s,    
-
                 web_ip          => web_ip_s,
+
                 colsize         => colsize_s,
                 start           => start_s,
                 hard_toggle_row => hard_toggle_row_s,

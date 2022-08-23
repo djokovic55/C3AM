@@ -71,7 +71,7 @@ proc create_report { reportName command } {
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
 set_param chipscope.maxJobs 3
-set_msg_config -id {Common 17-41} -limit 10000000
+set_msg_config  -id {Place 30-58}  -suppress 
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7z010clg400-1
 
@@ -82,7 +82,7 @@ set_property webtalk.parent_dir C:/Users/L340/Desktop/PSDS_projekat/hard_cem/har
 set_property parent.project_path C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
-set_property board_part digilentinc.com:zybo:part0:2.0 [current_project]
+set_property board_part digilentinc.com:zybo-z7-10:part0:1.1 [current_project]
 set_property ip_output_repo c:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
