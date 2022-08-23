@@ -41,8 +41,6 @@ class Hard :
         int cache_saddr;
         
         std::vector<unsigned short> cache;
-        // std::vector<unsigned short>  buff16_copy;
-        // unsigned short first_row_element;
 
         void cache_substitution(Data& data);
 

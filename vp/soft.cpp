@@ -7,7 +7,6 @@ char** input_parameter;
 Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name), offset(sc_core::SC_ZERO_TIME)
 {
 
-
     soft_dma_socket.register_b_transport(this, &Soft::b_transport);
     SC_THREAD(seam_carving);
 
@@ -124,21 +123,9 @@ void Soft::driver(Mat& image, int iterations) {
         // SOFT TO DDR
         ddr16.assign(energy_image_vect_1d.begin(), energy_image_vect_1d.end());
 
-
         cout<<"---------------------------> Number of pixels: "<<rowsize*colsize<<endl;
         configuration();
         
-        // UNTIL TRANSFER IS DONE 
-        // do{
-        //     p1.set_command(TLM_READ_COMMAND);
-        //     p1.set_address(DMA_L + DMA_CONTROL);
-        //     p1.set_data_ptr((unsigned char*)&dma_control);
-        //     p1.set_data_length(1);
-        //     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        //     soft_intcon_socket->b_transport(p1, offset);
-        // }while(dma_control != 0);    
-
         //SOFT PART 
         //CEM, type 2d vector
         vector<vector<unsigned short>> cumulative_energy_map_2d = convert_to_2d(ddr16, rowsize, colsize);
