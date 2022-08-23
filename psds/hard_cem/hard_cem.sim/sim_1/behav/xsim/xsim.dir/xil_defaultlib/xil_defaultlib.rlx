@@ -1,0 +1,8 @@
+0.7
+2020.2
+Nov 18 2020
+09:47:47
+C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.srcs/sim_1/new/cumulative_energy_map_tb.vhd,1661279201,vhdl,,,,cumulative_energy_map_tb,,,,,,,,
+C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.srcs/sources_1/new/comparator.vhd,1660578590,vhdl,,,,comparator,,,,,,,,
+C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.srcs/sources_1/new/cumulative_energy_map.vhd,1661278601,vhdl,C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.srcs/sim_1/new/cumulative_energy_map_tb.vhd,,,cumulative_energy_map,,,,,,,,
+C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.srcs/sources_1/new/memory.vhd,1661017855,vhdl,C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.srcs/sim_1/new/cumulative_energy_map_tb.vhd,,,rams_tdp_rf_rf,,,,,,,,
