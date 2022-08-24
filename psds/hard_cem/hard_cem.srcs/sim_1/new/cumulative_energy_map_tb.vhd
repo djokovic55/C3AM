@@ -54,7 +54,7 @@ architecture beh of cumulative_energy_map_tb is
             enb_ip:            out std_logic; 
             
         ----------Interfejs za prosljedjivanje broja kolona----------
-            colsize:         in unsigned(ADDR_WIDTH-1 downto 0);
+            colsize:         in std_logic_vector(ADDR_WIDTH-1 downto 0);
             
         ----------Komandni interfejs----------
             start:           in std_logic;
@@ -94,7 +94,7 @@ architecture beh of cumulative_energy_map_tb is
     signal clk_s:               std_logic;
     signal reset_s:             std_logic;
     
-    signal colsize_s:           unsigned(11 downto 0);
+    signal colsize_s:           std_logic_vector(11 downto 0);
     -- port 1 
     signal addra_ip_s:         std_logic_vector(11 downto 0);
     signal dia_ip_s:         std_logic_vector(15 downto 0);
@@ -144,8 +144,8 @@ begin
     stim_gen: process
     begin
         reset_s <= '1';
-        colsize_s <= (to_unsigned(5, 12));
-        hard_toggle_row_s <= '0';
+        colsize_s <= (std_logic_vector(to_unsigned(5, 12)));
+        hard_toggle_row_s <= '1';
 
         enb_tb_s <= '0'; 
         wait for 500 ns;

@@ -15,7 +15,6 @@
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
--- 
 ----------------------------------------------------------------------------------
 
 
@@ -55,7 +54,7 @@ generic(
      enb_ip:            out std_logic; 
      
 ----------Interfejs za prosljedjivanje broja kolona----------
-     colsize:         in unsigned(ADDR_WIDTH-1 downto 0);
+     colsize:         in std_logic_vector(ADDR_WIDTH-1 downto 0);
      
 ----------Komandni interfejs----------
      start:           in std_logic;
@@ -67,19 +66,17 @@ end cumulative_energy_map;
 
 architecture Behavioral of cumulative_energy_map is
 
-     type state_type is (idle, L1, L2, L2a, L3, L4, L4a, L5, L6, L6a);
+     type state_type is (idle, L1, L2, L3, L4, L5, L6, L6a);
 
      signal state_reg, state_next: state_type;
      signal a_reg, a_next: std_logic_vector(DATA_WIDTH-1 downto 0);
      signal b_reg, b_next: std_logic_vector(DATA_WIDTH-1 downto 0);
      signal c_reg, c_next: std_logic_vector(DATA_WIDTH-1 downto 0);
-     signal min_reg, min_next: std_logic_vector(DATA_WIDTH-1 downto 0);
      signal col_reg, col_next: std_logic_vector(ADDR_WIDTH-1 downto 0);
      signal target_pixel_addr_reg, target_pixel_addr_next: std_logic_vector(ADDR_WIDTH-1 downto 0);
      signal abc_addr_reg, abc_addr_next: std_logic_vector(ADDR_WIDTH-1 downto 0);
      signal min_abc: std_logic_vector(DATA_WIDTH-1 downto 0);
 
-     -- signal input_data: std_logic_vector(DATA_WIDTH-1 downto 0);
      
      component comparator
      port(
@@ -105,7 +102,6 @@ begin
      a_reg <= (others => '0');
      b_reg <= (others => '0');
      c_reg <= (others => '0');
-     min_reg <= (others => '0');
      col_reg <= (others => '0');
      target_pixel_addr_reg <= (others => '0');
      abc_addr_reg <= (others => '0');
@@ -116,7 +112,6 @@ begin
      a_reg <= a_next;
      b_reg <= b_next;
      c_reg <= c_next;
-     min_reg <= min_next;
      col_reg <= col_next;
      target_pixel_addr_reg <= target_pixel_addr_next;
      abc_addr_reg <= abc_addr_next;
@@ -124,12 +119,8 @@ begin
   end if;
  end process;
  
---  input_data <= dib_ip;
-
---  dob_ip <= std_logic_vector(unsigned(dib_ip) + unsigned(min_abc));
 
  process(a_reg, a_next, b_reg, b_next, c_reg, c_next, 
-          min_reg, min_next, 
          col_next, col_reg, target_pixel_addr_reg, target_pixel_addr_next, abc_addr_next, abc_addr_reg, start, state_reg, dia_ip)
  begin
      
@@ -139,7 +130,6 @@ begin
      a_next <= a_reg;
      b_next <= b_reg;
      c_next <= c_reg;
-     min_next <= min_reg;
 
      col_next <= col_reg;
      target_pixel_addr_next <= target_pixel_addr_reg;
@@ -168,12 +158,12 @@ begin
           addra_ip <= abc_addr_next;
 
           if hard_toggle_row = '1' then
-               abc_addr_next <= col_next;
-               target_pixel_addr_next <= std_logic_vector(unsigned(col_next) + unsigned(colsize));
+               abc_addr_next <= std_logic_vector(to_unsigned(0, ADDR_WIDTH));
+               target_pixel_addr_next <= colsize;
 
           else
-               abc_addr_next <= std_logic_vector(unsigned(col_next) + unsigned(colsize));
-               target_pixel_addr_next <= col_next;
+               abc_addr_next <= colsize;
+               target_pixel_addr_next <= std_logic_vector(to_unsigned(0, ADDR_WIDTH));
 
           end if;
           state_next <= L1;
@@ -195,20 +185,15 @@ begin
      c_next <= dia_ip;
      a_next <= dia_ip;
 
-     state_next <= L2a;
-   
-   when L2a =>
-     -- spremne reg vrednosti
-     min_next <= min_abc;
+     -- change
      addrb_ip <= target_pixel_addr_reg;
-   
-
      state_next <= L3;
+   
    when  L3 =>
 
      addrb_ip <= target_pixel_addr_reg;
      web_ip <= '1';
-     dob_ip <= std_logic_vector(unsigned(dib_ip) + unsigned(min_reg));
+     dob_ip <= std_logic_vector(unsigned(dib_ip) + unsigned(min_abc));
 
      col_next <= std_logic_vector(unsigned(col_reg) + 1);
      target_pixel_addr_next <= std_logic_vector(unsigned(target_pixel_addr_reg) + 1); 
@@ -224,15 +209,10 @@ begin
 
      c_next <= dia_ip;
      
-     state_next <= L4a;
-
-   when L4a => 
-
-
-     min_next <= min_abc;
+     --change
      addrb_ip <= target_pixel_addr_reg;
-     
      state_next <= L5;
+
    when L5 => 
 
      a_next <= b_reg;
@@ -240,14 +220,14 @@ begin
 
      web_ip <= '1';
      addrb_ip <= target_pixel_addr_reg;
-     dob_ip <= std_logic_vector(unsigned(dib_ip) + unsigned(min_reg));
+     dob_ip <= std_logic_vector(unsigned(dib_ip) + unsigned(min_abc));
 
      -- new pixel iteration
      col_next <= std_logic_vector(unsigned(col_reg) + 1);
      target_pixel_addr_next <= std_logic_vector(unsigned(target_pixel_addr_reg) + 1);
      abc_addr_next <= std_logic_vector(unsigned(abc_addr_reg) + 1);
 
-    if (unsigned(col_next) < colsize - 1) then
+    if (unsigned(col_next) < unsigned(colsize) - 1) then
 
      -- adresa za naredno c
      addra_ip <= std_logic_vector(unsigned(abc_addr_next));
@@ -260,7 +240,6 @@ begin
    
    when L6 => 
 
-     min_next <= min_abc;
      addrb_ip <= target_pixel_addr_reg;
      
      state_next <= L6a;
@@ -269,7 +248,7 @@ begin
 
      web_ip <= '1';
      addrb_ip <= target_pixel_addr_reg;
-     dob_ip <= std_logic_vector(unsigned(dib_ip) + unsigned(min_reg));
+     dob_ip <= std_logic_vector(unsigned(dib_ip) + unsigned(min_abc));
      
      state_next <= idle;
   end case;
