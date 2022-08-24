@@ -4,9 +4,7 @@
 int sc_main(int argc, char** argv) {
 
     Vp vp("Virtual Platform", argc, argv);
-    // Soft("soft", argc, argv);
-    // Ddr ddr("ddr"); 
-    sc_start(10000000, sc_core::SC_NS);
+    sc_start(1000, sc_core::SC_NS);
 
 
 
