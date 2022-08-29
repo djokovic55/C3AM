@@ -58,10 +58,10 @@ generic(
      
 ----------Komandni interfejs----------
      start:           in std_logic;
-     hard_toggle_row: in std_logic;
      
 ----------Statusni interfejs----------
-     ready:           out std_logic);
+     ready:           out std_logic;
+     hard_toggle_row: out std_logic);
 end cumulative_energy_map;
 
 architecture Behavioral of cumulative_energy_map is
@@ -77,7 +77,8 @@ architecture Behavioral of cumulative_energy_map is
      signal abc_addr_reg, abc_addr_next: std_logic_vector(ADDR_WIDTH-1 downto 0);
      signal min_abc: std_logic_vector(DATA_WIDTH-1 downto 0);
 
-     
+     signal hard_toggle_row_next, hard_toggle_row_reg: std_logic;
+
      component comparator
      port(
           a_reg:   in std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -105,6 +106,8 @@ begin
      col_reg <= (others => '0');
      target_pixel_addr_reg <= (others => '0');
      abc_addr_reg <= (others => '0');
+
+     hard_toggle_row_reg <= '0';
    
   elsif (clk'event and clk = '1') then
 
@@ -115,6 +118,8 @@ begin
      col_reg <= col_next;
      target_pixel_addr_reg <= target_pixel_addr_next;
      abc_addr_reg <= abc_addr_next;
+
+     hard_toggle_row_reg <= hard_toggle_row_next;
 
   end if;
  end process;
@@ -134,6 +139,7 @@ begin
      col_next <= col_reg;
      target_pixel_addr_next <= target_pixel_addr_reg;
      abc_addr_next <= abc_addr_reg;
+     hard_toggle_row_next <= hard_toggle_row_reg;
 
      -- default memory port 1
      doa_ip <= (others => '0');
@@ -153,11 +159,15 @@ begin
    
      ready <= '1';
 
+
      if start = '1' then
           col_next <= (others => '0');
           addra_ip <= abc_addr_next;
 
-          if hard_toggle_row = '1' then
+          hard_toggle_row_next <= not(hard_toggle_row_reg);
+          hard_toggle_row <= hard_toggle_row_next;
+
+          if hard_toggle_row_next = '1' then
                abc_addr_next <= std_logic_vector(to_unsigned(0, ADDR_WIDTH));
                target_pixel_addr_next <= colsize;
 

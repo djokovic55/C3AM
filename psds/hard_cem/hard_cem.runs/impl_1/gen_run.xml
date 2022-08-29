@@ -1,80 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="impl_1" LaunchPart="xc7z010clg400-1" LaunchTime="1661347742">
-  <File Type="BITSTR-BMM" Name="cumulative_energy_map_bd.bmm"/>
-  <File Type="OPT-METHODOLOGY-DRC" Name="cumulative_energy_map_methodology_drc_opted.rpt"/>
-  <File Type="INIT-TIMING" Name="cumulative_energy_map_timing_summary_init.rpt"/>
   <File Type="ROUTE-PWR" Name="cumulative_energy_map_power_routed.rpt"/>
   <File Type="PA-TCL" Name="cumulative_energy_map.tcl"/>
-  <File Type="OPT-TIMING" Name="cumulative_energy_map_timing_summary_opted.rpt"/>
-  <File Type="OPT-DCP" Name="cumulative_energy_map_opt.dcp"/>
   <File Type="ROUTE-PWR-SUM" Name="cumulative_energy_map_power_summary_routed.pb"/>
   <File Type="REPORTS-TCL" Name="cumulative_energy_map_reports.tcl"/>
+  <File Type="BITSTR-MSK" Name="cumulative_energy_map.msk"/>
+  <File Type="ROUTE-CLK" Name="cumulative_energy_map_clock_utilization_routed.rpt"/>
+  <File Type="RDI-RDI" Name="cumulative_energy_map.vdi"/>
+  <File Type="BG-BIT" Name="cumulative_energy_map.bit"/>
+  <File Type="BG-DRC" Name="cumulative_energy_map.drc"/>
+  <File Type="BG-BGN" Name="cumulative_energy_map.bgn"/>
+  <File Type="BG-BIN" Name="cumulative_energy_map.bin"/>
+  <File Type="BITSTR-RBT" Name="cumulative_energy_map.rbt"/>
+  <File Type="BITSTR-NKY" Name="cumulative_energy_map.nky"/>
+  <File Type="BITSTR-BMM" Name="cumulative_energy_map_bd.bmm"/>
+  <File Type="ROUTE-METHODOLOGY-DRC" Name="cumulative_energy_map_methodology_drc_routed.rpt"/>
+  <File Type="BITSTR-MMI" Name="cumulative_energy_map.mmi"/>
+  <File Type="BITSTR-SYSDEF" Name="cumulative_energy_map.sysdef"/>
+  <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
+  <File Type="BITSTR-LTX" Name="cumulative_energy_map.ltx"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="OPT-DRC" Name="cumulative_energy_map_drc_opted.rpt"/>
   <File Type="OPT-HWDEF" Name="cumulative_energy_map.hwdef"/>
-  <File Type="PWROPT-DCP" Name="cumulative_energy_map_pwropt.dcp"/>
-  <File Type="PWROPT-DRC" Name="cumulative_energy_map_drc_pwropted.rpt"/>
-  <File Type="PWROPT-TIMING" Name="cumulative_energy_map_timing_summary_pwropted.rpt"/>
-  <File Type="PLACE-DCP" Name="cumulative_energy_map_placed.dcp"/>
   <File Type="PLACE-IO" Name="cumulative_energy_map_io_placed.rpt"/>
-  <File Type="PLACE-CLK" Name="cumulative_energy_map_clock_utilization_placed.rpt"/>
   <File Type="PLACE-UTIL" Name="cumulative_energy_map_utilization_placed.rpt"/>
   <File Type="PLACE-UTIL-PB" Name="cumulative_energy_map_utilization_placed.pb"/>
   <File Type="PLACE-CTRL" Name="cumulative_energy_map_control_sets_placed.rpt"/>
-  <File Type="PLACE-SIMILARITY" Name="cumulative_energy_map_incremental_reuse_placed.rpt"/>
   <File Type="PLACE-PRE-SIMILARITY" Name="cumulative_energy_map_incremental_reuse_pre_placed.rpt"/>
-  <File Type="PLACE-TIMING" Name="cumulative_energy_map_timing_summary_placed.rpt"/>
-  <File Type="POSTPLACE-PWROPT-DCP" Name="cumulative_energy_map_postplace_pwropt.dcp"/>
-  <File Type="BG-BIN" Name="cumulative_energy_map.bin"/>
-  <File Type="POSTPLACE-PWROPT-TIMING" Name="cumulative_energy_map_timing_summary_postplace_pwropted.rpt"/>
-  <File Type="PHYSOPT-DCP" Name="cumulative_energy_map_physopt.dcp"/>
-  <File Type="PHYSOPT-DRC" Name="cumulative_energy_map_drc_physopted.rpt"/>
-  <File Type="BITSTR-MSK" Name="cumulative_energy_map.msk"/>
-  <File Type="PHYSOPT-TIMING" Name="cumulative_energy_map_timing_summary_physopted.rpt"/>
-  <File Type="ROUTE-ERROR-DCP" Name="cumulative_energy_map_routed_error.dcp"/>
-  <File Type="ROUTE-DCP" Name="cumulative_energy_map_routed.dcp"/>
-  <File Type="ROUTE-BLACKBOX-DCP" Name="cumulative_energy_map_routed_bb.dcp"/>
   <File Type="ROUTE-DRC" Name="cumulative_energy_map_drc_routed.rpt"/>
   <File Type="ROUTE-DRC-PB" Name="cumulative_energy_map_drc_routed.pb"/>
-  <File Type="ROUTE-DRC-RPX" Name="cumulative_energy_map_drc_routed.rpx"/>
-  <File Type="BITSTR-MMI" Name="cumulative_energy_map.mmi"/>
-  <File Type="ROUTE-METHODOLOGY-DRC" Name="cumulative_energy_map_methodology_drc_routed.rpt"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="cumulative_energy_map_methodology_drc_routed.rpx"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="cumulative_energy_map_methodology_drc_routed.pb"/>
   <File Type="ROUTE-PWR-RPX" Name="cumulative_energy_map_power_routed.rpx"/>
   <File Type="ROUTE-STATUS" Name="cumulative_energy_map_route_status.rpt"/>
   <File Type="ROUTE-STATUS-PB" Name="cumulative_energy_map_route_status.pb"/>
+  <File Type="ROUTE-DCP" Name="cumulative_energy_map_routed.dcp"/>
+  <File Type="ROUTE-ERROR-DCP" Name="cumulative_energy_map_routed_error.dcp"/>
+  <File Type="ROUTE-BLACKBOX-DCP" Name="cumulative_energy_map_routed_bb.dcp"/>
   <File Type="ROUTE-TIMINGSUMMARY" Name="cumulative_energy_map_timing_summary_routed.rpt"/>
   <File Type="ROUTE-TIMING-PB" Name="cumulative_energy_map_timing_summary_routed.pb"/>
   <File Type="ROUTE-TIMING-RPX" Name="cumulative_energy_map_timing_summary_routed.rpx"/>
-  <File Type="ROUTE-SIMILARITY" Name="cumulative_energy_map_incremental_reuse_routed.rpt"/>
-  <File Type="ROUTE-CLK" Name="cumulative_energy_map_clock_utilization_routed.rpt"/>
   <File Type="ROUTE-BUS-SKEW" Name="cumulative_energy_map_bus_skew_routed.rpt"/>
   <File Type="ROUTE-BUS-SKEW-PB" Name="cumulative_energy_map_bus_skew_routed.pb"/>
   <File Type="ROUTE-BUS-SKEW-RPX" Name="cumulative_energy_map_bus_skew_routed.rpx"/>
+  <File Type="OPT-DCP" Name="cumulative_energy_map_opt.dcp"/>
+  <File Type="PLACE-DCP" Name="cumulative_energy_map_placed.dcp"/>
+  <File Type="PWROPT-DCP" Name="cumulative_energy_map_pwropt.dcp"/>
+  <File Type="POSTPLACE-PWROPT-DCP" Name="cumulative_energy_map_postplace_pwropt.dcp"/>
+  <File Type="PHYSOPT-DCP" Name="cumulative_energy_map_physopt.dcp"/>
   <File Type="POSTROUTE-PHYSOPT-DCP" Name="cumulative_energy_map_postroute_physopt.dcp"/>
   <File Type="POSTROUTE-PHYSOPT-BLACKBOX-DCP" Name="cumulative_energy_map_postroute_physopt_bb.dcp"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="cumulative_energy_map_timing_summary_postroute_physopted.rpt"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="cumulative_energy_map_timing_summary_postroute_physopted.pb"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="cumulative_energy_map_timing_summary_postroute_physopted.rpx"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="cumulative_energy_map_bus_skew_postroute_physopted.rpt"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-PB" Name="cumulative_energy_map_bus_skew_postroute_physopted.pb"/>
-  <File Type="BG-BIT" Name="cumulative_energy_map.bit"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="cumulative_energy_map_bus_skew_postroute_physopted.rpx"/>
-  <File Type="BITSTR-RBT" Name="cumulative_energy_map.rbt"/>
-  <File Type="BITSTR-NKY" Name="cumulative_energy_map.nky"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="cumulative_energy_map_methodology_drc_routed.pb"/>
+  <File Type="ROUTE-DRC-RPX" Name="cumulative_energy_map_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="cumulative_energy_map_methodology_drc_routed.rpx"/>
   <File Type="PDI-FILE" Name="cumulative_energy_map.pdi"/>
   <File Type="RCFI_FILE" Name="cumulative_energy_map.rcfi"/>
   <File Type="CFI_FILE" Name="cumulative_energy_map.cfi"/>
   <File Type="RNPI_FILE" Name="cumulative_energy_map.rnpi"/>
   <File Type="NPI_FILE" Name="cumulative_energy_map.npi"/>
   <File Type="RBD_FILE" Name="cumulative_energy_map.rbd"/>
-  <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
-  <File Type="BITSTR-LTX" Name="cumulative_energy_map.ltx"/>
-  <File Type="BITSTR-SYSDEF" Name="cumulative_energy_map.sysdef"/>
-  <File Type="BG-BGN" Name="cumulative_energy_map.bgn"/>
-  <File Type="BG-DRC" Name="cumulative_energy_map.drc"/>
-  <File Type="RDI-RDI" Name="cumulative_energy_map.vdi"/>
-  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/comparator.vhd">
@@ -121,9 +103,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2020">
-      <Desc>Default settings for Implementation.</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2020"/>
     <Step Id="init_design"/>
     <Step Id="opt_design"/>
     <Step Id="power_opt_design"/>
@@ -133,5 +113,6 @@
     <Step Id="route_design"/>
     <Step Id="post_route_phys_opt_design"/>
     <Step Id="write_bitstream"/>
+    <Step Id="write_device_image"/>
   </Strategy>
 </GenRun>

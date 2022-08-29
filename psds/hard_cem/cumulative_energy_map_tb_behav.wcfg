@@ -10,15 +10,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1225529fs"></ZoomStartTime>
-      <ZoomEndTime time="1900133fs"></ZoomEndTime>
-      <Cursor1Time time="1645817fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="4000000fs"></ZoomEndTime>
+      <Cursor1Time time="2619583fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="177"></NameColumnWidth>
-      <ValueColumnWidth column_width="118"></ValueColumnWidth>
+      <ValueColumnWidth column_width="113"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="24" />
+   <WVObjectSize size="25" />
    <wvobject fp_name="/cumulative_energy_map_tb/clk_s" type="logic">
       <obj_property name="ElementShortName">clk_s</obj_property>
       <obj_property name="ObjectShortName">clk_s</obj_property>
@@ -46,12 +46,7 @@
    <wvobject fp_name="/cumulative_energy_map_tb/hard/min_abc" type="array">
       <obj_property name="ElementShortName">min_abc[15:0]</obj_property>
       <obj_property name="ObjectShortName">min_abc[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/hard/min_reg" type="array">
-      <obj_property name="ElementShortName">min_reg[15:0]</obj_property>
-      <obj_property name="ObjectShortName">min_reg[15:0]</obj_property>
-      <obj_property name="CustomSignalColor">#008080</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/cumulative_energy_map_tb/dob_ip_s" type="array">
       <obj_property name="ElementShortName">dob_ip_s[15:0]</obj_property>
@@ -147,8 +142,16 @@
       <obj_property name="ElementShortName">ready_s</obj_property>
       <obj_property name="ObjectShortName">ready_s</obj_property>
    </wvobject>
-   <wvobject fp_name="/cumulative_energy_map_tb/hard_toggle_row_s" type="logic">
-      <obj_property name="ElementShortName">hard_toggle_row_s</obj_property>
-      <obj_property name="ObjectShortName">hard_toggle_row_s</obj_property>
+   <wvobject fp_name="/cumulative_energy_map_tb/hard/hard_toggle_row_next" type="logic">
+      <obj_property name="ElementShortName">hard_toggle_row_next</obj_property>
+      <obj_property name="ObjectShortName">hard_toggle_row_next</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/hard/hard_toggle_row_reg" type="logic">
+      <obj_property name="ElementShortName">hard_toggle_row_reg</obj_property>
+      <obj_property name="ObjectShortName">hard_toggle_row_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cumulative_energy_map_tb/hard/hard_toggle_row" type="logic">
+      <obj_property name="ElementShortName">hard_toggle_row</obj_property>
+      <obj_property name="ObjectShortName">hard_toggle_row</obj_property>
    </wvobject>
 </wave_config>

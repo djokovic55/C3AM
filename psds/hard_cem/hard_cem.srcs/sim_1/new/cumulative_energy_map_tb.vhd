@@ -58,10 +58,10 @@ architecture beh of cumulative_energy_map_tb is
             
         ----------Komandni interfejs----------
             start:           in std_logic;
-            hard_toggle_row: in std_logic;
             
         ----------Statusni interfejs----------
-            ready:           out std_logic);
+            ready:           out std_logic;
+            hard_toggle_row: out std_logic);
     end component;
     
     constant MEM_CONTENT: mem_t :=
@@ -124,7 +124,7 @@ architecture beh of cumulative_energy_map_tb is
 
     
     signal start_s:             std_logic := '0';
-    signal hard_toggle_row_s:   std_logic := '0';
+    signal hard_toggle_row_s:   std_logic;
     signal ready_s:             std_logic;
 
 begin
@@ -145,7 +145,7 @@ begin
     begin
         reset_s <= '1';
         colsize_s <= (std_logic_vector(to_unsigned(5, 12)));
-        hard_toggle_row_s <= '1';
+        -- hard_toggle_row_s <= '1';
 
         enb_tb_s <= '0'; 
         wait for 500 ns;
@@ -171,16 +171,18 @@ begin
         addrb_tb <= (others => '0');
         db_tb <= (others => '0');
         enb_tb_s <= '0';
-        wait until falling_edge(clk_s);
         --pocetak rada algoritma
+        for i in 0 to 2 loop
+            
+            wait until falling_edge(clk_s);
+            start_s <= '1';
+            wait until falling_edge(clk_s);
+            wait until falling_edge(clk_s);
+            wait until falling_edge(clk_s);
+            start_s <= '0';
         
-        start_s <= '1';
-        wait until falling_edge(clk_s);
-        wait until falling_edge(clk_s);
-       wait until falling_edge(clk_s);
-        start_s <= '0';
-        
-        wait until ready_s = '1';
+            wait until ready_s = '1';
+        end loop;
         
         --zavrsetak stimulus generatora
         wait; 

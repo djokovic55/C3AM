@@ -1,6 +1,6 @@
 webtalk_init -webtalk_dir C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.sim/sim_1/behav/xsim/xsim.dir/cumulative_energy_map_tb_behav/webtalk/
 webtalk_register_client -client project
-webtalk_add_data -client project -key date_generated -value "Wed Aug 24 15:24:32 2022" -context "software_version_and_target_device"
+webtalk_add_data -client project -key date_generated -value "Mon Aug 29 22:20:21 2022" -context "software_version_and_target_device"
 webtalk_add_data -client project -key product_version -value "XSIM v2020.2 (64-bit)" -context "software_version_and_target_device"
 webtalk_add_data -client project -key build_version -value "3064766" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_platform -value "WIN64" -context "software_version_and_target_device"
@@ -14,7 +14,7 @@ webtalk_add_data -client project -key target_package -value "not_applicable" -co
 webtalk_add_data -client project -key target_speed -value "not_applicable" -context "software_version_and_target_device"
 webtalk_add_data -client project -key random_id -value "2f9d29ce-38ea-4982-b3cb-e4a38ab998bb" -context "software_version_and_target_device"
 webtalk_add_data -client project -key project_id -value "5f2ea4235e214a5b84dc1daac4f2fc38" -context "software_version_and_target_device"
-webtalk_add_data -client project -key project_iteration -value "229" -context "software_version_and_target_device"
+webtalk_add_data -client project -key project_iteration -value "239" -context "software_version_and_target_device"
 webtalk_add_data -client project -key os_name -value "Windows Server 2016 or Windows 10" -context "user_environment"
 webtalk_add_data -client project -key os_release -value "major release  (build 9200)" -context "user_environment"
 webtalk_add_data -client project -key cpu_name -value "Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz" -context "user_environment"
@@ -36,7 +36,7 @@ webtalk_add_data -client xsim -key Total_Nets -value "0" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Total_Processes -value "13" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Total_Instances -value "10" -context "xsim\\usage"
 webtalk_add_data -client xsim -key Xilinx_HDL_Libraries_Used -value "secureip " -context "xsim\\usage"
-webtalk_add_data -client xsim -key Compiler_Time -value "0.98_sec" -context "xsim\\usage"
-webtalk_add_data -client xsim -key Compiler_Memory -value "65192_KB" -context "xsim\\usage"
-webtalk_transmit -clientid 2643584466 -regid "" -xml C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.sim/sim_1/behav/xsim/xsim.dir/cumulative_energy_map_tb_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.sim/sim_1/behav/xsim/xsim.dir/cumulative_energy_map_tb_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.sim/sim_1/behav/xsim/xsim.dir/cumulative_energy_map_tb_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
+webtalk_add_data -client xsim -key Compiler_Time -value "1.70_sec" -context "xsim\\usage"
+webtalk_add_data -client xsim -key Compiler_Memory -value "66256_KB" -context "xsim\\usage"
+webtalk_transmit -clientid 4137750162 -regid "" -xml C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.sim/sim_1/behav/xsim/xsim.dir/cumulative_energy_map_tb_behav/webtalk/usage_statistics_ext_xsim.xml -html C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.sim/sim_1/behav/xsim/xsim.dir/cumulative_energy_map_tb_behav/webtalk/usage_statistics_ext_xsim.html -wdm C:/Users/L340/Desktop/PSDS_projekat/hard_cem/hard_cem.sim/sim_1/behav/xsim/xsim.dir/cumulative_energy_map_tb_behav/webtalk/usage_statistics_ext_xsim.wdm -intro "<H3>XSIM Usage Report</H3><BR>"
 webtalk_terminate
