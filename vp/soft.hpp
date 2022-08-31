@@ -19,7 +19,6 @@ class Soft : public sc_core::sc_module
         tlm_utils::simple_target_socket<Soft> soft_dma_socket; // 50%, receiving data left, sending done
         
         sc_in<int> from_dma;
-        sc_in<int> from_hard;
     protected:
         pl_t p1;
         sc_core::sc_time offset;
@@ -30,10 +29,6 @@ class Soft : public sc_core::sc_module
         void dma_interrupt();
         sc_core::sc_event dma_done;
         int dma_control;
-
-        void hard_interrupt();
-        sc_core::sc_event hard_done;
-        int hard_control;
 
         void configuration();
 

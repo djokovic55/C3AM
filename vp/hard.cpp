@@ -6,9 +6,6 @@ using namespace std;
 Hard::Hard(sc_core::sc_module_name name): sc_channel(name)
 {
     hard_intcon_socket.register_b_transport(this, &Hard::b_transport);
-    SC_METHOD(hard_cem);
-    dont_initialize();
-    sensitive<<hard_start;
     SC_REPORT_INFO("Hard", "Constructed.");
 }
 
@@ -30,12 +27,6 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
         case TLM_WRITE_COMMAND:
             switch(addr)
             {
-                case HARD_CONTROL:
-                    control = *((int*)data);
-                    hard_start.notify();
-                    p1.set_response_status(TLM_OK_RESPONSE);
-                    break;
-                
                 case HARD_ROWSIZE:
                     rowsize = *((int*)data);
                     hard_toggle_row = false;
@@ -52,11 +43,6 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                     cout<<"---------------------------> Cache size: "<<cache.size()<<endl;
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
-                case HARD_CACHE_SADDR:
-                    // cache_saddr = *((int*)data);
-                    // hard_toggle_row = cache_saddr;
-                    p1.set_response_status(TLM_OK_RESPONSE);
-                    break;
                 default:
                     p1.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
                     break;
@@ -64,11 +50,6 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
         case TLM_READ_COMMAND:
             switch(addr)
             {
-                case HARD_CONTROL:
-                    memcpy(data, &control, sizeof(control));
-                    p1.set_response_status(TLM_OK_RESPONSE);
-                    break;
-
                 default:
                     p1.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
                     break;
@@ -80,13 +61,17 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
 }
 
 
-void Hard::write(Data& data, int i)
+void Hard::write(Data& data)
 {
     cache_waddr = cache_waddr % (2*colsize);
     cache[cache_waddr++] = data.pixel;
+    if(data.hard_start == true && data.last == true)
+    {
+        hard_cem();
+    }
 }
 
-void Hard::read(Data& data, int i)
+void Hard::read(Data& data)
 {
     cache_raddr = cache_raddr % (2*colsize);
     data.pixel = cache[cache_raddr++];
@@ -171,18 +156,16 @@ void Hard::hard_cem() {
 
     cache.at(target_pixel_addr) = cache.at(target_pixel_addr) + min;
 
-    control++; 
-    to_soft_h->write(control);
 }
 
-// replace first and second row in cache
-void Hard::cache_substitution(Data& data)
-{
-    if(data.last)
-    {
-        for(int j = 0; j < colsize; j++)
-        {
-            cache[j] = cache[colsize + j];
-        }
-    }
-}
+// // replace first and second row in cache
+// void Hard::cache_substitution(Data& data)
+// {
+//     if(data.last)
+//     {
+//         for(int j = 0; j < colsize; j++)
+//         {
+//             cache[j] = cache[colsize + j];
+//         }
+//     }
+// }

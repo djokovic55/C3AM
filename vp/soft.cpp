@@ -14,18 +14,12 @@ Soft::Soft(sc_core::sc_module_name name, int argc, char** argv) : sc_module(name
     dont_initialize();
     sensitive<<from_dma;
 
-    SC_METHOD(hard_interrupt);
-    dont_initialize();
-    sensitive<<from_hard;
-
     dma_control = 1;
-    hard_control = 1;
 
     SC_REPORT_INFO("Soft", "Constructed.");
 
     input_num = argc;
     input_parameter = argv;
-
     
 }
 
@@ -37,12 +31,6 @@ Soft::~Soft()
 void Soft::dma_interrupt()
 {
     dma_done.notify();
-}
-
-
-void Soft::hard_interrupt()
-{
-    hard_done.notify();
 }
 
 void Soft::seam_carving(){
@@ -142,10 +130,6 @@ void Soft::driver(Mat& image, int iterations) {
 
 void Soft::configuration()
 {
-    int saddr;
-    int daddr;
-    int cache_saddr = colsize;
-
     //sending rowsize to hard 
     p1.set_command(TLM_WRITE_COMMAND);
     p1.set_address(HARD_L + HARD_ROWSIZE);
@@ -182,116 +166,28 @@ void Soft::configuration()
 
     soft_intcon_socket->b_transport(p1, offset);
 
-    for (int j = 0; j < rowsize; j++)
-    {
-        
-        saddr = j * colsize;
+    //sending source to dma 
+    int saddr = 0;
 
-        //sending cache saddr to hard 
-        // if(cache_saddr == colsize)
-        //     cache_saddr = 0;
-        // else 
-        //     cache_saddr = colsize;
+    p1.set_command(TLM_WRITE_COMMAND);
+    p1.set_address(DMA_L + DMA_SADDR);
+    p1.set_data_ptr((unsigned char*)&saddr);
+    p1.set_data_length(1);
+    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-        // p1.set_command(TLM_WRITE_COMMAND);
-        // p1.set_address(HARD_L + HARD_CACHE_SADDR);
-        // p1.set_data_ptr((unsigned char*)&cache_saddr);
-        // p1.set_data_length(1);
-        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+    soft_intcon_socket->b_transport(p1, offset);
 
-        // soft_intcon_socket->b_transport(p1, offset);
+    // dma control, ide na kraj jer se ovde poziva dm()
+    dma_control++;
+    p1.set_command(TLM_WRITE_COMMAND);
+    p1.set_address(DMA_L + DMA_CONTROL);
+    p1.set_data_ptr((unsigned char*)&dma_control);
+    p1.set_data_length(1);
+    p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-        //sending destination to dma 
-        daddr = TO_HARD;
-        p1.set_command(TLM_WRITE_COMMAND);
-        p1.set_address(DMA_L + DMA_DADDR);
-        p1.set_data_ptr((unsigned char*)&daddr);
-        p1.set_data_length(1);
-        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+    soft_intcon_socket->b_transport(p1, offset); 
 
-        soft_intcon_socket->b_transport(p1, offset);
-
-        //sending source to dma 
-        p1.set_command(TLM_WRITE_COMMAND);
-        p1.set_address(DMA_L + DMA_SADDR);
-        p1.set_data_ptr((unsigned char*)&saddr);
-        p1.set_data_length(1);
-        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        soft_intcon_socket->b_transport(p1, offset);
-
-        // dma control, ide na kraj jer se ovde poziva dm()
-        dma_control++;
-        p1.set_command(TLM_WRITE_COMMAND);
-        p1.set_address(DMA_L + DMA_CONTROL);
-        p1.set_data_ptr((unsigned char*)&dma_control);
-        p1.set_data_length(1);
-        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-        soft_intcon_socket->b_transport(p1, offset); 
-
-        wait(dma_done);
-        
-        //sending destination to dma 
-        if(j != 0)
-        {
-            // START HARD
-
-            ////////////////////////////////////////////////////////////////////////////////
-            // sending start to hard
-            hard_control++;
-            p1.set_command(TLM_WRITE_COMMAND);
-            p1.set_address(HARD_L + HARD_CONTROL);
-            p1.set_data_ptr((unsigned char*)&hard_control);
-            p1.set_data_length(1);
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-            soft_intcon_socket->b_transport(p1, offset);
-            
-            wait(hard_done);
-            // //sending cache saddr to hard 
-
-            // p1.set_command(TLM_WRITE_COMMAND);
-            // p1.set_address(HARD_L + HARD_CACHE_SADDR);
-            // p1.set_data_ptr((unsigned char*)&cache_saddr);
-            // p1.set_data_length(1);
-            // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-            // soft_intcon_socket->b_transport(p1, offset);
-
-            //sending destination to dma 
-            daddr = TO_DDR;
-            p1.set_command(TLM_WRITE_COMMAND);
-            p1.set_address(DMA_L + DMA_DADDR);
-            p1.set_data_ptr((unsigned char*)&daddr);
-            p1.set_data_length(1);
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-            soft_intcon_socket->b_transport(p1, offset);
-
-            //sending source to dma 
-            p1.set_command(TLM_WRITE_COMMAND);
-            p1.set_address(DMA_L + DMA_SADDR);
-            p1.set_data_ptr((unsigned char*)&saddr);
-            p1.set_data_length(1);
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-            soft_intcon_socket->b_transport(p1, offset);
-
-            // dma control, ide na kraj jer se ovde poziva dm()
-            dma_control++;
-            p1.set_command(TLM_WRITE_COMMAND);
-            p1.set_address(DMA_L + DMA_CONTROL);
-            p1.set_data_ptr((unsigned char*)&dma_control);
-            p1.set_data_length(1);
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
-
-            soft_intcon_socket->b_transport(p1, offset); 
-
-            wait(dma_done);
-        }
-    }
-    
+    wait(dma_done);
 }
 
 Mat Soft::createEnergyImage(Mat& image) {

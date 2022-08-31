@@ -19,27 +19,26 @@ Dma::~Dma(){
 
 void Dma::dm()
 {
-
-
-    if(daddr == TO_HARD)
+    data.hard_start = false;
+    for(int i = 0; i < rowsize; i++)
     {
         sh_transfer(saddr);
-        control++;
-        to_soft->write(control);
-    }
-    else if(daddr == TO_DDR)
-    {
+        data.hard_start = true;
         hs_transfer(saddr);
-        control++;
-        to_soft->write(control);
+
+        saddr += colsize;
     }
+
+    control++;
+    to_soft->write(control);
 
 }
 
 
 void Dma::sh_transfer(const int saddr) 
 {
-    for(int i = 0; i < colsize; i++){
+    for(int i = 0; i < colsize; i++)
+    {
 
         p1.set_address(saddr + i);
         p1.set_command(TLM_READ_COMMAND);
@@ -51,8 +50,14 @@ void Dma::sh_transfer(const int saddr)
         
         pixel_dma = toShort(buff_read);
 
+        data.last = false;
+        if (i == colsize - 1)
+        {
+            data.last = true;
+        }
         data.pixel = pixel_dma;
-        wr_port -> write(data, i);
+        wr_port -> write(data);
+        data.last = false;
     }
 
 }
@@ -61,8 +66,14 @@ void Dma::hs_transfer(const int saddr)
 {
     for(int i = 0; i < colsize; i++)
     {
+        data.last = false;
+        if (i == colsize - 1)
+        {
+            data.last = true;
+        }
+        rd_port -> read(data);
+        data.last = false;
 
-        rd_port -> read(data, i);
         toUchar(buff_write, data.pixel);
         
         p1.set_address(saddr + i);
@@ -72,7 +83,6 @@ void Dma::hs_transfer(const int saddr)
         p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
         dma_soft_socket->b_transport(p1, offset);
-
     }
 }
 void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){

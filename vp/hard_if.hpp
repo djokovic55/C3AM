@@ -10,21 +10,21 @@ using namespace sc_core;
 
 typedef struct
 {
-	bool first_row;	
 	unsigned short pixel;
 	bool last;
+	bool hard_start;
 }Data;
 
 class hard_write_if : virtual public sc_core::sc_interface
 {
 	public:
-		virtual void write(Data& data, int i) = 0;
+		virtual void write(Data& data) = 0;
 };
 
 class hard_read_if: virtual public sc_core::sc_interface
 {
 	public:
-		virtual void read(Data& data, int i) = 0;
+		virtual void read(Data& data) = 0;
 };
 
 #endif

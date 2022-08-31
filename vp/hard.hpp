@@ -20,10 +20,10 @@ class Hard :
         ~Hard();
 
         tlm_utils::simple_target_socket<Hard> hard_intcon_socket;
-        void write(Data& data, int i);
-        void read(Data& data, int i);
+        void write(Data& data);
+        void read(Data& data);
 
-        sc_out<int> to_soft_h;
+        // sc_out<int> to_soft_h;
         
     protected:
         pl_t p1;
@@ -31,7 +31,7 @@ class Hard :
         void b_transport(pl_t&, sc_core::sc_time&);
         void hard_cem();
 
-        sc_event hard_start; 
+        // sc_event hard_start; 
 
 
         int control;
@@ -41,10 +41,12 @@ class Hard :
 
         int cache_raddr;
         int cache_waddr;
+
+        bool hard_done;
         
         std::vector<unsigned short> cache;
 
-        void cache_substitution(Data& data);
+        // void cache_substitution(Data& data);
 
 };
 
