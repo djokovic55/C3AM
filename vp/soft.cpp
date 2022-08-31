@@ -188,18 +188,18 @@ void Soft::configuration()
         saddr = j * colsize;
 
         //sending cache saddr to hard 
-        if(cache_saddr == colsize)
-            cache_saddr = 0;
-        else 
-            cache_saddr = colsize;
+        // if(cache_saddr == colsize)
+        //     cache_saddr = 0;
+        // else 
+        //     cache_saddr = colsize;
 
-        p1.set_command(TLM_WRITE_COMMAND);
-        p1.set_address(HARD_L + HARD_CACHE_SADDR);
-        p1.set_data_ptr((unsigned char*)&cache_saddr);
-        p1.set_data_length(1);
-        p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+        // p1.set_command(TLM_WRITE_COMMAND);
+        // p1.set_address(HARD_L + HARD_CACHE_SADDR);
+        // p1.set_data_ptr((unsigned char*)&cache_saddr);
+        // p1.set_data_length(1);
+        // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-        soft_intcon_socket->b_transport(p1, offset);
+        // soft_intcon_socket->b_transport(p1, offset);
 
         //sending destination to dma 
         daddr = TO_HARD;
@@ -249,15 +249,15 @@ void Soft::configuration()
             soft_intcon_socket->b_transport(p1, offset);
             
             wait(hard_done);
-            //sending cache saddr to hard 
+            // //sending cache saddr to hard 
 
-            p1.set_command(TLM_WRITE_COMMAND);
-            p1.set_address(HARD_L + HARD_CACHE_SADDR);
-            p1.set_data_ptr((unsigned char*)&cache_saddr);
-            p1.set_data_length(1);
-            p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
+            // p1.set_command(TLM_WRITE_COMMAND);
+            // p1.set_address(HARD_L + HARD_CACHE_SADDR);
+            // p1.set_data_ptr((unsigned char*)&cache_saddr);
+            // p1.set_data_length(1);
+            // p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-            soft_intcon_socket->b_transport(p1, offset);
+            // soft_intcon_socket->b_transport(p1, offset);
 
             //sending destination to dma 
             daddr = TO_DDR;

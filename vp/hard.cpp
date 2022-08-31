@@ -38,6 +38,9 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                 
                 case HARD_ROWSIZE:
                     rowsize = *((int*)data);
+                    hard_toggle_row = false;
+                    cache_raddr = 0;
+                    cache_waddr = 0;
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 case HARD_COLSIZE:
@@ -50,8 +53,8 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 case HARD_CACHE_SADDR:
-                    cache_saddr = *((int*)data);
-                    hard_toggle_row = cache_saddr;
+                    // cache_saddr = *((int*)data);
+                    // hard_toggle_row = cache_saddr;
                     p1.set_response_status(TLM_OK_RESPONSE);
                     break;
                 default:
@@ -79,12 +82,14 @@ void Hard::b_transport(pl_t &p1, sc_core::sc_time &offset)
 
 void Hard::write(Data& data, int i)
 {
-    cache[cache_saddr++] = data.pixel;
+    cache_waddr = cache_waddr % (2*colsize);
+    cache[cache_waddr++] = data.pixel;
 }
 
 void Hard::read(Data& data, int i)
 {
-    data.pixel = cache[cache_saddr++];
+    cache_raddr = cache_raddr % (2*colsize);
+    data.pixel = cache[cache_raddr++];
 }
 
 void Hard::hard_cem() {
@@ -93,7 +98,7 @@ void Hard::hard_cem() {
     unsigned short a, b, c, min;
     unsigned short target_pixel_addr, abc_addr;
 	unsigned short col;
-
+    hard_toggle_row = !hard_toggle_row;
     // generisanje pocetnih adresa
     if(hard_toggle_row)
     {

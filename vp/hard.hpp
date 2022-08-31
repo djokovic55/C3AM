@@ -37,8 +37,10 @@ class Hard :
         int control;
         int rowsize;
         int colsize;
-        int hard_toggle_row; 
-        int cache_saddr;
+        bool hard_toggle_row; 
+
+        int cache_raddr;
+        int cache_waddr;
         
         std::vector<unsigned short> cache;
 
