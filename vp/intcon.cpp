@@ -12,7 +12,6 @@ Intcon::~Intcon()
     SC_REPORT_INFO("Interconnect", "Destructed");
 
 }
-
 void Intcon::b_transport(pl_t &p1, sc_core::sc_time &offset)
 {
     sc_dt::uint64 addr = p1.get_address();

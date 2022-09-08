@@ -34,7 +34,7 @@ void Dma::dm()
 
         saddr += colsize;
     }
-
+    
     control++;
     to_soft->write(control);
 

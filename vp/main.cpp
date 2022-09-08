@@ -9,7 +9,6 @@ int sc_main(int argc, char** argv) {
     return 0;
 }
 /*       
-
     Mat energy_image = createEnergyImage(image);
     //cout<<image;
     vector<vector<int>> energy_image_2d = convert_to_vect(energy_image);
