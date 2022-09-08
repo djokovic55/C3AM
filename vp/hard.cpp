@@ -82,26 +82,25 @@ void Hard::hard_cem() {
     // take the minimum of the three neighbors and add to total, this creates a running sum which is used to determine the lowest energy path
     unsigned short a, b, c, min;
     unsigned short target_pixel_addr, abc_addr;
-	unsigned short col;
+	unsigned short col = 0;
+
     hard_toggle_row = !hard_toggle_row;
+
     // generisanje pocetnih adresa
     if(hard_toggle_row)
     {
-        col = 0;
-        abc_addr = col;
-        target_pixel_addr = col + colsize;
+        abc_addr = 0;
+        target_pixel_addr = colsize;
     } 
     else
     {
-        col = 0;
-        abc_addr = col + colsize;
-        target_pixel_addr = col;
+        abc_addr = colsize;
+        target_pixel_addr = 0;
     }
   
 	// Levi granicni slucaj
     b = cache.at(abc_addr);
     min = b;
-    
     c = cache.at(abc_addr + 1);
         
     if(c < b)
@@ -116,7 +115,6 @@ void Hard::hard_cem() {
     target_pixel_addr++;
 
 	// Srednji slucaj
-
     loop:
 		a = b;
 		b = c;
@@ -143,6 +141,7 @@ void Hard::hard_cem() {
 
 	if(col < colsize - 1)
         goto loop;	
+
 	// Desni granicni slucaj
 	
     a = b;
@@ -157,15 +156,3 @@ void Hard::hard_cem() {
     cache.at(target_pixel_addr) = cache.at(target_pixel_addr) + min;
 
 }
-
-// // replace first and second row in cache
-// void Hard::cache_substitution(Data& data)
-// {
-//     if(data.last)
-//     {
-//         for(int j = 0; j < colsize; j++)
-//         {
-//             cache[j] = cache[colsize + j];
-//         }
-//     }
-// }

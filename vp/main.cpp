@@ -6,8 +6,6 @@ int sc_main(int argc, char** argv) {
     Vp vp("Virtual Platform", argc, argv);
     sc_start(1000, sc_core::SC_NS);
 
-
-
     return 0;
 }
 /*       

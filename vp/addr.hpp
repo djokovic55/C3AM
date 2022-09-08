@@ -14,8 +14,6 @@
 // registers in hard
 #define HARD_ROWSIZE 0x00
 #define HARD_COLSIZE 0x01
-#define HARD_CONTROL 0x02
-#define HARD_CACHE_SADDR 0x03
 
 // dma
 #define DMA_L 0x42000000
@@ -26,9 +24,6 @@
 #define DMA_ROWSIZE 0x01
 #define DMA_COLSIZE 0x02
 #define DMA_SADDR 0x03
-#define DMA_DADDR 0x04
 
-const int TO_HARD = 10;
-const int TO_DDR = 20;
-
+#define DELAY 5
 #endif

@@ -33,6 +33,12 @@ int sc_main(int argc, char** argv) {
 
     cout<<"Hello world"<<endl;
 
+    double throughput[12] = {0.30274, 0.57509, 1.02858, 0.89309, 1.72527, 3.20697, 1.72772, 3.39579, 6.54794, 1.02999, 2.01015, 3.82094};
+
+    for(int i = 0; i < 12; i++)
+    {
+        cout<< "Throughput "<<i+1<<" :"<< 60/throughput[i]<<endl;
+    }
     // char c = 1;
     // if (c > 0)
     // {
@@ -43,14 +49,14 @@ int sc_main(int argc, char** argv) {
     //     cout<<"This is signed number"<<endl;
     // }
 
-    vector<int> vec;
-    vec.reserve(10);
+    // vector<int> vec;
+    // vec.reserve(10);
 
-    vec[5] = 1;
-    for(int i = 0; i < 9; i++)
-    {
-        cout<<i<<" vec:"<<vec[i]<<endl;
-    }
+    // vec[5] = 1;
+    // for(int i = 0; i < 9; i++)
+    // {
+    //     cout<<i<<" vec:"<<vec[i]<<endl;
+    // }
 
     // unsigned short a = 255;
 

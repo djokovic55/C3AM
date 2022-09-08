@@ -84,15 +84,6 @@
     return image_16b;
     }
 
-    // void print_1d_uc (vector<unsigned char> &vector_1d){
-        
-    //     cout<<"1d vector: "<<endl;
-    //     for(int i = 0; i < vector_1d.size(); i++){
-    //         cout<<int(vector_1d[i])<<' ';
-    //     }
-    //     cout<<endl;
-    // }
-
 
     void print_1d_sh(vector<unsigned short> &vector_1d){
         
@@ -104,17 +95,6 @@
         cout<<endl;
         cout<<endl;
     }
-
-    // void print_2d(vector<vector<int>> &vector_2d){
-
-    //     cout<<"2d vector: "<<endl;
-    //     for (int i = 0; i < vector_2d.size(); i++) {
-    //         for (int j = 0; j < vector_2d[i].size(); j++) {
-    //             cout<<vector_2d[i][j]<<' ';
-    //         }
-    //     }
-    //     cout<<endl;
-    // }
 
 
 unsigned short toShort(unsigned char *buf)

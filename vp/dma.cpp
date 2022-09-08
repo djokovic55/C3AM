@@ -1,6 +1,7 @@
 #include "dma.hpp"
 
-Dma::Dma(sc_core::sc_module_name name) : sc_module(name){
+Dma::Dma(sc_core::sc_module_name name) : sc_module(name), dma_offset(sc_core::SC_ZERO_TIME), global_time(sc_core::SC_ZERO_TIME)
+{
 
     dma_intcon_socket.register_b_transport(this, &Dma::b_transport);
     SC_METHOD(dm);
@@ -23,6 +24,11 @@ void Dma::dm()
     for(int i = 0; i < rowsize; i++)
     {
         sh_transfer(saddr);
+        if(i != 0)
+        {
+            int hard_cycles = (colsize - 2)*2 + 7;
+            dma_offset += sc_core::sc_time(hard_cycles*DELAY, sc_core::SC_NS);
+        }
         data.hard_start = true;
         hs_transfer(saddr);
 
@@ -32,6 +38,9 @@ void Dma::dm()
     control++;
     to_soft->write(control);
 
+    cout<<endl<<"Time needed for current seam: "<< dma_offset;
+    global_time += dma_offset;
+    cout<<endl<<"Total time consumed: "<< global_time<< endl<<endl;
 }
 
 
@@ -46,7 +55,13 @@ void Dma::sh_transfer(const int saddr)
         p1.set_data_ptr((unsigned char*)buff_read);
         p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-        dma_soft_socket->b_transport(p1, offset);
+        //axi full consumes 11 cycles when the transaction initiates, after that only 1 cycle
+        if((i % 256) == 0)
+        {
+            dma_offset += sc_core::sc_time(10*DELAY, sc_core::SC_NS);
+        }
+        dma_offset += sc_core::sc_time(DELAY, sc_core::SC_NS);
+        dma_soft_socket->b_transport(p1, dma_offset);
         
         pixel_dma = toShort(buff_read);
 
@@ -82,7 +97,14 @@ void Dma::hs_transfer(const int saddr)
         p1.set_data_ptr((unsigned char*)buff_write);
         p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
-        dma_soft_socket->b_transport(p1, offset);
+        //axi full consumes 11 cycles when the transaction initiates, after that only 1 cycle
+        if((i % 256) == 0)
+        {
+            dma_offset += sc_core::sc_time(10*DELAY, sc_core::SC_NS);
+        }
+        dma_offset += sc_core::sc_time(2*DELAY, sc_core::SC_NS);
+
+        dma_soft_socket->b_transport(p1, dma_offset);
     }
 }
 void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
@@ -100,7 +122,10 @@ void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
             {
                 case DMA_CONTROL:
                    control = *((int*)data);
+                   dma_offset = offset;
                    dma_start.notify();
+                    // cout<<"Time after soft :"<<dma_offset<<endl;
+                    // exit(0);
                    p1.set_response_status(TLM_OK_RESPONSE);
                 break;
 
@@ -119,10 +144,6 @@ void Dma::b_transport(pl_t &p1, sc_core::sc_time &offset){
                     p1.set_response_status(TLM_OK_RESPONSE);
                 break;
 
-                case DMA_DADDR:
-                    daddr = *((int*)data);
-                    p1.set_response_status(TLM_OK_RESPONSE);
-                break;
                 default:
                     p1.set_response_status(TLM_ADDRESS_ERROR_RESPONSE);
                 break;

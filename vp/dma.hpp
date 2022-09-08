@@ -23,7 +23,8 @@ class Dma: public sc_core::sc_module
 
         sc_out<int> to_soft;
     protected:
-        sc_core::sc_time offset;
+        sc_core::sc_time dma_offset;
+        sc_core::sc_time global_time;
         pl_t p1;
 
         sc_event dma_start;
@@ -37,7 +38,6 @@ class Dma: public sc_core::sc_module
         int rowsize;
         int colsize;
         int saddr;
-        int daddr;
         
         unsigned char buff_write[2];
         unsigned char buff_read[2];

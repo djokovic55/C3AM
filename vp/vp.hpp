@@ -21,9 +21,6 @@ class Vp : public sc_core::sc_module{
         Dma dma;
         Intcon intcon;
         sc_signal<int> soft_dma;
-        // sc_signal<int> soft_hard;
-        
-        
 };
 
 #endif

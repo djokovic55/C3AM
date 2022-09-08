@@ -113,7 +113,7 @@ void Soft::driver(Mat& image, int iterations) {
 
         cout<<"---------------------------> Number of pixels: "<<rowsize*colsize<<endl;
         configuration();
-        
+
         //SOFT PART 
         //CEM, type 2d vector
         vector<vector<unsigned short>> cumulative_energy_map_2d = convert_to_2d(ddr16, rowsize, colsize);
@@ -121,8 +121,9 @@ void Soft::driver(Mat& image, int iterations) {
         Mat cumulative_energy_map_mat = convert_to_mat(cumulative_energy_map_2d);
         vector<int> path = findOptimalSeam(cumulative_energy_map_mat);
         reduce(image, path);
-        cout<<"Seam "<<i+1<<" done."<<endl;
+        cout<<"Seam "<<i+1<<" done."<<endl<<endl;
     
+        // cout<<"delay after each seam: "<< offset<<endl;
     }
     namedWindow("Reduced Image", WINDOW_AUTOSIZE); imshow("Reduced Image", image); waitKey(0);
     imwrite("result.jpg", image);
@@ -137,6 +138,7 @@ void Soft::configuration()
     p1.set_data_length(1);
     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+    offset += sc_core::sc_time(11*DELAY, sc_core::SC_NS);
     soft_intcon_socket->b_transport(p1, offset);
 
     // sending colsize to hard
@@ -146,6 +148,7 @@ void Soft::configuration()
     p1.set_data_length(1);
     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+    offset += sc_core::sc_time(11*DELAY, sc_core::SC_NS);
     soft_intcon_socket->b_transport(p1, offset);
 
     //sending rowsize to dma 
@@ -155,6 +158,7 @@ void Soft::configuration()
     p1.set_data_length(1);
     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+    offset += sc_core::sc_time(11*DELAY, sc_core::SC_NS);
     soft_intcon_socket->b_transport(p1, offset);
 
     // sending colsize to dma
@@ -164,6 +168,7 @@ void Soft::configuration()
     p1.set_data_length(1);
     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+    offset += sc_core::sc_time(11*DELAY, sc_core::SC_NS);
     soft_intcon_socket->b_transport(p1, offset);
 
     //sending source to dma 
@@ -175,6 +180,7 @@ void Soft::configuration()
     p1.set_data_length(1);
     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+    offset += sc_core::sc_time(11*DELAY, sc_core::SC_NS);
     soft_intcon_socket->b_transport(p1, offset);
 
     // dma control, ide na kraj jer se ovde poziva dm()
@@ -185,6 +191,7 @@ void Soft::configuration()
     p1.set_data_length(1);
     p1.set_response_status(TLM_INCOMPLETE_RESPONSE);
 
+    offset += sc_core::sc_time(11*DELAY, sc_core::SC_NS);
     soft_intcon_socket->b_transport(p1, offset); 
 
     wait(dma_done);

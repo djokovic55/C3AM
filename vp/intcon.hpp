@@ -11,8 +11,8 @@ class Intcon : public sc_core::sc_module{
 
         tlm_utils::simple_target_socket<Intcon> intcon_soft_socket;
         
-        tlm_utils::simple_initiator_socket<Intcon> intcon_dma_socket; //90% impl
-        tlm_utils::simple_initiator_socket<Intcon> intcon_hard_socket; //90% impl
+        tlm_utils::simple_initiator_socket<Intcon> intcon_dma_socket; 
+        tlm_utils::simple_initiator_socket<Intcon> intcon_hard_socket; 
 
     protected:
 
