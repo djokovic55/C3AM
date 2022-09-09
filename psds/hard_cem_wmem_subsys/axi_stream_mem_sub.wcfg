@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="mem_subsystem_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="mem_subsystem_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="1274962fs"></ZoomEndTime>
+      <Cursor1Time time="525000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="242"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="109" />
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_clk" type="logic">
+      <obj_property name="ElementShortName">axis_clk</obj_property>
+      <obj_property name="ObjectShortName">axis_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_reset" type="logic">
+      <obj_property name="ElementShortName">axis_reset</obj_property>
+      <obj_property name="ObjectShortName">axis_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_start" type="logic">
+      <obj_property name="ElementShortName">axis_start</obj_property>
+      <obj_property name="ObjectShortName">axis_start</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/colsize" type="array">
+      <obj_property name="ElementShortName">colsize[11:0]</obj_property>
+      <obj_property name="ObjectShortName">colsize[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/rowsize" type="array">
+      <obj_property name="ElementShortName">rowsize[11:0]</obj_property>
+      <obj_property name="ObjectShortName">rowsize[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/m_axis_ready" type="logic">
+      <obj_property name="ElementShortName">m_axis_ready</obj_property>
+      <obj_property name="ObjectShortName">m_axis_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/s_axis_data" type="array">
+      <obj_property name="ElementShortName">s_axis_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_data[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/s_axis_valid" type="logic">
+      <obj_property name="ElementShortName">s_axis_valid</obj_property>
+      <obj_property name="ObjectShortName">s_axis_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/s_axis_ready" type="logic">
+      <obj_property name="ElementShortName">s_axis_ready</obj_property>
+      <obj_property name="ObjectShortName">s_axis_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/s_axis_last" type="logic">
+      <obj_property name="ElementShortName">s_axis_last</obj_property>
+      <obj_property name="ObjectShortName">s_axis_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/hard_done" type="logic">
+      <obj_property name="ElementShortName">hard_done</obj_property>
+      <obj_property name="ObjectShortName">hard_done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/hard_start" type="logic">
+      <obj_property name="ElementShortName">hard_start</obj_property>
+      <obj_property name="ObjectShortName">hard_start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/m_axis_last" type="logic">
+      <obj_property name="ElementShortName">m_axis_last</obj_property>
+      <obj_property name="ObjectShortName">m_axis_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/m_axis_valid" type="logic">
+      <obj_property name="ElementShortName">m_axis_valid</obj_property>
+      <obj_property name="ObjectShortName">m_axis_valid</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/m_axis_data" type="array">
+      <obj_property name="ElementShortName">m_axis_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axis_data[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_mem_addr" type="array">
+      <obj_property name="ElementShortName">axis_mem_addr[11:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_addr[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#808080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_mem_data_o" type="array">
+      <obj_property name="ElementShortName">axis_mem_data_o[15:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_data_o[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/col_next" type="array">
+      <obj_property name="ElementShortName">col_next[11:0]</obj_property>
+      <obj_property name="ObjectShortName">col_next[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/col_reg" type="array">
+      <obj_property name="ElementShortName">col_reg[11:0]</obj_property>
+      <obj_property name="ObjectShortName">col_reg[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#DCDCDC</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/comb_addr" type="array">
+      <obj_property name="ElementShortName">comb_addr[11:0]</obj_property>
+      <obj_property name="ObjectShortName">comb_addr[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/comb_addr_hs" type="array">
+      <obj_property name="ElementShortName">comb_addr_hs[11:0]</obj_property>
+      <obj_property name="ObjectShortName">comb_addr_hs[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_done" type="logic">
+      <obj_property name="ElementShortName">axis_done</obj_property>
+      <obj_property name="ObjectShortName">axis_done</obj_property>
+      <obj_property name="CustomSignalColor">#F0E68C</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/status_axis_o" type="logic">
+      <obj_property name="ElementShortName">status_axis_o</obj_property>
+      <obj_property name="ObjectShortName">status_axis_o</obj_property>
+      <obj_property name="CustomSignalColor">#A52A2A</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_mem_data_i" type="array">
+      <obj_property name="ElementShortName">axis_mem_data_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_data_i[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/memorija/RAM" type="array">
+      <obj_property name="ElementShortName">RAM[24:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">RAM[24:0][15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_mem_we" type="logic">
+      <obj_property name="ElementShortName">axis_mem_we</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_we</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_mem_en" type="logic">
+      <obj_property name="ElementShortName">axis_mem_en</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/state_reg" type="other">
+      <obj_property name="ElementShortName">state_reg</obj_property>
+      <obj_property name="ObjectShortName">state_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/state_next" type="other">
+      <obj_property name="ElementShortName">state_next</obj_property>
+      <obj_property name="ObjectShortName">state_next</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/row_reg" type="array">
+      <obj_property name="ElementShortName">row_reg[11:0]</obj_property>
+      <obj_property name="ObjectShortName">row_reg[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/row_next" type="array">
+      <obj_property name="ElementShortName">row_next[11:0]</obj_property>
+      <obj_property name="ObjectShortName">row_next[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/data_reg" type="array">
+      <obj_property name="ElementShortName">data_reg[15:0]</obj_property>
+      <obj_property name="ObjectShortName">data_reg[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/data_next" type="array">
+      <obj_property name="ElementShortName">data_next[15:0]</obj_property>
+      <obj_property name="ObjectShortName">data_next[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/m_data_reg" type="array">
+      <obj_property name="ElementShortName">m_data_reg[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_data_reg[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/m_data_next" type="array">
+      <obj_property name="ElementShortName">m_data_next[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_data_next[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_toggle_row_reg" type="logic">
+      <obj_property name="ElementShortName">axis_toggle_row_reg</obj_property>
+      <obj_property name="ObjectShortName">axis_toggle_row_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/axis_toggle_row_next" type="logic">
+      <obj_property name="ElementShortName">axis_toggle_row_next</obj_property>
+      <obj_property name="ObjectShortName">axis_toggle_row_next</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/DATA_WIDTH" type="other">
+      <obj_property name="ElementShortName">DATA_WIDTH</obj_property>
+      <obj_property name="ObjectShortName">DATA_WIDTH</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axi_stream_cont_inst/ADDR_WIDTH" type="other">
+      <obj_property name="ElementShortName">ADDR_WIDTH</obj_property>
+      <obj_property name="ObjectShortName">ADDR_WIDTH</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+      <obj_property name="CustomSignalColor">#FF0000</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/reset" type="logic">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/reg_data_i" type="array">
+      <obj_property name="ElementShortName">reg_data_i[11:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_data_i[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/col_wr_i" type="logic">
+      <obj_property name="ElementShortName">col_wr_i</obj_property>
+      <obj_property name="ObjectShortName">col_wr_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/row_wr_i" type="logic">
+      <obj_property name="ElementShortName">row_wr_i</obj_property>
+      <obj_property name="ObjectShortName">row_wr_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/cmd_wr_i" type="logic">
+      <obj_property name="ElementShortName">cmd_wr_i</obj_property>
+      <obj_property name="ObjectShortName">cmd_wr_i</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/colsize_axis_o" type="array">
+      <obj_property name="ElementShortName">colsize_axis_o[11:0]</obj_property>
+      <obj_property name="ObjectShortName">colsize_axis_o[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/rowsize_axis_o" type="array">
+      <obj_property name="ElementShortName">rowsize_axis_o[11:0]</obj_property>
+      <obj_property name="ObjectShortName">rowsize_axis_o[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/start_axis_o" type="logic">
+      <obj_property name="ElementShortName">start_axis_o</obj_property>
+      <obj_property name="ObjectShortName">start_axis_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/cmd_s" type="logic">
+      <obj_property name="ElementShortName">cmd_s</obj_property>
+      <obj_property name="ObjectShortName">cmd_s</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/axis_hard_work_i" type="logic">
+      <obj_property name="ElementShortName">axis_hard_work_i</obj_property>
+      <obj_property name="ObjectShortName">axis_hard_work_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/axis_addr_i" type="array">
+      <obj_property name="ElementShortName">axis_addr_i[11:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_addr_i[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/axis_data_i" type="array">
+      <obj_property name="ElementShortName">axis_data_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_data_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/axis_ena_i" type="logic">
+      <obj_property name="ElementShortName">axis_ena_i</obj_property>
+      <obj_property name="ObjectShortName">axis_ena_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/axis_wea_i" type="logic">
+      <obj_property name="ElementShortName">axis_wea_i</obj_property>
+      <obj_property name="ObjectShortName">axis_wea_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/doa_o" type="array">
+      <obj_property name="ElementShortName">doa_o[15:0]</obj_property>
+      <obj_property name="ObjectShortName">doa_o[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/colsize_ip_o" type="array">
+      <obj_property name="ElementShortName">colsize_ip_o[11:0]</obj_property>
+      <obj_property name="ObjectShortName">colsize_ip_o[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/addra_ip_i" type="array">
+      <obj_property name="ElementShortName">addra_ip_i[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addra_ip_i[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/doa_ip_i" type="array">
+      <obj_property name="ElementShortName">doa_ip_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">doa_ip_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/ena_ip_i" type="logic">
+      <obj_property name="ElementShortName">ena_ip_i</obj_property>
+      <obj_property name="ObjectShortName">ena_ip_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/wea_ip_i" type="logic">
+      <obj_property name="ElementShortName">wea_ip_i</obj_property>
+      <obj_property name="ObjectShortName">wea_ip_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/addrb_ip_i" type="array">
+      <obj_property name="ElementShortName">addrb_ip_i[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb_ip_i[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/dob_ip_i" type="array">
+      <obj_property name="ElementShortName">dob_ip_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dob_ip_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/enb_ip_i" type="logic">
+      <obj_property name="ElementShortName">enb_ip_i</obj_property>
+      <obj_property name="ObjectShortName">enb_ip_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/web_ip_i" type="logic">
+      <obj_property name="ElementShortName">web_ip_i</obj_property>
+      <obj_property name="ObjectShortName">web_ip_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/dib_ip_o" type="array">
+      <obj_property name="ElementShortName">dib_ip_o[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dib_ip_o[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/colsize_s" type="array">
+      <obj_property name="ElementShortName">colsize_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">colsize_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/rowsize_s" type="array">
+      <obj_property name="ElementShortName">rowsize_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">rowsize_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/addra_mux" type="array">
+      <obj_property name="ElementShortName">addra_mux[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addra_mux[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/dia_mux" type="array">
+      <obj_property name="ElementShortName">dia_mux[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dia_mux[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/ena_mux" type="logic">
+      <obj_property name="ElementShortName">ena_mux</obj_property>
+      <obj_property name="ObjectShortName">ena_mux</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/wea_mux" type="logic">
+      <obj_property name="ElementShortName">wea_mux</obj_property>
+      <obj_property name="ObjectShortName">wea_mux</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/DATA_WIDTH" type="other">
+      <obj_property name="ElementShortName">DATA_WIDTH</obj_property>
+      <obj_property name="ObjectShortName">DATA_WIDTH</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/mem_subsystem_inst/ADDR_WIDTH" type="other">
+      <obj_property name="ElementShortName">ADDR_WIDTH</obj_property>
+      <obj_property name="ObjectShortName">ADDR_WIDTH</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/clk_s" type="logic">
+      <obj_property name="ElementShortName">clk_s</obj_property>
+      <obj_property name="ObjectShortName">clk_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/reset_s" type="logic">
+      <obj_property name="ElementShortName">reset_s</obj_property>
+      <obj_property name="ObjectShortName">reset_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/colsize_s" type="array">
+      <obj_property name="ElementShortName">colsize_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">colsize_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/rowsize_s" type="array">
+      <obj_property name="ElementShortName">rowsize_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">rowsize_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/addra_ip_s" type="array">
+      <obj_property name="ElementShortName">addra_ip_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addra_ip_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/doa_ip_s" type="array">
+      <obj_property name="ElementShortName">doa_ip_s[15:0]</obj_property>
+      <obj_property name="ObjectShortName">doa_ip_s[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/wea_ip_s" type="logic">
+      <obj_property name="ElementShortName">wea_ip_s</obj_property>
+      <obj_property name="ObjectShortName">wea_ip_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/ena_ip_s" type="logic">
+      <obj_property name="ElementShortName">ena_ip_s</obj_property>
+      <obj_property name="ObjectShortName">ena_ip_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/addrb_ip_s" type="array">
+      <obj_property name="ElementShortName">addrb_ip_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb_ip_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/dib_ip_s" type="array">
+      <obj_property name="ElementShortName">dib_ip_s[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dib_ip_s[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/dob_ip_s" type="array">
+      <obj_property name="ElementShortName">dob_ip_s[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dob_ip_s[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/web_ip_s" type="logic">
+      <obj_property name="ElementShortName">web_ip_s</obj_property>
+      <obj_property name="ObjectShortName">web_ip_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/enb_ip_s" type="logic">
+      <obj_property name="ElementShortName">enb_ip_s</obj_property>
+      <obj_property name="ObjectShortName">enb_ip_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/hard_work_s" type="logic">
+      <obj_property name="ElementShortName">hard_work_s</obj_property>
+      <obj_property name="ObjectShortName">hard_work_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axis_start_s" type="logic">
+      <obj_property name="ElementShortName">axis_start_s</obj_property>
+      <obj_property name="ObjectShortName">axis_start_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axis_done_s" type="logic">
+      <obj_property name="ElementShortName">axis_done_s</obj_property>
+      <obj_property name="ObjectShortName">axis_done_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/m_axis_data_s" type="array">
+      <obj_property name="ElementShortName">m_axis_data_s[15:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axis_data_s[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/m_axis_valid_s" type="logic">
+      <obj_property name="ElementShortName">m_axis_valid_s</obj_property>
+      <obj_property name="ObjectShortName">m_axis_valid_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/m_axis_ready_s" type="logic">
+      <obj_property name="ElementShortName">m_axis_ready_s</obj_property>
+      <obj_property name="ObjectShortName">m_axis_ready_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/m_axis_last_s" type="logic">
+      <obj_property name="ElementShortName">m_axis_last_s</obj_property>
+      <obj_property name="ObjectShortName">m_axis_last_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/s_axis_data_s" type="array">
+      <obj_property name="ElementShortName">s_axis_data_s[15:0]</obj_property>
+      <obj_property name="ObjectShortName">s_axis_data_s[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/s_axis_valid_s" type="logic">
+      <obj_property name="ElementShortName">s_axis_valid_s</obj_property>
+      <obj_property name="ObjectShortName">s_axis_valid_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/s_axis_ready_s" type="logic">
+      <obj_property name="ElementShortName">s_axis_ready_s</obj_property>
+      <obj_property name="ObjectShortName">s_axis_ready_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/s_axis_last_s" type="logic">
+      <obj_property name="ElementShortName">s_axis_last_s</obj_property>
+      <obj_property name="ObjectShortName">s_axis_last_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/hard_done_s" type="logic">
+      <obj_property name="ElementShortName">hard_done_s</obj_property>
+      <obj_property name="ObjectShortName">hard_done_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/hard_start_s" type="logic">
+      <obj_property name="ElementShortName">hard_start_s</obj_property>
+      <obj_property name="ObjectShortName">hard_start_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axis_mem_addr_s" type="array">
+      <obj_property name="ElementShortName">axis_mem_addr_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_addr_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axis_mem_data_o_s" type="array">
+      <obj_property name="ElementShortName">axis_mem_data_o_s[15:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_data_o_s[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axis_mem_we_s" type="logic">
+      <obj_property name="ElementShortName">axis_mem_we_s</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_we_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/axis_mem_en_s" type="logic">
+      <obj_property name="ElementShortName">axis_mem_en_s</obj_property>
+      <obj_property name="ObjectShortName">axis_mem_en_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/doa_s" type="array">
+      <obj_property name="ElementShortName">doa_s[15:0]</obj_property>
+      <obj_property name="ObjectShortName">doa_s[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/reg_data_i_s" type="array">
+      <obj_property name="ElementShortName">reg_data_i_s[11:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_data_i_s[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/col_wr_i_s" type="logic">
+      <obj_property name="ElementShortName">col_wr_i_s</obj_property>
+      <obj_property name="ObjectShortName">col_wr_i_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/row_wr_i_s" type="logic">
+      <obj_property name="ElementShortName">row_wr_i_s</obj_property>
+      <obj_property name="ObjectShortName">row_wr_i_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/cmd_wr_i_s" type="logic">
+      <obj_property name="ElementShortName">cmd_wr_i_s</obj_property>
+      <obj_property name="ObjectShortName">cmd_wr_i_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mem_subsystem_tb/MEM_CONTENT" type="array">
+      <obj_property name="ElementShortName">MEM_CONTENT[0:24][15:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_CONTENT[0:24][15:0]</obj_property>
+   </wvobject>
+</wave_config>
