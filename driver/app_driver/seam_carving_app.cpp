@@ -17,18 +17,20 @@ void write_seam_ip(const int rowsize, const int colsize, const int start);
 void read_seam_ip();
 void write_seam_dma(const int value, const int reset);
 void read_seam_dma(vector<int> &cache);
+void print_cache_content(vector<int> &cache);
 
-int rowsize = 3;
-int colsize = 5;
+int rowsize = 5;
+int colsize = 7;
 int start;
 int ready;
 
+
 int main()
 {
-
     vector<int> cache;
 
     write_seam_ip(rowsize, colsize, STOP);
+
     // Form cache size
     for(int i = 0; i < 2*colsize; i++)
     {
@@ -43,7 +45,6 @@ int main()
 
     //Initialize cache    
     write_seam_dma(1, RESET);
-    write_seam_dma(1, RESET);
     for (int i = 0; i < 2*colsize; i++)
     {
         write_seam_dma(i, SET);
@@ -51,28 +52,28 @@ int main()
 
     cout<<"Before seam:"<<endl;    
     read_seam_dma(cache);
-    cout<<"Cache content: ";
-    for(int i = 0; i < 2*colsize; i++)
-    {
-        cout<<cache[i]<<" "; 
-    }
-    cout<<endl;
+    print_cache_content(cache); 
+
     // Start seam process
     write_seam_ip(rowsize, colsize, START);
     write_seam_ip(rowsize, colsize, START);
 
     cout<<"After seam:"<<endl;    
     read_seam_dma(cache);
+    print_cache_content(cache); 
+
+    return 0;
+}
+
+void print_cache_content(vector<int> &cache)
+{
     cout<<"Cache content: ";
     for(int i = 0; i < 2*colsize; i++)
     {
         cout<<cache[i]<<" "; 
     }
     cout<<endl;
-    
-    return 0;
 }
-
 
 void write_seam_ip(const int rowsize, const int colsize, const int start)
 {

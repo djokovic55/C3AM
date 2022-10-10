@@ -242,8 +242,10 @@ ssize_t seam_write(struct file *pfile, const char __user *buffer, size_t length,
 
       if(start)
       {
-        hard_cem();
         printk(KERN_INFO "[WRITE] Succesfully started seam_carving device\n");    
+        ready = 0;
+        hard_cem();
+        ready = 1;
       }
       else
       {
@@ -266,6 +268,7 @@ ssize_t seam_write(struct file *pfile, const char __user *buffer, size_t length,
         if(reset)
         {
           cache_waddr = 0;
+          hard_toggle_row = 0;
           printk(KERN_INFO "RESET OCCURED! cache_waddr = %d\n", cache_waddr);
           reset = 0;
         }
